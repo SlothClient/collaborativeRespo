@@ -1,0 +1,1 @@
+不要pull request，放在分支就行，分支上的工作都执行完毕后再pull request执行merge
