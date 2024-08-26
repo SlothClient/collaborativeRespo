@@ -22,13 +22,13 @@ const router = useRouter()
             default-active="1"
             text-color="#fff"
         >
-          <el-menu-item index="1" >
+          <el-menu-item index="1" @click="router.replace('/')">
             <el-icon>
               <HomeFilled/>
             </el-icon>
             <span>系统首页</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" @click="router.replace('/views/Device')">
             <el-icon><MessageBox /></el-icon>
           <span>设备信息</span>
         </el-menu-item>
