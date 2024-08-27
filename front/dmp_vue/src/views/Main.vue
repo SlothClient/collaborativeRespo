@@ -32,19 +32,11 @@ const router = useRouter()
             <el-icon><MessageBox /></el-icon>
           <span>设备信息</span>
         </el-menu-item>
-          <el-sub-menu index="3">
-            <template #title>
-              <el-icon><DocumentChecked /></el-icon>
-              <span>计划管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="3-1" >
-                <el-icon><SetUp /></el-icon>维修计划</el-menu-item>
-              <el-menu-item index="3-2" >
-                <el-icon><SetUp /></el-icon>保养计划</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
-          <el-menu-item index="4">
+        <el-menu-item index="3" @click="router.replace('/views/Maintenance')">
+          <el-icon><SetUp /></el-icon>
+          <span>保养计划</span>
+        </el-menu-item>
+          <el-menu-item index="4" @click="router.replace('/views/Approve')">
           <el-icon><document /></el-icon>
           <span>审批管理</span>
         </el-menu-item>
@@ -54,9 +46,9 @@ const router = useRouter()
               <span>工单管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="5-1" >
+              <el-menu-item index="5-1" @click="router.replace('/views/WorkOrder')">
                 <el-icon><SetUp /></el-icon>工单计划</el-menu-item>
-              <el-menu-item index="5-2" >
+              <el-menu-item index="5-2" @click="router.replace('/views/WorkHours')">
                 <el-icon><SetUp /></el-icon>工时管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>

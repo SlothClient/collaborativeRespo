@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style scope>
 *{
   padding: 0;
   margin: 0;

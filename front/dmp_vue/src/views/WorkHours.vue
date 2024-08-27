@@ -1,5 +1,5 @@
 <template>
     <div>
-        shouye
+        WorkHours
     </div>
 </template>

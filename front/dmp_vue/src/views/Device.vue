@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import {Delete, Edit} from "@element-plus/icons-vue";
-import { ref } from "vue";
+import {ref} from 'vue'
 const addVisible = ref(false)
 // 打开新增面板
 
