@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.DeviceMapper">
+    <insert id="add">
+        insert into device(deviceName,status,supplierId,departmentId,typeId,position,photo,notes,bigRepairsNumber,middleRepairsNumber,smallRepairsNumber,bigRepairsCycle,middleRepairsCycle,smallRepairsCycle,purchasingDate,lastMaintenanceTime,validPeriod)
+        values (#{deviceName},#{status},#{supplierId},#{departmentId},#{typeId},#{position},#{photo},#{notes},#{bigRepairsNumber},#{middleRepairsNumber},#{smallRepairsNumber},#{bigRepairsCycle},#{middleRepairsCycle},#{smallRepairsCycle},#{lastMaintenanceTime},#{purchasingDate},#{validPeriod})
+    </insert>
+    <update id="update">
+        update device
+        <set>
+            <if test="deviceName != null and deviceName != ''">
+                deviceName = #{deviceName},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="supplierId != null">
+                supplierId = #{supplierId},
+            </if>
+            <if test="departmentId != null">
+                departmentId = #{departmentId},
+            </if>
+            <if test="typeId != null">
+                typeId = #{typeId},
+            </if>
+            <if test="position != null and position != ''">
+                position = #{position},
+            </if>
+            <if test="photo != null and photo != ''">
+                photo = #{photo},
+            </if>
+            <if test="notes != null and notes != ''">
+                notes = #{notes},
+            </if>
+            <if test="bigRepairsNumber != null">
+                bigRepairsNumber = #{bigRepairsNumber},
+            </if>
+            <if test="middleRepairsNumber != null">
+                middleRepairsNumber = #{middleRepairsNumber},
+            </if>
+            <if test="smallRepairsNumber != null">
+                smallRepairsNumber = #{smallRepairsNumber},
+            </if>
+            <if test="bigRepairsCycle != null">
+                bigRepairsCycle = #{bigRepairsCycle},
+            </if>
+            <if test="middleRepairsCycle != null">
+                middleRepairsCycle = #{middleRepairsCycle},
+            </if>
+            <if test="smallRepairsCycle != null">
+                smallRepairsCycle = #{smallRepairsCycle},
+            </if>
+
+            <if test="lastMaintenanceTime != null">
+                lastMaintenanceTime = #{lastMaintenanceTime},
+            </if>
+            <if test="purchasingDate != null">
+                purchasingDate = #{purchasingDate},
+            </if>
+            <if test="validPeriod != null">
+                validPeriod = #{validPeriod},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from device
+        where id = #{id}
+    </delete>
+
+
+    <select id="findBySearch" resultType="com.example.springboot.entity.Device">
+        SELECT device.id,device.deviceName,device.status,device.supplierId,supplier.supplierName,device.departmentId,department.departmentName,device.typeId,type.typeName,device.position,device.photo,device.notes,device.bigRepairsNumber,device.middleRepairsNumber,device.smallRepairsNumber,device.bigRepairsCycle,device.middleRepairsCycle,device.smallRepairsCycle,device.lastMaintenanceTime,device.purchasingDate,device.validPeriod
+        FROM device
+        JOIN supplier ON device.supplierId = supplier.id
+        JOIN department ON device.departmentId = department.id
+        JOIN type ON device.typeId = type.id
+        <where>
+            <!-- 动态条件 -->
+            <if test="deviceName !=null and deviceName !=''">
+                and deviceName like concat('%',#{deviceName},'%')
+            </if>
+            <if test="typeName !=null and typeName !=''">
+                and typeName like concat('%',#{typeName},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getAll" resultType="com.example.springboot.entity.Device">
+        SELECT device.id,device.deviceName,device.status,device.supplierId,supplier.supplierName,device.departmentId,department.departmentName,device.typeId,type.typeName,device.position,device.photo,device.notes,device.bigRepairsNumber,device.middleRepairsNumber,device.smallRepairsNumber,device.bigRepairsCycle,device.middleRepairsCycle,device.smallRepairsCycle,device.lastMaintenanceTime,device.purchasingDate,device.validPeriod
+        FROM device
+                 JOIN supplier ON device.supplierId = supplier.id
+                 JOIN department ON device.departmentId = department.id
+                 JOIN type ON device.typeId = type.id
+    </select>
+</mapper>
