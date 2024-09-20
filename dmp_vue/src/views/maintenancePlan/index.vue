@@ -33,6 +33,8 @@
 
     <el-row class="add-button-row">
       <el-button type="primary" size="small" icon="Plus" class="add-btn">新增</el-button>
+      <el-button type="primary" size="small" icon="User" class="add-btn">分派人员</el-button>
+      <el-button type="primary" size="small" icon="Filter" class="add-btn">高级查询</el-button>
     </el-row>
 
     <!-- 卡片区域 -->
@@ -47,8 +49,8 @@
           <el-row :gutter="10">
             <el-col :span="20">
               <el-descriptions :column="2" size="small" class="description-box">
-                <el-descriptions-item label="计划名称">{{ item.planName }}</el-descriptions-item>
-                <el-descriptions-item label="计划编号">{{ item.planId }}</el-descriptions-item>
+                <el-descriptions-item label="计划名称" >{{ item.planName }}</el-descriptions-item>
+                <el-descriptions-item label="计划编号">{{ item.planId }}<el-tag size="small" type="success">{{ item.status }}</el-tag></el-descriptions-item>
                 <el-descriptions-item label="开始时间">{{ item.startTime }}</el-descriptions-item>
                 <el-descriptions-item label="结束时间">{{ item.endTime }}</el-descriptions-item>
                 <el-descriptions-item label="计划描述" :span="2">
@@ -68,21 +70,36 @@
 
           <!-- 创建和更新时间 -->
           <el-row class="info-row" :gutter="10">
-            <el-col :span="6">
+            <el-col :span="4">
               <span class="info-item"><label>创建时间：</label>{{ item.createTime }}</span>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <span class="info-item"><label>创建人：</label>{{ item.creator }}</span>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <span class="info-item"><label>更新时间：</label>{{ item.updateTime }}</span>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <span class="info-item"><label>更新人：</label>{{ item.updater }}</span>
             </el-col>
           </el-row>
         </div>
       </el-card>
+    </div>
+    <!--  分页-->
+    <div style="margin: 10px 0">
+      <el-pagination
+          :background="true"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[1, 10, 20, 100]"
+          large
+          :disabled="false"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -134,6 +151,27 @@ const data = ref([
   },
 ]);
 
+//当前页面
+const currentPage = ref(0)
+
+//总记录数
+const total = ref(10)
+
+//页面大小
+const pageSize = ref(10);
+
+//页面变化
+const handleCurrentChange = ()=>{
+
+}
+
+/**
+ * 页面大小变化
+ */
+const handleSizeChange = ()=>{
+
+}
+//搜索
 const searchPlans = () => {
   // 实现搜索逻辑
   console.log('搜索计划');
@@ -150,10 +188,9 @@ const resetFilters = () => {
 </script>
 
 <style scoped>
-
 .page-container {
   padding: 20px;
-  background-color: #f0f2f5;
+  background-color: white;
   line-height: 10%;
   overflow: hidden;
 }
@@ -162,9 +199,9 @@ const resetFilters = () => {
 .filter-container {
   padding: 15px;
   background-color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .filter-content {
@@ -172,6 +209,7 @@ const resetFilters = () => {
   align-items: center;
   flex-wrap: nowrap;
   gap: 15px;
+  margin-bottom: 0;
 }
 
 .status-filter {
@@ -213,6 +251,7 @@ const resetFilters = () => {
 /* 新增按钮样式 */
 .add-button-row {
   margin-bottom: 20px;
+  margin-left: 1%;
 }
 
 .add-btn {
@@ -223,16 +262,16 @@ const resetFilters = () => {
 .card-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  //gap: 10px;
   width: 100%;
 }
 /* 卡片样式 */
 .card {
   width: 100%;
-  border-radius: 8px;
+  //border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  //transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -273,9 +312,13 @@ const resetFilters = () => {
 }
 
 .card-actions {
+  padding: 0;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  align-items: center; /* 垂直居中 */
+  height: 100%; /* 设置容器高度为 100% */
+  gap: 5px; /* 调整按钮之间的间距 */
+  margin: auto;
 }
 
 .action-link {
