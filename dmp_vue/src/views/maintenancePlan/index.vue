@@ -62,7 +62,7 @@
             <el-col :span="4">
               <div class="card-actions">
                 <el-link type="primary" class="action-link">编辑</el-link>
-                <el-link type="primary" class="action-link">详情</el-link>
+                <el-link type="primary" class="action-link" @click="openDetailDialog()">详情</el-link>
                 <el-link type="primary" class="action-link">更多</el-link>
               </div>
             </el-col>
@@ -70,16 +70,16 @@
 
           <!-- 创建和更新时间 -->
           <el-row class="info-row" :gutter="10">
-            <el-col :span="4">
+            <el-col :span="6">
               <span class="info-item"><label>创建时间：</label>{{ item.createTime }}</span>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
               <span class="info-item"><label>创建人：</label>{{ item.creator }}</span>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
               <span class="info-item"><label>更新时间：</label>{{ item.updateTime }}</span>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
               <span class="info-item"><label>更新人：</label>{{ item.updater }}</span>
             </el-col>
           </el-row>
@@ -101,16 +101,33 @@
           @current-change="handleCurrentChange"
       />
     </div>
+
+<!--    详情框-->
+    <maintenance-plan-detail-dialog
+        :maintenancePlanDetailVisible="isMaintenancePlanDetailVisible"
+      @close-dialog="closeDialog()"
+    ></maintenance-plan-detail-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenancePlanDetailDialog.vue";
 
 const checkboxGroup1 = ref(['全部']);
 const cities = ['全部', '待开始', '已派单', '执行中', '已完成'];
 const planName = ref("");
 const dateRange = ref('');
+
+//详情框是否可见
+const isMaintenancePlanDetailVisible = ref(false)
+
+const openDetailDialog = () =>{
+  isMaintenancePlanDetailVisible.value = true;
+}
+const closeDialog = () =>{
+  isMaintenancePlanDetailVisible.value = false
+}
 
 const data = ref([
   {
@@ -197,7 +214,7 @@ const resetFilters = () => {
 
 
 .filter-container {
-  padding: 15px;
+  padding: 20px;
   background-color: #ffffff;
   margin-bottom: 0;
   border-radius: 8px;

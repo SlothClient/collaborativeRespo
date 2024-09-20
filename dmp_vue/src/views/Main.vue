@@ -1,13 +1,16 @@
 <script setup>
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+
 const router = useRouter()
 
 </script>
 <template>
   <el-container>
     <el-header style="display: flex;align-items: center;gap: 16px">
-        <el-icon><Memo /></el-icon>
+      <el-icon>
+        <Memo/>
+      </el-icon>
       <p>
         中药制剂运维系统
       </p>
@@ -29,27 +32,43 @@ const router = useRouter()
             <span>系统首页</span>
           </el-menu-item>
           <el-menu-item index="2" @click="router.replace('/views/Device')">
-            <el-icon><MessageBox /></el-icon>
-          <span>设备信息</span>
-        </el-menu-item>
-        <el-menu-item index="3" @click="router.replace('/views/Maintenance')">
-          <el-icon><SetUp /></el-icon>
-          <span>保养计划</span>
-        </el-menu-item>
+            <el-icon>
+              <MessageBox/>
+            </el-icon>
+            <span>设备信息</span>
+          </el-menu-item>
+          <el-menu-item index="3" @click="router.replace('/views/Maintenance')">
+            <el-icon>
+              <SetUp/>
+            </el-icon>
+            <span>保养计划</span>
+          </el-menu-item>
           <el-menu-item index="4" @click="router.replace('/views/Approve')">
-          <el-icon><document /></el-icon>
-          <span>审批管理</span>
-        </el-menu-item>
-        <el-sub-menu index="5">
+            <el-icon>
+              <document/>
+            </el-icon>
+            <span>审批管理</span>
+          </el-menu-item>
+          <el-sub-menu index="5">
             <template #title>
-              <el-icon><DocumentChecked /></el-icon>
+              <el-icon>
+                <DocumentChecked/>
+              </el-icon>
               <span>工单管理</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="5-1" @click="router.replace('/views/WorkOrder')">
-                <el-icon><SetUp /></el-icon>工单计划</el-menu-item>
+                <el-icon>
+                  <SetUp/>
+                </el-icon>
+                工单计划
+              </el-menu-item>
               <el-menu-item index="5-2" @click="router.replace('/views/WorkHours')">
-                <el-icon><SetUp /></el-icon>工时管理</el-menu-item>
+                <el-icon>
+                  <SetUp/>
+                </el-icon>
+                工时管理
+              </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
@@ -59,20 +78,26 @@ const router = useRouter()
       </el-main>
     </el-container>
   </el-container>
-  </template>
+</template>
 
-<style scope>
-*
-{margin: 0px;padding: 0px;}
-html,body,#box,.el-container,.el-menu{
-  height: 100%;
+<style scoped>
+* {
+  margin: 0px;
+  padding: 0px;
 }
+
+html, body, #box, .el-container, .el-menu {
+  height: 100%;
+  overflow: hidden;
+}
+
 .el-header, .el-footer {
   background-color: #B3C0D1;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
+
 .el-aside {
   background-color: #D3DCE6;
   color: #333;

@@ -134,25 +134,25 @@ const resetSearch = () =>{
 const filteredData = computed(() => {
   let filtered = tableData.value;
 
-  // 搜索过滤
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(item =>
-        item.deviceName.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
-    );
-  }
-
-  // 日期范围过滤
-  if (dateRange.value && dateRange.value.length === 2) {
-    const [startDate, endDate] = dateRange.value;
-    filtered = filtered.filter(item => {
-      const itemDate = new Date(item.date);
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  }
-
-  return filtered;
+  // // 搜索过滤
+  // if (searchQuery.value) {
+  //   const query = searchQuery.value.toLowerCase();
+  //   filtered = filtered.filter(item =>
+  //       item.deviceName.toLowerCase().includes(query) ||
+  //       item.description.toLowerCase().includes(query)
+  //   );
+  // }
+  //
+  // // 日期范围过滤
+  // if (dateRange.value && dateRange.value.length === 2) {
+  //   const [startDate, endDate] = dateRange.value;
+  //   filtered = filtered.filter(item => {
+  //     const itemDate = new Date(item.date);
+  //     return itemDate >= startDate && itemDate <= endDate;
+  //   });
+  // }
+  //
+  // return filtered;
 });
 
 // 分页切换
@@ -190,13 +190,11 @@ const filterTag = (value, row) => row.status === value;
 // 查看详情
 const viewDetails = (row) => {
   console.log("查看详情：", row);
-  // 可以在此处展示详情弹窗
 };
 
 // 编辑设备
 const editItem = (row) => {
   console.log("编辑设备：", row);
-  // 在此处打开编辑界面
 };
 
 // 审批通过
