@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" :before-close="closeDialog">
    <span>
-   保养计划详情框
+   保养计划添加框
  </span>
     <template #footer>
       <div class="dialog-footer">
@@ -15,21 +15,21 @@
 </template>
 
 <script setup>
-import { ref, watch} from 'vue';
+import {ref, watch} from 'vue';
 
 const props = defineProps({
-  maintenancePlanDetailVisible: {
+  maintenancePlanAddVisible: {
     type: Boolean,
     default: false
   }
 });
 
-const dialogVisible = ref(props.maintenancePlanDetailVisible);
+const dialogVisible = ref(props.maintenancePlanAddVisible);
 const emit = defineEmits(["closeDialog"])
-watch(() => props.maintenancePlanDetailVisible, (newValue) => {
+watch(() => props.maintenancePlanAddVisible, (newValue) => {
   dialogVisible.value = newValue;
 });
-const closeDialog = () =>{
+const closeDialog = () => {
   dialogVisible.value = !dialogVisible.value;
   emit("closeDialog")
 }

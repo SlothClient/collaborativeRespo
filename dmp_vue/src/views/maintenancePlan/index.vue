@@ -32,7 +32,9 @@
     </el-row>
 
     <el-row class="add-button-row">
-      <el-button type="primary" size="small" icon="Plus" class="add-btn">新增</el-button>
+      <el-button type="primary" size="small" icon="Plus"
+                 @click="isMaintenancePlanAddVisible = !isMaintenancePlanAddVisible" class="add-btn">新增
+      </el-button>
       <el-button type="primary" size="small" icon="User" class="add-btn">分派人员</el-button>
       <el-button type="primary" size="small" icon="Filter" class="add-btn">高级查询</el-button>
     </el-row>
@@ -49,8 +51,10 @@
           <el-row :gutter="10">
             <el-col :span="20">
               <el-descriptions :column="2" size="small" class="description-box">
-                <el-descriptions-item label="计划名称" >{{ item.planName }}</el-descriptions-item>
-                <el-descriptions-item label="计划编号">{{ item.planId }}<el-tag size="small" type="success">{{ item.status }}</el-tag></el-descriptions-item>
+                <el-descriptions-item label="计划名称">{{ item.planName }}</el-descriptions-item>
+                <el-descriptions-item label="计划编号">{{ item.planId }}
+                  <el-tag size="small" type="success">{{ item.status }}</el-tag>
+                </el-descriptions-item>
                 <el-descriptions-item label="开始时间">{{ item.startTime }}</el-descriptions-item>
                 <el-descriptions-item label="结束时间">{{ item.endTime }}</el-descriptions-item>
                 <el-descriptions-item label="计划描述" :span="2">
@@ -61,8 +65,12 @@
             <!-- 操作按钮在最右侧 -->
             <el-col :span="4">
               <div class="card-actions">
-                <el-link type="primary" class="action-link">编辑</el-link>
-                <el-link type="primary" class="action-link" @click="openDetailDialog()">详情</el-link>
+                <el-link type="primary" class="action-link"
+                         @click="openEditDialog()">编辑
+                </el-link>
+                <el-link type="primary" class="action-link"
+                         @click="openDetailDialog()">详情
+                </el-link>
                 <el-link type="primary" class="action-link">更多</el-link>
               </div>
             </el-col>
@@ -102,31 +110,57 @@
       />
     </div>
 
-<!--    详情框-->
+    <!--    详情框-->
     <maintenance-plan-detail-dialog
         :maintenancePlanDetailVisible="isMaintenancePlanDetailVisible"
-      @close-dialog="closeDialog()"
+        @close-dialog="closeDetailDialog()"
     ></maintenance-plan-detail-dialog>
+
+    <!--    增加框-->
+    <maintenance-plan-add-dialog
+        :maintenancePlanAddVisible="isMaintenancePlanAddVisible"
+        @close-dialog="closeAddDialog()"
+    ></maintenance-plan-add-dialog>
+
+    <!--    修改框-->
+    <maintenance-plan-edit-dialog
+        :maintenancePlanEditVisible="isMaintenancePlanEditVisible"
+        @close-dialog="closeEditDialog()"
+    ></maintenance-plan-edit-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenancePlanDetailDialog.vue";
+import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePlanAddDialog.vue";
+import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
 
 const checkboxGroup1 = ref(['全部']);
 const cities = ['全部', '待开始', '已派单', '执行中', '已完成'];
 const planName = ref("");
 const dateRange = ref('');
 
-//详情框是否可见
+//详情框
 const isMaintenancePlanDetailVisible = ref(false)
-
-const openDetailDialog = () =>{
+const closeDetailDialog = () => {
+  isMaintenancePlanDetailVisible.value = false
+}
+const openDetailDialog =() =>{
   isMaintenancePlanDetailVisible.value = true;
 }
-const closeDialog = () =>{
-  isMaintenancePlanDetailVisible.value = false
+//添加
+const isMaintenancePlanAddVisible = ref(false)
+const closeAddDialog = () => {
+  isMaintenancePlanAddVisible.value = false
+}
+//修改
+const isMaintenancePlanEditVisible = ref(false)
+const closeEditDialog = () => {
+  isMaintenancePlanEditVisible.value = false
+}
+const openEditDialog = ()=>{
+  isMaintenancePlanEditVisible.value = true;
 }
 
 const data = ref([
@@ -137,9 +171,9 @@ const data = ref([
     endTime: '2024-03-31 15:34:51',
     description: '每日设备保养',
     createTime: '2024-03-05 15:37:37',
-    creator: '李铭',
+    creator: 'aaa',
     updateTime: '2024-03-05 17:06:39',
-    updater: '李铭',
+    updater: 'aaa',
     status: '已完成'
   },
   {
@@ -178,14 +212,14 @@ const total = ref(10)
 const pageSize = ref(10);
 
 //页面变化
-const handleCurrentChange = ()=>{
+const handleCurrentChange = () => {
 
 }
 
 /**
  * 页面大小变化
  */
-const handleSizeChange = ()=>{
+const handleSizeChange = () => {
 
 }
 //搜索
@@ -282,6 +316,7 @@ const resetFilters = () => {
   //gap: 10px;
   width: 100%;
 }
+
 /* 卡片样式 */
 .card {
   width: 100%;
@@ -292,7 +327,7 @@ const resetFilters = () => {
 }
 
 .card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-content {
@@ -348,6 +383,7 @@ const resetFilters = () => {
   .filter-content {
     flex-wrap: wrap;
   }
+
   .status-filter, .input-search, .date-picker, .button-group {
     width: 100%;
     margin-bottom: 10px;

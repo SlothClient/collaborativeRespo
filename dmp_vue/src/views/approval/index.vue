@@ -18,8 +18,8 @@
           @change="handleDateChange"
           clearable
       />
-      <el-button type="primary"  icon="Search" @click="searchApproval">查询</el-button>
-      <el-button  icon="Refresh" @click="resetSearch">重置</el-button>
+      <el-button type="primary" icon="Search" @click="searchApproval">查询</el-button>
+      <el-button icon="Refresh" @click="resetSearch">重置</el-button>
     </div>
 
     <!-- 表格 -->
@@ -27,17 +27,16 @@
         ref="tableRef"
         :data="filteredData"
         stripe
-        border
+        :border="false"
         style="width: 100%"
         class="device-table"
     >
-      <el-table-column prop="date" label="日期" sortable width="180"/>
-      <el-table-column prop="deviceName" label="设备名称" width="180"/>
+      <el-table-column prop="date" label="日期" sortable/>
+      <el-table-column prop="deviceName" label="设备名称"/>
       <el-table-column prop="description" label="描述" :formatter="formatter"/>
       <el-table-column
           prop="status"
           label="状态"
-          width="100"
           :filters="statusFilter"
           :filter-method="filterTag"
           filter-placement="bottom-end"
@@ -52,30 +51,37 @@
         </template>
       </el-table-column>
 
-      <!-- 审批操作列 -->
-      <el-table-column label="审批操作" width="180">
-        <template #default="scope">
-          <el-button @click="approve(scope.row)" type="success" size="small">
-            通过
-          </el-button>
-          <el-button @click="reject(scope.row)" type="danger" size="small">
-            驳回
-          </el-button>
-        </template>
-      </el-table-column>
-
       <!-- 操作列 -->
-      <el-table-column label="操作" width="180">
+      <el-table-column label="操作">
         <template #default="scope">
-          <el-button @click="viewDetails(scope.row)" type="primary" size="small">
-            查看
-          </el-button>
-          <el-button @click="editItem(scope.row)" type="success" size="small">
-            编辑
-          </el-button>
+          <el-link @click.prevent="approve(scope.row)" type="success" class="action-link">通过</el-link>
+          <el-link @click.prevent="reject(scope.row)" type="danger" class="action-link">驳回</el-link>
+          <el-popover
+              placement="bottom-start"
+              :width="160"
+              trigger="click"
+          >
+            <div >
+              <el-link @click.prevent="viewDetails(scope.row)" type="primary" class="more-action-link">查看详情</el-link>
+              <el-link type="danger" @click.prevent="confirmDelete(scope.row)" class="more-action-link">删除</el-link>
+            </div>
+            <template #reference>
+              <el-link type="primary" class="action-link" icon="ArrowDown">
+                更多
+              </el-link>
+            </template>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
+
+<!--    详情框-->
+    <ApprovalDetailDrawer
+        :approvalDetailVisible="approvalDetailVisible"
+    @close-approval-detail="closeApprovalDetail()"
+        :currentRow = "currentRow"
+    ></ApprovalDetailDrawer>
+
     <!-- 分页控件 -->
     <div style="margin: 10px 0">
       <el-pagination
@@ -91,22 +97,25 @@
           @current-change="handleCurrentChange"
       />
     </div>
+
   </div>
 
 </template>
 
 <script setup>
 import {ref, computed} from 'vue';
+import {ElMessageBox} from "element-plus";
+import ApprovalDetailDrawer from "@/components/approval/approvalDetailDrawer.vue";
 
 // 表格数据
 const tableData = ref([
-  {date: '2016-05-03', deviceName: '设备A', description: 'Los Angeles aaa', status: '待审核'},
-  {date: '2016-05-02', deviceName: '设备B', description: 'Los Angeles bbb', status: '审核中'},
-  {date: '2016-05-04', deviceName: '设备A', description: 'Los Angeles ccc', status: '已通过'},
-  {date: '2016-05-01', deviceName: '设备C', description: 'Los Angeles ddd', status: '已驳回'},
-  {date: '2016-05-01', deviceName: '设备D', description: 'Los Angeles bbb', status: '已撤销'},
-  {date: '2016-05-01', deviceName: '设备F', description: 'Los Angeles eee', status: '已撤销'},
-  {date: '2016-05-01', deviceName: '设备G', description: 'Los Angeles fff', status: '已撤销'},
+  {date: '2016-05-03', creator:"张三",deviceName: '设备A', description: 'Los Angeles aaa', status: '待审核'},
+  {date: '2016-05-02', creator:"张三",deviceName: '设备B', description: 'Los Angeles bbb', status: '审核中'},
+  {date: '2016-05-04', creator:"张三",deviceName: '设备A', description: 'Los Angeles ccc', status: '已通过'},
+  {date: '2016-05-01', creator:"张三",deviceName: '设备C', description: 'Los Angeles ddd', status: '已驳回'},
+  {date: '2016-05-01', creator:"张三",deviceName: '设备D', description: 'Los Angeles bbb', status: '已撤销'},
+  {date: '2016-05-01', creator:"张三",deviceName: '设备F', description: 'Los Angeles eee', status: '已撤销'},
+  {date: '2016-05-01', creator:"张三",deviceName: '设备G', description: 'Los Angeles fff', status: '已撤销'},
 ]);
 
 const currentPage = ref(1); // 当前页面
@@ -114,7 +123,8 @@ const pageSize = ref(10); // 页面大小
 const total = ref(10)
 const searchQuery = ref(''); // 搜索框
 const dateRange = ref([]); // 日期范围
-
+const approvalDetailVisible = ref(false) //详情框是否可见
+const currentRow = ref()
 
 const statusFilter = ref([
   {text: '待审核', value: '待审核'},
@@ -122,10 +132,10 @@ const statusFilter = ref([
   {text: '已驳回', value: '已驳回'},
   {text: '已撤销', value: '已撤销'}
 ]);
-const searchApproval = ()=>{
+const searchApproval = () => {
 
 }
-const resetSearch = () =>{
+const resetSearch = () => {
 
 }
 
@@ -134,25 +144,25 @@ const resetSearch = () =>{
 const filteredData = computed(() => {
   let filtered = tableData.value;
 
-  // // 搜索过滤
-  // if (searchQuery.value) {
-  //   const query = searchQuery.value.toLowerCase();
-  //   filtered = filtered.filter(item =>
-  //       item.deviceName.toLowerCase().includes(query) ||
-  //       item.description.toLowerCase().includes(query)
-  //   );
-  // }
-  //
-  // // 日期范围过滤
-  // if (dateRange.value && dateRange.value.length === 2) {
-  //   const [startDate, endDate] = dateRange.value;
-  //   filtered = filtered.filter(item => {
-  //     const itemDate = new Date(item.date);
-  //     return itemDate >= startDate && itemDate <= endDate;
-  //   });
-  // }
-  //
-  // return filtered;
+  // 搜索过滤
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(item =>
+        item.deviceName.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query)
+    );
+  }
+
+  // 日期范围过滤
+  if (dateRange.value && dateRange.value.length === 2) {
+    const [startDate, endDate] = dateRange.value;
+    filtered = filtered.filter(item => {
+      const itemDate = new Date(item.date);
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+  }
+
+  return filtered;
 });
 
 // 分页切换
@@ -189,6 +199,8 @@ const filterTag = (value, row) => row.status === value;
 
 // 查看详情
 const viewDetails = (row) => {
+  approvalDetailVisible.value = true
+  currentRow.value = row
   console.log("查看详情：", row);
 };
 
@@ -214,14 +226,41 @@ const handleDateChange = (dates) => {
   dateRange.value = dates;
 };
 
+
+const confirmDelete = (row) => {
+  ElMessageBox.confirm('您确定要删除此项吗？', '确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 执行删除操作
+    const index = tableData.value.indexOf(row);
+    if (index !== -1) {
+      tableData.value.splice(index, 1);
+      console.log("已删除：", row);
+    }
+  }).catch(() => {
+    console.log("用户取消了删除操作");
+  });
+};
+
+
+const closeApprovalDetail = ()=>{
+
+  approvalDetailVisible.value = false
+}
+
+
+
 </script>
 
 <style scoped>
 .container {
-  padding: 20px;
-  background-color: #f9f9f9;
+  padding: 40px 20px 20px 20px;
+  //margin-top: 20px;
+  background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.1);
   line-height: 10%;
 }
 
@@ -241,6 +280,24 @@ const handleDateChange = (dates) => {
 
 .device-table {
   margin-bottom: 20px;
+}
+
+.action-link {
+  padding: 6px 12px; /* 增加内边距 */
+  border-radius: 4px; /* 圆角边框 */
+  transition: background-color 0.3s, color 0.3s; /* 平滑过渡效果 */
+}
+
+.action-link:hover {
+  background-color: #f0f0f0; /* 悬停时背景色 */
+  //color: #409eff; /* 悬停时字体颜色 */
+}
+
+.more-action-link {
+  //display: block;
+  /* 增加选项间距 */
+  //padding: 20px;
+  margin: 5px 20px 5px 5px;
 }
 
 
