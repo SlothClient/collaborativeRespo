@@ -61,7 +61,7 @@ const router = useRouter()
   </el-container>
   </template>
 
-<style scope>
+<style scoped>
 *
 {margin: 0px;padding: 0px;}
 html,body,#box,.el-container,.el-menu{
@@ -83,8 +83,9 @@ html,body,#box,.el-container,.el-menu{
 .el-main {
   background-color: #E9EEF3;
   color: #333;
-  text-align: center;
-  line-height: 160px;
+  overflow: hidden;
+  /* text-align: center;
+  line-height: 160px; */
 }
 
 body > .el-container {
