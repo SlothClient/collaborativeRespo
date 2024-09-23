@@ -6,9 +6,14 @@ import Maintenance from '@/views/maintenancePlan/index.vue'
 import WorkHours from '@/views/WorkHours.vue'
 import WorkOrder from '@/views/WorkOrder.vue'
 import Approve from '@/views/approval/index.vue'
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path:"/login",
+      name:"login",
+      component :()=>import("@/views/login/login.vue")
+    },
     {
       path: '/',
       name: 'main',
@@ -43,5 +48,3 @@ const router = createRouter({
     }
   ]
 })
-
-export default router
