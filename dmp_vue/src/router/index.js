@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Main from '@/views/Main.vue'
 import Device from '@/views/Device.vue'
 import Home from '@/views/Home.vue'
-import Maintenance from '@/views/Maintenance.vue'
+import Maintenance from '@/views/maintenancePlan/index.vue'
 import WorkHours from '@/views/WorkHours.vue'
 import WorkOrder from '@/views/WorkOrder.vue'
-import Approve from '@/views/Approve.vue'
+import Approve from '@/views/approval/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,7 +37,7 @@ const router = createRouter({
         {
           path:'/views/Approve',
           component:Approve
-        }
+        },
 
       ]
     }

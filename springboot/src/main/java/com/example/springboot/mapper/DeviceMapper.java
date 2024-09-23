@@ -1,14 +1,17 @@
 package com.example.springboot.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.springboot.entity.Device;
 import com.example.springboot.entity.Params;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @Mapper
-public interface DeviceMapper {
+public interface DeviceMapper extends BaseMapper<Device> {
 
     List<Device> getAll();
 
