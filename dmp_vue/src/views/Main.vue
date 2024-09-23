@@ -81,16 +81,9 @@ const router = useRouter()
 </template>
 
 <style scoped>
-<<<<<<< HEAD
-*
-{margin: 0px;padding: 0px;}
-html,body,#box,.el-container,.el-menu{
-  height: 100%;
-=======
 * {
   margin: 0px;
   padding: 0px;
->>>>>>> origin/yes
 }
 
 html, body, #box, .el-container, .el-menu {
