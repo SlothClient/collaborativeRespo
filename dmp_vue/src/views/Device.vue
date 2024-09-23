@@ -248,7 +248,7 @@ const deleteRow = (id) => {
       });
 };
 </script>
-<style scope>
+<style scoped>
 .form-group {
   display: flex;
   justify-content: space-between;
