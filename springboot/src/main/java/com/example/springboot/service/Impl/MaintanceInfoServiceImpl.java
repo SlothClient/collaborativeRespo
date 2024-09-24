@@ -34,67 +34,12 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     @Override
     public Result<List<MaintenanceResp>> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
 
-        List<MaintanceInfo> maintanceInfoList = maintenanceMapper.selectList(
-                new LambdaQueryWrapper<MaintanceInfo>()
-        );
+        List<MaintenanceResp> maintenanceRespList =  maintenanceMapper.getMaintenancePlan(maintenancePlanReq);
 
-        List<MaintenanceResp> maintenanceRespList = new ArrayList<MaintenanceResp>();
-
-        for (MaintanceInfo maintanceInfo : maintanceInfoList) {
-
-            ApprovalInfo approvalInfoFirst = approvalInfoMapper
-                    .selectOne(
-                            new LambdaQueryWrapper<ApprovalInfo>()
-                                    .eq(ApprovalInfo::getPlanId, maintanceInfo.getPlanId())
-                                    .orderByAsc(ApprovalInfo::getManipTime)
-                                    .last("LIMIT 1")
-                    );
-            if (approvalInfoFirst != null) {
-                ApprovalInfo approvalInfoLast = approvalInfoMapper
-                        .selectOne(
-                                new LambdaQueryWrapper<ApprovalInfo>()
-                                        .eq(ApprovalInfo::getPlanId, maintanceInfo.getPlanId())
-                                        .orderByDesc(ApprovalInfo::getManipTime)
-                                        .last("LIMIT 1")
-                        );
-                MaintenanceResp maintenanceResp = MaintenanceResp.builder()
-                        .planId(maintanceInfo.getPlanId())
-                        .maintanceType(maintanceInfo.getMaintanceType())
-                        .planName(maintanceInfo.getPlanName())
-                        .createTime(approvalInfoFirst.getManipTime())
-                        .maintanceDesc(maintanceInfo.getMaintanceDesc())
-                        .creator(approvalInfoFirst.getApplicantId())
-                        .startTime(maintanceInfo.getStartTime())
-                        .endTime(maintanceInfo.getEndTime())
-                        .equipId(maintanceInfo.getEquipId())
-                        .status(maintanceInfo.getStatus())
-                        .updatePerson(approvalInfoLast.getApprovalId())
-                        .updateTime(approvalInfoLast.getManipTime())
-                        .build();
-                maintenanceRespList.add(maintenanceResp);
-            }
-            else {
-                MaintenanceResp maintenanceResp = MaintenanceResp.builder()
-                        .planId(maintanceInfo.getPlanId())
-                        .maintanceType(maintanceInfo.getMaintanceType())
-                        .planName(maintanceInfo.getPlanName())
-                        .createTime(null)
-                        .maintanceDesc(maintanceInfo.getMaintanceDesc())
-                        .creator("未开始")
-                        .startTime(maintanceInfo.getStartTime())
-                        .endTime(maintanceInfo.getEndTime())
-                        .equipId(maintanceInfo.getEquipId())
-                        .status(maintanceInfo.getStatus())
-                        .updatePerson("未开始")
-                        .updateTime(null)
-                        .build();
-                maintenanceRespList.add(maintenanceResp);
-            }
-
-
-
+        if(maintenanceRespList.isEmpty())
+        {
+            return Result.fail("查询为空");
         }
-
         return Result.success(maintenanceRespList);
     }
 

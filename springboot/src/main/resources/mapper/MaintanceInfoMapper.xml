@@ -20,5 +20,68 @@
         start_time,end_time,status,
         maintance_desc,maintance_type
     </sql>
+    <select id="getMaintenancePlan" resultType="com.example.springboot.response.MaintenanceResp">
+        SELECT m.plan_id                               AS planId,
+        m.maintance_type                        AS maintanceType,
+        m.plan_name                             AS planName,
+        first_approval.manip_time               AS createTime,
+        m.maintance_desc                        AS maintanceDesc,
+        COALESCE(first_user.username, '未开始') AS creator,
+        m.start_time                            AS startTime,
+        m.end_time                              AS endTime,
+        m.equip_id                              AS equipId,
+        m.status                                AS status,
+        COALESCE(last_user.username, '未开始')  AS updatePerson,
+        last_approval.manip_time                AS updateTime
+        FROM maintance_info m
+        LEFT JOIN
+        (SELECT ai.plan_id,
+        ai.manip_time,
+        ai.applicant_id
+        FROM approval_info ai
+        WHERE ai.manip_time = (SELECT MIN(inside_ai.manip_time)
+        FROM approval_info inside_ai
+        WHERE inside_ai.plan_id = ai.plan_id)) first_approval
+        ON
+        m.plan_id = first_approval.plan_id
+        LEFT JOIN
+        (SELECT ai.plan_id,
+        ai.manip_time,
+        ai.applicant_id
+        FROM approval_info ai
+        WHERE ai.manip_time = (SELECT MAX(inside_ai.manip_time)
+        FROM approval_info inside_ai
+        WHERE inside_ai.plan_id = ai.plan_id)) last_approval
+        ON
+        m.plan_id = last_approval.plan_id
+        LEFT JOIN
+        user_info first_user
+        ON
+        first_approval.applicant_id = first_user.user_id
+        LEFT JOIN
+        user_info last_user
+        ON
+        last_approval.applicant_id = last_user.user_id
+        WHERE 1 = 1
+        <!-- 动态条件 -->
+        <if test="maintenancePlanReq != null">
+            <if test="maintenancePlanReq.status != null">
+                AND m.status = #{maintenancePlanReq.status}
+            </if>
+            <if test="maintenancePlanReq.planName != null and maintenancePlanReq.planName != ''">
+                AND m.plan_name LIKE concat('%', #{maintenancePlanReq.planName}, '%')
+            </if>
+            <!-- 动态添加开始日期 -->
+            <if test="maintenancePlanReq.startTime != null">
+                AND m.start_time &gt;= #{maintenancePlanReq.startTime}
+            </if>
+            <!-- 动态添加结束日期 -->
+            <if test="maintenancePlanReq.endTime != null">
+                AND m.end_time &lt;= #{maintenancePlanReq.endTime}
+            </if>
+        </if>
+        <!-- 分页 -->
+        LIMIT #{maintenancePlanReq.pageSize} OFFSET #{maintenancePlanReq.offset}
+    </select>
 
 </mapper>
