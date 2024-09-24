@@ -131,10 +131,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenancePlanDetailDialog.vue";
 import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePlanAddDialog.vue";
 import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
+import {getMaintenancePlan} from "@/api/maintenancePlan/index.js";
 
 const checkboxGroup1 = ref(['全部']);
 const cities = ['全部', '待开始', '已派单', '执行中', '已完成'];
@@ -235,6 +236,16 @@ const resetFilters = () => {
   dateRange.value = '';
   console.log('重置过滤器');
 };
+
+
+const getMaintenance = () =>{
+  const res = getMaintenancePlan() ;
+}
+onMounted(()=>{
+  getMaintenance()
+})
+
+
 
 </script>
 

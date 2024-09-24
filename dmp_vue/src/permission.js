@@ -19,7 +19,7 @@ router.beforeEach(async (to, from, next) => {
                     await userStore.GetUserInfo();
 
                     // 重新生成路由
-                    const  res = await permissionStore.generateRoutes();
+                    const res = await permissionStore.generateRoutes();
                     console.log(res)
                     next({...to, replace: true});
                 } catch (error) {

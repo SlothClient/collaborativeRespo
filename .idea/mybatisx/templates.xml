@@ -27,7 +27,7 @@
                   <option name="fileName" value="${domain.fileName}ServiceImpl" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}ServiceImpl.java" />
                   <option name="modulePath" value="$PROJECT_DIR$/springboot" />
-                  <option name="packageName" value="${domain.basePackage}.service.impl" />
+                  <option name="packageName" value="com.example.springboot.service.Impl" />
                 </ModuleInfoGo>
                 <ModuleInfoGo>
                   <option name="basePath" value="${domain.basePath}" />
@@ -69,8 +69,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="UserInfo" />
-                  <option name="tableName" value="user_info" />
+                  <option name="className" value="ApprovalInfo" />
+                  <option name="tableName" value="approval_info" />
                 </TableUIInfo>
               </list>
             </option>

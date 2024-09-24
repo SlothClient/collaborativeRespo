@@ -36,7 +36,7 @@
           </el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="resetForm(loginFormRef)"  class="reset-button">重置</el-button>
+          <el-button @click="resetForm(loginFormRef)" class="reset-button">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { User,Lock } from '@element-plus/icons';
+import {reactive, ref} from 'vue'
+import {User, Lock} from '@element-plus/icons';
 import {router} from '@/router/index.js';
 import {ElMessage} from "element-plus";
 import {useUserStore} from "@/store/module/user.js";
@@ -64,9 +64,9 @@ const loginForm = reactive({
 const validateUsername = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请输入用户名'))
-  } else if(value.length <1 /*|| value.length >= 10*/) {
+  } else if (value.length < 1 /*|| value.length >= 10*/) {
     callback(new Error('用户名不符合规则'))
-  }else{
+  } else {
     callback()
   }
 }
@@ -74,16 +74,16 @@ const validateUsername = (rule, value, callback) => {
 const validatePassword = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请输入密码'))
-  } else if(value.length < 3 /*|| value.length >= 10*/) {
+  } else if (value.length < 3 /*|| value.length >= 10*/) {
     callback(new Error('密码不符合规则'))
-  }else{
+  } else {
     callback()
   }
 }
 
 const rules = reactive({
-  username: [{ validator: validateUsername, trigger: 'blur' }],
-  userpwd: [{ validator: validatePassword, trigger: 'blur' }],
+  username: [{validator: validateUsername, trigger: 'blur'}],
+  userpwd: [{validator: validatePassword, trigger: 'blur'}],
 })
 
 const submitForm = async (formEl) => {
@@ -93,11 +93,10 @@ const submitForm = async (formEl) => {
     if (valid) {
       loading.value = true
       const res = await userStore.Login(loginForm)
-      if(!res){
+      if (!res) {
         ElMessage.error('登入失败')
         loading.value = false
-      }
-      else{
+      } else {
         ElMessage.success('登录成功')
         loading.value = false
         await router.push('/')
