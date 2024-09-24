@@ -7,8 +7,9 @@
           <div class="status-filter">
             <span class="status-label">计划状态：</span>
             <el-checkbox-group v-model="checkboxGroup1" size="small" class="status-checkbox-group">
-              <el-checkbox-button v-for="city in cities" :key="city" :value="city" class="status-filter-btn">
-                {{ city }}
+              <el-checkbox-button v-for="(status, index) in statusOptions" :key="index" :value="status.value"
+                                  :label="status.label" class="status-filter-btn">
+                {{ status.label }}
               </el-checkbox-button>
             </el-checkbox-group>
           </div>
@@ -58,7 +59,7 @@
                 <el-descriptions-item label="开始时间">{{ item.startTime }}</el-descriptions-item>
                 <el-descriptions-item label="结束时间">{{ item.endTime }}</el-descriptions-item>
                 <el-descriptions-item label="计划描述" :span="2">
-                  <el-tag size="small" type="info">{{ item.description }}</el-tag>
+                  <el-tag size="small" type="info">{{ item.maintanceDesc }}</el-tag>
                 </el-descriptions-item>
               </el-descriptions>
             </el-col>
@@ -88,7 +89,7 @@
               <span class="info-item"><label>更新时间：</label>{{ item.updateTime }}</span>
             </el-col>
             <el-col :span="6">
-              <span class="info-item"><label>更新人：</label>{{ item.updater }}</span>
+              <span class="info-item"><label>更新人：</label>{{ item.update_person }}</span>
             </el-col>
           </el-row>
         </div>
@@ -100,7 +101,7 @@
           :background="true"
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :page-sizes="[1, 10, 20, 100]"
+          :page-sizes="[5, 10, 20, 100]"
           large
           :disabled="false"
           layout="total, sizes, prev, pager, next, jumper"
@@ -135,126 +136,118 @@ import {onMounted, ref} from 'vue';
 import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenancePlanDetailDialog.vue";
 import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePlanAddDialog.vue";
 import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
-import {getMaintenancePlan} from "@/api/maintenancePlan/index.js";
+import {getMaintenancePlan, getMaintenancePlanSize} from "@/api/maintenancePlan/index.js";
 
-const checkboxGroup1 = ref(['全部']);
-const cities = ['全部', '待开始', '已派单', '执行中', '已完成'];
+// 状态映射
+const statusOptions = [
+  {label: '全部', value: -1},
+  {label: '待开始', value: 0},
+  {label: '已派单', value: 1},
+  {label: '执行中', value: 2},
+  {label: '已完成', value: 3}
+];
+
+const checkboxGroup1 = ref([-1]); // 默认选择“全部”
 const planName = ref("");
-const dateRange = ref('');
+const dateRange = ref([]);
 
-//详情框
-const isMaintenancePlanDetailVisible = ref(false)
+// 详情框
+const isMaintenancePlanDetailVisible = ref(false);
 const closeDetailDialog = () => {
-  isMaintenancePlanDetailVisible.value = false
-}
-const openDetailDialog =() =>{
+  isMaintenancePlanDetailVisible.value = false;
+};
+const openDetailDialog = () => {
   isMaintenancePlanDetailVisible.value = true;
-}
-//添加
-const isMaintenancePlanAddVisible = ref(false)
+};
+// 添加
+const isMaintenancePlanAddVisible = ref(false);
 const closeAddDialog = () => {
-  isMaintenancePlanAddVisible.value = false
-}
-//修改
-const isMaintenancePlanEditVisible = ref(false)
+  isMaintenancePlanAddVisible.value = false;
+};
+// 修改
+const isMaintenancePlanEditVisible = ref(false);
 const closeEditDialog = () => {
-  isMaintenancePlanEditVisible.value = false
-}
-const openEditDialog = ()=>{
+  isMaintenancePlanEditVisible.value = false;
+};
+const openEditDialog = () => {
   isMaintenancePlanEditVisible.value = true;
-}
+};
 
 const data = ref([
-  {
-    planName: '每日设备保养',
-    planId: 'PL17096183',
-    startTime: '2024-03-05 15:34:51',
-    endTime: '2024-03-31 15:34:51',
-    description: '每日设备保养',
-    createTime: '2024-03-05 15:37:37',
-    creator: 'aaa',
-    updateTime: '2024-03-05 17:06:39',
-    updater: 'aaa',
-    status: '已完成'
-  },
-  {
-    planName: '压片机保养计划',
-    planId: 'PL16475564908',
-    startTime: '2023-09-15 16:12:44',
-    endTime: '2023-09-16 16:12:44',
-    description: '压片机保养',
-    createTime: '2023-09-15 16:13:54',
-    creator: '管理员',
-    updateTime: '2023-09-15 16:14:20',
-    updater: '开发管理员',
-    status: '已派单'
-  },
-  {
-    planName: '测试计划',
-    planId: 'PL16886054764',
-    startTime: '2023-07-06 09:04:35',
-    endTime: '2023-07-31 09:04:35',
-    description: '是',
-    createTime: '2023-07-06 09:05:30',
-    creator: '管理员',
-    updateTime: '2023-03-06 21:26:23',
-    updater: '李铭',
-    status: '已完成'
-  },
+  // 示例数据
 ]);
 
-//当前页面
-const currentPage = ref(0)
+const maintenancePlanReq = ref({
+  currentPage: 1,
+  pageSize: 3,
+  planName: '',
+  startTime: null,
+  endTime: null,
+  status: []
+});
 
-//总记录数
-const total = ref(10)
+const currentPage = ref(1);
+const pageSize = ref(5);
+const total = ref(data.value.length);
 
-//页面大小
-const pageSize = ref(10);
+const handleCurrentChange = (newPage) => {
+  maintenancePlanReq.value.currentPage = newPage;
+  getMaintenance(maintenancePlanReq.value);
+};
 
-//页面变化
-const handleCurrentChange = () => {
+const handleSizeChange = (newPageSize) => {
+  maintenancePlanReq.value.pageSize = newPageSize;
+  getMaintenance(maintenancePlanReq.value);
+};
 
-}
-
-/**
- * 页面大小变化
- */
-const handleSizeChange = () => {
-
-}
-//搜索
 const searchPlans = () => {
-  // 实现搜索逻辑
-  console.log('搜索计划');
+  maintenancePlanReq.value.planName = planName.value;
+  maintenancePlanReq.value.startTime = dateRange.value[0];
+  maintenancePlanReq.value.endTime = dateRange.value[1];
+  if (checkboxGroup1.value.includes(-1)) {
+    // 当包含 '-1' 时，将 checkboxGroup1 设置为 [0, 1, 2, 3]
+    maintenancePlanReq.value.status = statusOptions.slice(1).map(option => option.value);
+  } else {
+    maintenancePlanReq.value.status = checkboxGroup1.value;
+  }
+  getMaintenance(maintenancePlanReq.value);
 };
 
 const resetFilters = () => {
-  // 实现重置逻辑
-  checkboxGroup1.value = ['全部'];
+  checkboxGroup1.value = [-1];
   planName.value = '';
-  dateRange.value = '';
-  console.log('重置过滤器');
+  dateRange.value = [];
+  maintenancePlanReq.value.planName = '';
+  maintenancePlanReq.value.startTime = null;
+  maintenancePlanReq.value.endTime = null;
+  maintenancePlanReq.value.status = [];
+  getMaintenance(maintenancePlanReq.value);
 };
 
+const getMaintenance = async (maintenancePlanReq) => {
+  const res = await getMaintenancePlan(maintenancePlanReq);
+  data.value = res.data.data;
+};
 
-const getMaintenance = () =>{
-  const res = getMaintenancePlan() ;
+const getMaintenanceListSize = async () => {
+  const res = await getMaintenancePlanSize()
+  total.value = res.data.data
 }
-onMounted(()=>{
-  getMaintenance()
-})
 
-
-
+// 初始数据加载
+onMounted(() => {
+  getMaintenanceListSize();
+  getMaintenance(maintenancePlanReq.value);
+});
 </script>
 
 <style scoped>
 .page-container {
   padding: 20px;
   background-color: white;
-  line-height: 10%;
-  overflow: hidden;
+  //line-height: 10%;
+  //overflow: hidden;
+  height: 100%;
 }
 
 
@@ -332,7 +325,7 @@ onMounted(()=>{
 .card {
   width: 100%;
   //border-radius: 8px;
-  overflow: hidden;
+  //overflow: hidden;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   //transition: box-shadow 0.3s ease;
 }

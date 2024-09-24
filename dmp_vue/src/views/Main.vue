@@ -108,7 +108,7 @@ html, body, #box, .el-container, .el-menu {
 .el-main {
   background-color: #ffffff;
   color: #333;
-  overflow: hidden;
+  //overflow: hidden;
   /* text-align: center;
   line-height: 160px; */
 }

@@ -1,5 +1,9 @@
 import {request} from "@/utils/request.js";
 
-export const getMaintenancePlan = () =>{
-    return request.post("/maintenance/getMaintenancePlan");
+export const getMaintenancePlan = (maintenancePlanReq) =>{
+    return request.post("/maintenance/getMaintenancePlan",maintenancePlanReq);
+}
+
+export const getMaintenancePlanSize = () =>{
+    return request.get("/maintenance/getMaintenancePlanSize");
 }

@@ -7,10 +7,7 @@ import com.example.springboot.response.MaintenanceResp;
 import com.example.springboot.service.MaintanceInfoService;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,23 +25,23 @@ public class MaintenancePlanController {
 
     /**
      * 查询所有保养计划列表
+     *
      * @param maintenancePlanReq
      * @return {@link List<MaintenanceResp>}
      */
     @SaCheckLogin
     @PostMapping("/getMaintenancePlan")
-    public Result<List<MaintenanceResp>> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq){
+    public Result<List<MaintenanceResp>> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
         System.out.println(maintenancePlanReq);
         return maintanceInfoService.getMaintenancePlan(maintenancePlanReq);
     }
 
     /**
-     *
      * @return
      */
     @SaCheckLogin
-    @PostMapping("getAll")
-    public Result getAllMaintenancePlan(){
+    @GetMapping("getMaintenancePlanSize")
+    public Result getAllMaintenancePlan() {
         return maintanceInfoService.getAllMaintenancePlan();
     }
 }

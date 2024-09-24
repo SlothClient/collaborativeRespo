@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author ys
@@ -17,7 +18,7 @@ public class MaintenancePlanReq extends Page {
     /**
      * 计划状态
      */
-    private Integer status;
+    private List<Integer> status;
 
     /**
      * 计划名称

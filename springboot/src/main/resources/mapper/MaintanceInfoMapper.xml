@@ -21,18 +21,18 @@
         maintance_desc,maintance_type
     </sql>
     <select id="getMaintenancePlan" resultType="com.example.springboot.response.MaintenanceResp">
-        SELECT m.plan_id                               AS planId,
-        m.maintance_type                        AS maintanceType,
-        m.plan_name                             AS planName,
-        first_approval.manip_time               AS createTime,
-        m.maintance_desc                        AS maintanceDesc,
+        SELECT m.plan_id AS planId,
+        m.maintance_type AS maintanceType,
+        m.plan_name AS planName,
+        first_approval.manip_time AS createTime,
+        m.maintance_desc AS maintanceDesc,
         COALESCE(first_user.username, '未开始') AS creator,
-        m.start_time                            AS startTime,
-        m.end_time                              AS endTime,
-        m.equip_id                              AS equipId,
-        m.status                                AS status,
-        COALESCE(last_user.username, '未开始')  AS updatePerson,
-        last_approval.manip_time                AS updateTime
+        m.start_time AS startTime,
+        m.end_time AS endTime,
+        m.equip_id AS equipId,
+        m.status AS status,
+        COALESCE(last_user.username, '未开始') AS updatePerson,
+        last_approval.manip_time AS updateTime
         FROM maintance_info m
         LEFT JOIN
         (SELECT ai.plan_id,
@@ -65,8 +65,11 @@
         WHERE 1 = 1
         <!-- 动态条件 -->
         <if test="maintenancePlanReq != null">
-            <if test="maintenancePlanReq.status != null">
-                AND m.status = #{maintenancePlanReq.status}
+            <if test="maintenancePlanReq.status != null and maintenancePlanReq.status.size() > 0">
+                AND m.status IN
+                <foreach item="status" collection="maintenancePlanReq.status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
             </if>
             <if test="maintenancePlanReq.planName != null and maintenancePlanReq.planName != ''">
                 AND m.plan_name LIKE concat('%', #{maintenancePlanReq.planName}, '%')
