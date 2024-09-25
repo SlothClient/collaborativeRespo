@@ -1,12 +1,17 @@
 package com.example.springboot.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
 
 /**
  * 
@@ -14,11 +19,12 @@ import lombok.Data;
  */
 @TableName(value ="maintance_info")
 @Data
-public class MaintanceInfo implements Serializable {
+@Builder
+public class MaintanceInfoDetail implements Serializable {
     /**
      * 
      */
-    @TableId
+    @TableId(type = ASSIGN_ID)
     private String planId;
 
     /**
@@ -34,11 +40,13 @@ public class MaintanceInfo implements Serializable {
     /**
      * 
      */
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date startTime;
 
     /**
      * 
      */
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date endTime;
 
     /**
@@ -70,7 +78,7 @@ public class MaintanceInfo implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        MaintanceInfo other = (MaintanceInfo) that;
+        MaintanceInfoDetail other = (MaintanceInfoDetail) that;
         return (this.getPlanId() == null ? other.getPlanId() == null : this.getPlanId().equals(other.getPlanId()))
             && (this.getEquipId() == null ? other.getEquipId() == null : this.getEquipId().equals(other.getEquipId()))
             && (this.getPlanName() == null ? other.getPlanName() == null : this.getPlanName().equals(other.getPlanName()))

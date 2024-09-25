@@ -1,9 +1,9 @@
 package com.example.springboot.mapper;
 
-import com.example.springboot.entity.MaintanceInfo;
+import com.example.springboot.entity.MaintanceInfoDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.springboot.request.MaintenancePlanReq;
-import com.example.springboot.response.MaintenanceResp;
+import com.example.springboot.response.MaintenanceInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,10 +19,12 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface MaintanceInfoMapper extends BaseMapper<MaintanceInfo> {
+public interface MaintanceInfoMapper extends BaseMapper<MaintanceInfoDetail> {
 
 
-    List<MaintenanceResp> getMaintenancePlan(@Param("maintenancePlanReq") MaintenancePlanReq maintenancePlanReq);
+    List<MaintenanceInfo> getMaintenancePlan(@Param("maintenancePlanReq") MaintenancePlanReq maintenancePlanReq);
+
+    Integer getMaintenancePlanCount(@Param("maintenancePlanReq") MaintenancePlanReq maintenancePlanReq);
 }
 
 

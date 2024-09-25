@@ -6,7 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
 
 /**
  * 
@@ -14,11 +19,12 @@ import lombok.Data;
  */
 @TableName(value ="approval_info")
 @Data
+@Builder
 public class ApprovalInfo implements Serializable {
     /**
      * 
      */
-    @TableId
+    @TableId(type = ASSIGN_ID)
     private String approvalId;
 
     /**

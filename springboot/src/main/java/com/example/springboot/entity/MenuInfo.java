@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
+
 /**
  * 
  * @TableName menu_info

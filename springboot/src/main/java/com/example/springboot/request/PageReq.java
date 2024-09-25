@@ -1,4 +1,4 @@
-package com.example.springboot.utils;
+package com.example.springboot.request;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  */
 
 @Data
-public class Page {
+public class PageReq {
 
     /**
      * 每页条数

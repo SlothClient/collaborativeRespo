@@ -1,9 +1,9 @@
 package com.example.springboot.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.springboot.request.MaintenancePlanReq;
-import com.example.springboot.response.MaintenanceResp;
+import com.example.springboot.response.MaintenanceInfo;
+import com.example.springboot.response.MaintenanceInfoResp;
 import com.example.springboot.service.MaintanceInfoService;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +27,22 @@ public class MaintenancePlanController {
      * 查询所有保养计划列表
      *
      * @param maintenancePlanReq
-     * @return {@link List<MaintenanceResp>}
+     * @return {@link List< MaintenanceInfo >}
      */
     @SaCheckLogin
+    @ResponseBody
     @PostMapping("/getMaintenancePlan")
-    public Result<List<MaintenanceResp>> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
+    public Result<MaintenanceInfoResp> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
         System.out.println(maintenancePlanReq);
         return maintanceInfoService.getMaintenancePlan(maintenancePlanReq);
     }
 
-    /**
-     * @return
-     */
     @SaCheckLogin
-    @GetMapping("getMaintenancePlanSize")
-    public Result getAllMaintenancePlan() {
-        return maintanceInfoService.getAllMaintenancePlan();
+    @ResponseBody
+    @PostMapping("/addMaintenancePlan")
+    public Result addMaintenancePlan(@RequestBody MaintenanceInfo maintenanceInfo) {
+        System.out.println(maintenanceInfo);
+         return maintanceInfoService.addMaintenancePlan(maintenanceInfo);
     }
+
 }

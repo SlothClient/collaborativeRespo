@@ -34,7 +34,7 @@ const filterAsyncRoutes = (routes) => {
             console.log(routeObj.component)
         } else {
             console.log("走了这里")
-            routeObj.component = () => import('@/components/layout/dashboard.vue')
+            // routeObj.component = () => import('@/components/layout/dashboard.vue')
         }
         // 递归处理子路由
         if (route.children && route.children.length > 0) {

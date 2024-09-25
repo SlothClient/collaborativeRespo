@@ -146,108 +146,108 @@
 </div>
 </template>
 
-<!--<script lang="ts" setup>-->
-<!--import {Delete, Edit} from "@element-plus/icons-vue";-->
-<!--import {getCurrentInstance, reactive, ref} from 'vue'-->
-<!--import request from "../request"-->
-<!--import {ElMessage} from "element-plus";-->
-<!--const {proxy} =getCurrentInstance()-->
-<!--const addVisible = ref(false)-->
-<!--// 打开新增面板-->
-<!--const state=reactive({-->
-<!--  tableData:[],-->
-<!--  form:{},-->
-<!--})-->
+<script lang="ts" setup>
+import {Delete, Edit} from "@element-plus/icons-vue";
+import {getCurrentInstance, reactive, ref} from 'vue'
+// import request from "../request"
+import {ElMessage} from "element-plus";
+const {proxy} =getCurrentInstance()
+const addVisible = ref(false)
+// 打开新增面板
+const state=reactive({
+  tableData:[],
+  form:{},
+})
 
-<!--const deviceName=ref()-->
-<!--const typeName=ref()-->
-<!--const currentPage=ref(1)-->
-<!--const pageSize=ref(10)-->
-<!--const total=ref(0)-->
-<!--const load =()=>{-->
-<!--  request.get("/device/findBySearch",{-->
-<!--    params:{-->
-<!--      currentPage:currentPage.value,-->
-<!--      pageSize:pageSize.value,-->
-<!--      deviceName:deviceName.value,-->
-<!--      typeName:typeName.value-->
-<!--    }-->
-<!--  }).then(res =>{-->
-<!--      state.tableData = res.data.list-->
-<!--      total.value=res.data.total-->
+const deviceName=ref()
+const typeName=ref()
+const currentPage=ref(1)
+const pageSize=ref(10)
+const total=ref(0)
+const load =()=>{
+  // request.get("/device/findBySearch",{
+  //   params:{
+  //     currentPage:currentPage.value,
+  //     pageSize:pageSize.value,
+  //     deviceName:deviceName.value,
+  //     typeName:typeName.value
+  //   }
+  // }).then(res =>{
+  //     state.tableData = res.data.list
+  //     total.value=res.data.total
+  //
+  // })
+}
+load()
 
-<!--  })-->
-<!--}-->
-<!--load()-->
+const handleSizeChange =(val)=>{
+  pageSize.value=val
+  console.log(pageSize)
+  load()
 
-<!--const handleSizeChange =(val)=>{-->
-<!--  pageSize.value=val-->
-<!--  console.log(pageSize)-->
-<!--  load()-->
+}
+const handleCurrentChange =(val)=>{
+  currentPage.value=val
+  console.log(currentPage)
+  load()
 
-<!--}-->
-<!--const handleCurrentChange =(val)=>{-->
-<!--  currentPage.value=val-->
-<!--  console.log(currentPage)-->
-<!--  load()-->
+}
+const handleEdit=(row)=>{
+  dialogFormVisible.value=true
+  //实现了数据的转让
+  state.form=JSON.parse(JSON.stringify(row))
+}
+const dialogFormVisible = ref(false)
+const handleAdd=()=>{
+  dialogFormVisible.value=true
+  state.form={}
+}
+const save = ()=>{
+  proxy.$refs.ruleFormRef.validate((valid)=>{
+    if(valid){
+      state.form.password='123'
+      if(state.form.id){//如果id存在，那就是编辑
+        request.post("/device/update",state.form).then(res=>{
+            ElMessage.success("保存成功")
+            dialogFormVisible.value=false
+            load()
+        })
 
-<!--}-->
-<!--const handleEdit=(row)=>{-->
-<!--  dialogFormVisible.value=true-->
-<!--  //实现了数据的转让-->
-<!--  state.form=JSON.parse(JSON.stringify(row))-->
-<!--}-->
-<!--const dialogFormVisible = ref(false)-->
-<!--const handleAdd=()=>{-->
-<!--  dialogFormVisible.value=true-->
-<!--  state.form={}-->
-<!--}-->
-<!--const save = ()=>{-->
-<!--  proxy.$refs.ruleFormRef.validate((valid)=>{-->
-<!--    if(valid){-->
-<!--      state.form.password='123'-->
-<!--      if(state.form.id){//如果id存在，那就是编辑-->
-<!--        request.post("/device/update",state.form).then(res=>{-->
-<!--            ElMessage.success("保存成功")-->
-<!--            dialogFormVisible.value=false-->
-<!--            load()-->
-<!--        })-->
+      }else{//新增
+          request.post("/device/add",state.form).then(res=>{
+            ElMessage.success("保存成功")
+            dialogFormVisible.value=false
+            load()
+          })
 
-<!--      }else{//新增-->
-<!--          request.post("/device/add",state.form).then(res=>{-->
-<!--            ElMessage.success("保存成功")-->
-<!--            dialogFormVisible.value=false-->
-<!--            load()-->
-<!--          })-->
+      }
 
-<!--      }-->
+    }
 
-<!--    }-->
-
-<!--  })-->
-<!--}-->
-<!--const deleteRow = (id) => {-->
-<!--  console.log("Deleting row with id:", id);-->
-<!--  request.get("/device/delete", { params: { id } })-->
-<!--      .then(res => {-->
-<!--        if (res.code === '200') {-->
-<!--          ElMessage.success("删除成功");-->
-<!--        } else {-->
-<!--          ElMessage.error("删除失败");-->
-<!--        }-->
-<!--        load();-->
-<!--      })-->
-<!--      .catch(error => {-->
-<!--        console.error("删除操作失败:", error.response ? error.response.data : error.message);-->
-<!--        if (error.response) {-->
-<!--          console.error("Response data:", error.response.data);-->
-<!--          console.error("Response status:", error.response.status);-->
-<!--          console.error("Response headers:", error.response.headers);-->
-<!--        }-->
-<!--        ElMessage.error("删除失败，请稍后再试");-->
-<!--      });-->
-<!--};-->
-<!--</script>-->
+  })
+}
+const deleteRow = (id) => {
+  console.log("Deleting row with id:", id);
+  // request.get("/device/delete", { params: { id } })
+  //     .then(res => {
+  //       if (res.code === '200') {
+  //         ElMessage.success("删除成功");
+  //       } else {
+  //         ElMessage.error("删除失败");
+  //       }
+  //       load();
+  //     })
+  //     .catch(error => {
+  //       console.error("删除操作失败:", error.response ? error.response.data : error.message);
+  //       if (error.response) {
+  //         console.error("Response data:", error.response.data);
+  //         console.error("Response status:", error.response.status);
+  //         console.error("Response headers:", error.response.headers);
+  //       }
+  //       ElMessage.error("删除失败，请稍后再试");
+  //     });
+};
+</script>
 <style scoped>
 .form-group {
   display: flex;
