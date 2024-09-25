@@ -1,13 +1,13 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   application:
-    name: lightning
+    name: device-maintenance
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lightning
+    url: jdbc:mysql://localhost:3306/maintenance_db
     username: root
     password: 123456
 

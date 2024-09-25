@@ -14,9 +14,12 @@
  Date: 23/09/2024 16:36:36
 */
 
+create database  maintenance_db;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+use maintenance_db;
 -- ----------------------------
 -- Table structure for approval_info
 -- ----------------------------
@@ -244,7 +247,7 @@ CREATE TABLE `worker_info`  (
   `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `worker_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dept` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `pay_hour` decimal(10, 0) NULL DEFAULT NULL,
+  `pay_hour` decimal(10, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`worker_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 

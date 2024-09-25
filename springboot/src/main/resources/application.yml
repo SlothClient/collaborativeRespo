@@ -4,17 +4,26 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lightning
+    url: jdbc:mysql://localhost:3306/maintenance_db
     username: root
     password: 123456
 
 mybatis-plus:
-  mapper-locations: classpath*:/mappers/*Mapper.xml
+  mapper-locations: classpath*:/mapper/*Mapper.xml
   type-aliases-package: com.example.springboot.entity
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     use-actual-param-name: true
 
 
 server:
   port: 8080
+
+sa-token:
+    token-name: satoken
+    timeout: 2592000
+    active-timeout: -1
+    is-concurrent: true
+    is-share: true
+    token-style: uuid
+    is-log: true
