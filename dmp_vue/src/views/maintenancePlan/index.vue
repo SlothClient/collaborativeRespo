@@ -77,13 +77,10 @@
             <!-- 操作按钮在最右侧 -->
             <el-col :span="4">
               <div class="card-actions">
-                <el-link type="primary" class="action-link"
-                         @click="openEditDialog(item.planId)">编辑
-                </el-link>
-                <el-link type="primary" class="action-link"
-                         @click="openDetailDialog(item.planId)">详情
-                </el-link>
-                <el-link type="primary" class="action-link">更多</el-link>
+                <el-link type="primary" class="action-link" @click="openEditDialog(item)">编辑</el-link>
+                <el-link type="primary" class="action-link" @click="openDetailDialog(item.planId)">详情</el-link>
+                <el-link type="primary" @click.prevent="handleDelete(item)" class="action-link">撤销</el-link>
+
               </div>
             </el-col>
           </el-row>
@@ -127,6 +124,7 @@
     <maintenance-plan-detail-dialog
         :maintenancePlanDetailVisible="isMaintenancePlanDetailVisible"
         @close-dialog="closeDetailDialog()"
+        :maintenancePlanDetail="currentRowDetail"
     ></maintenance-plan-detail-dialog>
 
     <!--    增加框-->
@@ -143,6 +141,10 @@
     <maintenance-plan-edit-dialog
         :maintenancePlanEditVisible="isMaintenancePlanEditVisible"
         @close-dialog="closeEditDialog()"
+        :currentRow="currentRowEdit"
+        :equipmentInfoList="equipmentInfo"
+        :equipmentMaintenanceType="equipmentMaintenanceType"
+        @edit-maintenance-plan="editMaintenancePlan"
     ></maintenance-plan-edit-dialog>
   </div>
 </template>
@@ -156,10 +158,9 @@ import {
   addPlan,
   getEquipmentInfo,
   getEquipmentMaintenanceType,
-  getMaintenancePlan,
-  getMaintenancePlanSize
+  getMaintenancePlan, getPlanDetail, undoPlan, updateMaintenance,
 } from "@/api/maintenancePlan/index.js";
-import {ElNotification} from "element-plus";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 
 // 状态映射
 const statusOptions = [
@@ -169,6 +170,42 @@ const statusOptions = [
   {label: '执行中', value: 2},
   {label: '已完成', value: 3}
 ];
+
+const currentRowEdit = ref(null)
+const currentRowDetail = ref(null)
+const handleDelete = (plan) => {
+  ElMessageBox.confirm(
+      '你确定要撤销' + plan.planName,
+      '删除计划',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(async () => {
+        const res = await undoPlan(plan.planId)
+
+        if (res.data.flag) {
+          ElNotification({
+            message: res.data.data,
+            type: "success"
+          })
+          await getMaintenance(maintenancePlanReq.value);
+        } else {
+          ElNotification({
+            message: res.data.data,
+            type: "error"
+          })
+        }
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消删除',
+        })
+      })
+}
 
 const getStatusLabel = (statusValue) => {
   // 根据statusValue返回相应的label
@@ -185,8 +222,16 @@ const isMaintenancePlanDetailVisible = ref(false);
 const closeDetailDialog = () => {
   isMaintenancePlanDetailVisible.value = false;
 };
-const openDetailDialog = (plaId) => {
-  console.log(plaId)
+const openDetailDialog = async (planId) => {
+  const res = await getPlanDetail(planId)
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: "error"
+    })
+    return
+  }
+  currentRowDetail.value = res.data.data
   isMaintenancePlanDetailVisible.value = true;
 };
 // 添加
@@ -198,9 +243,12 @@ const isMaintenancePlanAddVisible = ref(false);
 const closeAddDialog = () => {
   isMaintenancePlanAddVisible.value = false;
 };
+/**
+ * 添加保养计划
+ * @param Plan
+ * @returns {Promise<void>}
+ */
 const addMaintenancePlan = async (Plan) => {
-  console.log("父组件添加", Plan.equipId)
-  console.log(Plan)
   const res = await addPlan(Plan);
   if (!res.data.flag) {
     ElNotification({
@@ -212,7 +260,9 @@ const addMaintenancePlan = async (Plan) => {
       message: res.data.data,
       type: "success"
     })
+    await getMaintenance(maintenancePlanReq.value);
   }
+
 }
 
 // 修改
@@ -220,10 +270,39 @@ const isMaintenancePlanEditVisible = ref(false);
 const closeEditDialog = () => {
   isMaintenancePlanEditVisible.value = false;
 };
-const openEditDialog = (planId) => {
-  console.log(planId)
+const openEditDialog = (row) => {
+  currentRowEdit.value = row
+  console.log(row)
   isMaintenancePlanEditVisible.value = true;
 };
+
+const editMaintenancePlan = async (val) => {
+  console.log(val)
+  const editPlan = {
+    equipId: val.equipId,
+    planName: val.planName,
+    startTime: val.startTime,
+    endTime: val.endTime,
+    maintanceDesc: val.maintanceDesc,
+    maintanceType: val.maintanceType,
+    planId: val.planId
+  }
+  const res = await updateMaintenance(editPlan)
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.msg,
+      type: "error"
+    })
+  } else {
+    ElNotification({
+      message: res.data.data,
+      type: "success"
+    })
+    clear()
+    await getMaintenance(maintenancePlanReq.value)
+  }
+
+}
 
 const data = ref([
   // 示例数据
@@ -261,6 +340,7 @@ const searchPlans = () => {
   maintenancePlanReq.value.planName = planName.value;
   maintenancePlanReq.value.startTime = dateRange.value[0];
   maintenancePlanReq.value.endTime = dateRange.value[1];
+  maintenancePlanReq.value.currentPage = 1;
   if (checkboxGroup1.value.includes(-1)) {
     // 当包含 '-1' 时，将 checkboxGroup1 设置为 [0, 1, 2, 3]
     maintenancePlanReq.value.status = statusOptions.slice(1).map(option => option.value);
@@ -268,10 +348,11 @@ const searchPlans = () => {
     maintenancePlanReq.value.status = checkboxGroup1.value;
   }
   getMaintenance(maintenancePlanReq.value);
+  currentPage.value = 1
 };
 
 //重置
-const resetFilters = () => {
+const clear = () => {
   checkboxGroup1.value = [-1];
   planName.value = '';
   dateRange.value = [];
@@ -279,6 +360,10 @@ const resetFilters = () => {
   maintenancePlanReq.value.startTime = null;
   maintenancePlanReq.value.endTime = null;
   maintenancePlanReq.value.status = [];
+}
+
+const resetFilters = () => {
+  clear()
   getMaintenance(maintenancePlanReq.value);
 };
 
@@ -345,7 +430,6 @@ onMounted(() => {
   getMaintenance(maintenancePlanReq.value);
   getEquipmentInfoList();
   getEquipmentMaintenanceTypeList();
-
 });
 </script>
 
@@ -485,11 +569,6 @@ onMounted(() => {
   margin: auto;
 }
 
-.action-link {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 
 @media (max-width: 1200px) {
   .filter-content {
@@ -501,4 +580,16 @@ onMounted(() => {
     margin-bottom: 10px;
   }
 }
+
+
+.action-link {
+  margin-right: 10px;
+  font-weight: bold;
+  color: #409EFF;
+}
+
+.el-overlay-dialog {
+  overflow: hidden;
+}
+
 </style>

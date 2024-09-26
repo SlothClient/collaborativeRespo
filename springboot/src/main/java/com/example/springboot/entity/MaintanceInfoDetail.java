@@ -7,8 +7,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
@@ -20,6 +22,8 @@ import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
 @TableName(value ="maintance_info")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaintanceInfoDetail implements Serializable {
     /**
      * 
@@ -67,6 +71,7 @@ public class MaintanceInfoDetail implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+    private Integer isDeleted;
     @Override
     public boolean equals(Object that) {
         if (this == that) {

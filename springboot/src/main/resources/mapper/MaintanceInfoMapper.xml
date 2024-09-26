@@ -5,14 +5,15 @@
 <mapper namespace="com.example.springboot.mapper.MaintanceInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.example.springboot.entity.MaintanceInfoDetail">
-            <id property="planId" column="plan_id" jdbcType="VARCHAR"/>
-            <result property="equipId" column="equip_id" jdbcType="VARCHAR"/>
-            <result property="planName" column="plan_name" jdbcType="VARCHAR"/>
-            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
-            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
-            <result property="status" column="status" jdbcType="TINYINT"/>
-            <result property="maintanceDesc" column="maintance_desc" jdbcType="VARCHAR"/>
-            <result property="maintanceType" column="maintance_type" jdbcType="VARCHAR"/>
+        <id property="planId" column="plan_id" jdbcType="VARCHAR"/>
+        <result property="equipId" column="equip_id" jdbcType="VARCHAR"/>
+        <result property="planName" column="plan_name" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="maintanceDesc" column="maintance_desc" jdbcType="VARCHAR"/>
+        <result property="maintanceType" column="maintance_type" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -62,7 +63,7 @@
         ON first_approval.applicant_id = first_user.user_id
         LEFT JOIN user_info last_user
         ON last_approval.applicant_id = last_user.user_id
-        WHERE 1 = 1
+        WHERE m.is_deleted = 0
         <!-- 动态条件 -->
         <if test="maintenancePlanReq != null">
             <if test="maintenancePlanReq.status != null and maintenancePlanReq.status.size() > 0">

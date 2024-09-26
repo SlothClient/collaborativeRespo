@@ -1,6 +1,6 @@
 package com.example.springboot.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,7 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
-import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_UUID;
+
 
 /**
  * 
@@ -61,6 +61,8 @@ public class ApprovalInfo implements Serializable {
      * 
      */
     private String approvalRemark;
+
+    private Integer isDeleted;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

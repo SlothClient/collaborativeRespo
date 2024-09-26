@@ -17,4 +17,10 @@ public interface MaintanceInfoService extends IService<MaintanceInfoDetail> {
     Result<MaintenanceInfoResp> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq);
 
     Result addMaintenancePlan(MaintenanceInfo maintenanceInfo);
+
+    Result undoMaintenancePlan(String planId);
+
+    Result getMaintenancePlanDetail(String planId);
+
+    Result updateMaintenance(MaintanceInfoDetail maintanceInfoDetail);
 }

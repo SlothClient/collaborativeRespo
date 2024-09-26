@@ -60,6 +60,7 @@
               placement="bottom-start"
               :width="160"
               trigger="click"
+
           >
             <div >
               <el-link @click.prevent="viewDetails(scope.row)" type="primary" class="more-action-link">查看详情</el-link>
