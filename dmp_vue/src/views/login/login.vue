@@ -57,7 +57,7 @@ const userStore = useUserStore()
 const loginFormRef = ref()
 
 const loginForm = reactive({
-  username: 'admin',
+  username: 'user' ,
   userpwd: 'password123',
 })
 
@@ -99,7 +99,7 @@ const submitForm = async (formEl) => {
       } else {
         ElMessage.success('登录成功')
         loading.value = false
-        await router.push('/')
+        await router.push('/dashboard')
       }
     } else {
       console.log('error submit!', fields)

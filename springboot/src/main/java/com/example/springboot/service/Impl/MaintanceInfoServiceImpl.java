@@ -1,19 +1,25 @@
 package com.example.springboot.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.entity.ApprovalInfo;
-import com.example.springboot.entity.MaintanceInfo;
+import com.example.springboot.entity.EquipInfo;
+import com.example.springboot.entity.MaintanceInfoDetail;
+import com.example.springboot.entity.UserInfo;
 import com.example.springboot.mapper.ApprovalInfoMapper;
+import com.example.springboot.mapper.EquipInfoMapper;
+import com.example.springboot.mapper.UserInfoMapper;
 import com.example.springboot.request.MaintenancePlanReq;
-import com.example.springboot.response.MaintenanceResp;
+import com.example.springboot.response.MaintenanceInfo;
+import com.example.springboot.response.MaintenanceInfoResp;
+import com.example.springboot.response.PlanDetailResp;
 import com.example.springboot.service.MaintanceInfoService;
 import com.example.springboot.mapper.MaintanceInfoMapper;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +28,7 @@ import java.util.List;
  * @createDate 2024-09-24 11:04:20
  */
 @Service
-public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, MaintanceInfo>
+public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, MaintanceInfoDetail>
         implements MaintanceInfoService {
 
     @Autowired
@@ -31,29 +37,181 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     @Autowired
     private ApprovalInfoMapper approvalInfoMapper;
 
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private EquipInfoMapper equipInfoMapper;
+
     @Override
-    public Result<List<MaintenanceResp>> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
+    public Result<MaintenanceInfoResp> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
 
-        List<MaintenanceResp> maintenanceRespList =  maintenanceMapper.getMaintenancePlan(maintenancePlanReq);
+        // 第一步：获取总记录数
+        int total = maintenanceMapper.getMaintenancePlanCount(maintenancePlanReq);
 
-        if(maintenanceRespList.isEmpty())
-        {
+        // 第二步：获取分页后的数据
+        List<MaintenanceInfo> maintenanceRespList = maintenanceMapper.getMaintenancePlan(maintenancePlanReq);
+
+        // 如果查询结果为空，返回查询为空的提示
+        if (maintenanceRespList.isEmpty()) {
             return Result.fail("查询为空");
         }
-        return Result.success(maintenanceRespList);
+
+        // 打印总数
+        System.out.println(total);
+
+        // 构建返回响应对象
+        MaintenanceInfoResp maintenanceInfoResp = MaintenanceInfoResp.builder()
+                .maintenanceInfoList(maintenanceRespList)
+                .total(total) // 使用从第一个查询获取的总数
+                .build();
+
+        return Result.success(maintenanceInfoResp);
+    }
+
+
+    @Override
+    public Result addMaintenancePlan(MaintenanceInfo maintenanceInfo) {
+        String userId = (String) StpUtil.getLoginId();
+        UserInfo userInfo = userInfoMapper.selectById(userId);
+        maintenanceInfo.setCreator(userInfo.getUsername());
+
+        //当前审批计划详情
+        MaintanceInfoDetail maintanceInfoDetail = MaintanceInfoDetail
+                .builder()
+                .maintanceDesc(maintenanceInfo.getMaintanceDesc())
+                .maintanceType(maintenanceInfo.getMaintanceType())
+                .planName(maintenanceInfo.getPlanName())
+                .startTime(maintenanceInfo.getStartTime())
+                .endTime(maintenanceInfo.getEndTime())
+                .equipId(maintenanceInfo.getEquipId())
+                .status(0)
+                .build();
+
+        maintenanceMapper.insert(maintanceInfoDetail);
+
+        ApprovalInfo approvalInfoApplicant = ApprovalInfo
+                .builder()
+                .planId(maintanceInfoDetail.getPlanId())
+                .applicantId(userId)
+                .approvalStatus(0)
+                .stepOrder(0)
+                .manipTime(maintenanceInfo.getCreateTime())
+                .build();
+        approvalInfoMapper.insert(approvalInfoApplicant);
+
+        ApprovalInfo approvalInfoFirst = ApprovalInfo
+                .builder()
+                .planId(maintanceInfoDetail.getPlanId())
+                .approvalStatus(0)
+                .stepOrder(1)
+                .fatherId(approvalInfoApplicant.getFatherId())
+                .build();
+        approvalInfoMapper.insert(approvalInfoFirst);
+
+        ApprovalInfo approvalInfoSecond = ApprovalInfo
+                .builder()
+                .planId(maintanceInfoDetail.getPlanId())
+                .approvalStatus(0)
+                .stepOrder(2)
+                .fatherId(approvalInfoFirst.getFatherId())
+                .build();
+        approvalInfoMapper.insert(approvalInfoSecond);
+
+        return Result.success("保养计划已成功添加，请等待审批");
     }
 
     @Override
-    public Result getAllMaintenancePlan() {
-        List<MaintanceInfo> maintanceInfoList = maintenanceMapper.selectList(
-                new LambdaQueryWrapper<MaintanceInfo>()
+    public Result undoMaintenancePlan(String planId) {
+        int approvalRows = approvalInfoMapper.delete(
+                new LambdaQueryWrapper<ApprovalInfo>()
+                        .eq(ApprovalInfo::getPlanId, planId)
         );
 
-        if(!maintanceInfoList.isEmpty())
-            return Result.success(maintanceInfoList.size());
-        else
-            return Result.fail("记录为空");
+        int maintenancePlanRows = maintenanceMapper.deleteById(planId);
+        if (maintenancePlanRows <= 0 || approvalRows <= 0) {
+            return Result.fail("撤销失败，请联系管理员处理");
+        }
+        return Result.success("该保养计划已成功撤销");
     }
+
+    @Override
+    public Result getMaintenancePlanDetail(String planId) {
+
+        PlanDetailResp detailResp = new PlanDetailResp();
+
+        MaintanceInfoDetail maintanceInfoDetail = maintenanceMapper.selectById(planId);
+
+        if (maintanceInfoDetail == null){
+            return Result.fail("该计划详情为空，请联系管理员检查");
+        }
+
+
+        List<ApprovalInfo> approvalInfoList = approvalInfoMapper.selectList(
+                new LambdaQueryWrapper<ApprovalInfo>()
+                        .eq(ApprovalInfo::getPlanId, planId)
+                        .orderByAsc(ApprovalInfo::getStepOrder)
+        );
+
+        for (ApprovalInfo approvalInfo : approvalInfoList) {
+            if (approvalInfo.getManipTime() != null) {
+                UserInfo userInfo = userInfoMapper.selectById(approvalInfo.getApplicantId());
+                System.out.println(userInfo);
+                if (approvalInfo.getStepOrder() == 0) {
+                    detailResp.setCreator(userInfo.getUsername());
+                    detailResp.setCreateTime(approvalInfo.getManipTime());
+                } else {
+                    detailResp.setUpdatePerson(userInfo.getUsername());
+                    detailResp.setUpdateTime(approvalInfo.getManipTime());
+                    detailResp.setRemark(approvalInfo.getApprovalRemark());
+                }
+            } else {
+                detailResp.setUpdatePerson("计划还未有人审批");
+                detailResp.setUpdateTime(null);
+                detailResp.setRemark("还未审批");
+                break;
+            }
+        }
+
+        EquipInfo equipInfo = equipInfoMapper.selectById(maintanceInfoDetail.getEquipId());
+        detailResp.setEquipName(equipInfo.getEquipName());
+        detailResp.setEquipId(equipInfo.getEquipId());
+        detailResp.setPlanId(maintanceInfoDetail.getPlanId());
+        detailResp.setPlanName(maintanceInfoDetail.getPlanName());
+        detailResp.setMaintanceType(maintanceInfoDetail.getMaintanceType());
+        detailResp.setMaintanceDesc(maintanceInfoDetail.getMaintanceDesc());
+        detailResp.setStatus(maintanceInfoDetail.getStatus());
+        detailResp.setStartTime(maintanceInfoDetail.getStartTime());
+        detailResp.setEndTime(maintanceInfoDetail.getEndTime());
+        System.out.println(detailResp);
+        return Result.success(detailResp);
+    }
+
+    @Override
+    public Result updateMaintenance(MaintanceInfoDetail maintanceInfoDetail) {
+
+        MaintanceInfoDetail infoDetail = maintenanceMapper.selectById(maintanceInfoDetail.getPlanId());
+
+        if(infoDetail == null){
+            return Result.fail("修改失败并未找到该计划，请联系后台管理员解决");
+        }
+        infoDetail.setStartTime(maintanceInfoDetail.getStartTime());
+        infoDetail.setEndTime(maintanceInfoDetail.getEndTime());
+
+        infoDetail.setMaintanceDesc(maintanceInfoDetail.getMaintanceDesc());
+        infoDetail.setMaintanceType(maintanceInfoDetail.getMaintanceType());
+
+        infoDetail.setEquipId(maintanceInfoDetail.getEquipId());
+        infoDetail.setPlanName(maintanceInfoDetail.getPlanName());
+
+        maintenanceMapper.updateById(infoDetail);
+
+        return Result.success("保养计划修改成功");
+
+
+
+    }
+
 }
 
 

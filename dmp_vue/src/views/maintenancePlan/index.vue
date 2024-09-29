@@ -22,6 +22,8 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               size="small"
+              format="YYYY/MM/DD HH:mm:ss"
+              value-format="YYYY/MM/DD HH:mm:ss"
               class="date-picker"
           ></el-date-picker>
           <div class="button-group">
@@ -43,36 +45,42 @@
     <!-- 卡片区域 -->
     <div class="card-container">
       <div class="card-header">
-        <span class="card-title">保养计划信息</span>
+        <span class="card-title"><el-checkbox
+            v-model="checkAll"
+            :indeterminate="isIndeterminate"
+            @change="handleCheckAllChange">
+            保养计划信息
+          </el-checkbox>
+        </span>
         <span class="card-title">操作</span>
       </div>
       <el-card v-for="(item, index) in data" :key="index" class="card">
         <div class="card-content">
           <!-- 计划信息展示 -->
           <el-row :gutter="10">
-            <el-col :span="20">
+            <el-col :span="1">
+              <el-checkbox v-model="checkedItems[index]" @change="handleItemChange"></el-checkbox>
+            </el-col>
+            <el-col :span="19">
               <el-descriptions :column="2" size="small" class="description-box">
                 <el-descriptions-item label="计划名称">{{ item.planName }}</el-descriptions-item>
                 <el-descriptions-item label="计划编号">{{ item.planId }}
-                  <el-tag size="small" type="success">{{ item.status }}</el-tag>
+                  <el-tag size="small" type="success">{{ getStatusLabel(item.status) }}</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item label="开始时间">{{ item.startTime }}</el-descriptions-item>
                 <el-descriptions-item label="结束时间">{{ item.endTime }}</el-descriptions-item>
-                <el-descriptions-item label="计划描述" :span="2">
-                  <el-tag size="small" type="info">{{ item.maintanceDesc }}</el-tag>
+                <el-descriptions-item label="计划类型" :span="2">
+                  <el-tag size="small" type="info">{{ item.maintanceType }}</el-tag>
                 </el-descriptions-item>
               </el-descriptions>
             </el-col>
             <!-- 操作按钮在最右侧 -->
             <el-col :span="4">
               <div class="card-actions">
-                <el-link type="primary" class="action-link"
-                         @click="openEditDialog()">编辑
-                </el-link>
-                <el-link type="primary" class="action-link"
-                         @click="openDetailDialog()">详情
-                </el-link>
-                <el-link type="primary" class="action-link">更多</el-link>
+                <el-link type="primary" class="action-link" @click="openEditDialog(item)">编辑</el-link>
+                <el-link type="primary" class="action-link" @click="openDetailDialog(item.planId)">详情</el-link>
+                <el-link type="primary" @click.prevent="handleDelete(item)" class="action-link">撤销</el-link>
+
               </div>
             </el-col>
           </el-row>
@@ -89,19 +97,20 @@
               <span class="info-item"><label>更新时间：</label>{{ item.updateTime }}</span>
             </el-col>
             <el-col :span="6">
-              <span class="info-item"><label>更新人：</label>{{ item.update_person }}</span>
+              <span class="info-item"><label>更新人：</label>{{ item.updatePerson }}</span>
             </el-col>
           </el-row>
         </div>
       </el-card>
     </div>
+
     <!--  分页-->
     <div style="margin: 10px 0">
       <el-pagination
           :background="true"
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :page-sizes="[5, 10, 20, 100]"
+          :page-sizes="[3, 5, 10, 100]"
           large
           :disabled="false"
           layout="total, sizes, prev, pager, next, jumper"
@@ -115,18 +124,27 @@
     <maintenance-plan-detail-dialog
         :maintenancePlanDetailVisible="isMaintenancePlanDetailVisible"
         @close-dialog="closeDetailDialog()"
+        :maintenancePlanDetail="currentRowDetail"
     ></maintenance-plan-detail-dialog>
 
     <!--    增加框-->
     <maintenance-plan-add-dialog
         :maintenancePlanAddVisible="isMaintenancePlanAddVisible"
         @close-dialog="closeAddDialog()"
+        @add-maintenance-plan="addMaintenancePlan"
+        :equipmentInfoList="equipmentInfo"
+        :equipmentMaintenanceType="equipmentMaintenanceType"
+
     ></maintenance-plan-add-dialog>
 
     <!--    修改框-->
     <maintenance-plan-edit-dialog
         :maintenancePlanEditVisible="isMaintenancePlanEditVisible"
         @close-dialog="closeEditDialog()"
+        :currentRow="currentRowEdit"
+        :equipmentInfoList="equipmentInfo"
+        :equipmentMaintenanceType="equipmentMaintenanceType"
+        @edit-maintenance-plan="editMaintenancePlan"
     ></maintenance-plan-edit-dialog>
   </div>
 </template>
@@ -136,7 +154,12 @@ import {onMounted, ref} from 'vue';
 import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenancePlanDetailDialog.vue";
 import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePlanAddDialog.vue";
 import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
-import {getMaintenancePlan, getMaintenancePlanSize} from "@/api/maintenancePlan/index.js";
+import {
+  addPlan,
+  getMaintenancePlan, getPlanDetail, undoPlan, updateMaintenance,
+} from "@/api/maintenancePlan/index.js";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
+import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
 
 // 状态映射
 const statusOptions = [
@@ -147,6 +170,50 @@ const statusOptions = [
   {label: '已完成', value: 3}
 ];
 
+const currentRowEdit = ref(null)
+const currentRowDetail = ref(null)
+
+//删除
+const handleDelete = (plan) => {
+  ElMessageBox.confirm(
+      '你确定要撤销' + plan.planName,
+      '删除计划',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(async () => {
+        const res = await undoPlan(plan.planId)
+
+        if (res.data.flag) {
+          ElNotification({
+            message: res.data.data,
+            type: "success"
+          })
+          await getMaintenance(maintenancePlanReq.value);
+        } else {
+          ElNotification({
+            message: res.data.data,
+            type: "error"
+          })
+        }
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消删除',
+        })
+      })
+}
+
+const getStatusLabel = (statusValue) => {
+  // 根据statusValue返回相应的label
+  const option = statusOptions.find(option => option.value === statusValue);
+  return option ? option.label : '未知状态';
+}
+
 const checkboxGroup1 = ref([-1]); // 默认选择“全部”
 const planName = ref("");
 const dateRange = ref([]);
@@ -156,27 +223,93 @@ const isMaintenancePlanDetailVisible = ref(false);
 const closeDetailDialog = () => {
   isMaintenancePlanDetailVisible.value = false;
 };
-const openDetailDialog = () => {
+
+
+const openDetailDialog = async (planId) => {
+  const res = await getPlanDetail(planId)
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: "error"
+    })
+    return
+  }
+  currentRowDetail.value = res.data.data
   isMaintenancePlanDetailVisible.value = true;
 };
 // 添加
+
 const isMaintenancePlanAddVisible = ref(false);
 const closeAddDialog = () => {
   isMaintenancePlanAddVisible.value = false;
 };
+/**
+ * 添加保养计划
+ * @param Plan
+ * @returns {Promise<void>}
+ */
+const addMaintenancePlan = async (Plan) => {
+  const res = await addPlan(Plan);
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.msg,
+      type: "error"
+    })
+  } else {
+    ElNotification({
+      message: res.data.data,
+      type: "success"
+    })
+    await getMaintenance(maintenancePlanReq.value);
+  }
+
+}
+
 // 修改
 const isMaintenancePlanEditVisible = ref(false);
 const closeEditDialog = () => {
   isMaintenancePlanEditVisible.value = false;
 };
-const openEditDialog = () => {
+const openEditDialog = (row) => {
+  currentRowEdit.value = row
+  console.log(row)
   isMaintenancePlanEditVisible.value = true;
 };
+
+const editMaintenancePlan = async (val) => {
+  console.log(val)
+  const editPlan = {
+    equipId: val.equipId,
+    planName: val.planName,
+    startTime: val.startTime,
+    endTime: val.endTime,
+    maintanceDesc: val.maintanceDesc,
+    maintanceType: val.maintanceType,
+    planId: val.planId
+  }
+  const res = await updateMaintenance(editPlan)
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.msg,
+      type: "error"
+    })
+  } else {
+    ElNotification({
+      message: res.data.data,
+      type: "success"
+    })
+    clear()
+    await getMaintenance(maintenancePlanReq.value)
+  }
+
+}
 
 const data = ref([
   // 示例数据
 ]);
 
+
+//搜索请求
 const maintenancePlanReq = ref({
   currentPage: 1,
   pageSize: 3,
@@ -186,8 +319,9 @@ const maintenancePlanReq = ref({
   status: []
 });
 
+//分页
 const currentPage = ref(1);
-const pageSize = ref(5);
+const pageSize = ref(3);
 const total = ref(data.value.length);
 
 const handleCurrentChange = (newPage) => {
@@ -200,10 +334,13 @@ const handleSizeChange = (newPageSize) => {
   getMaintenance(maintenancePlanReq.value);
 };
 
+
+//搜索
 const searchPlans = () => {
   maintenancePlanReq.value.planName = planName.value;
   maintenancePlanReq.value.startTime = dateRange.value[0];
   maintenancePlanReq.value.endTime = dateRange.value[1];
+  maintenancePlanReq.value.currentPage = 1;
   if (checkboxGroup1.value.includes(-1)) {
     // 当包含 '-1' 时，将 checkboxGroup1 设置为 [0, 1, 2, 3]
     maintenancePlanReq.value.status = statusOptions.slice(1).map(option => option.value);
@@ -211,9 +348,11 @@ const searchPlans = () => {
     maintenancePlanReq.value.status = checkboxGroup1.value;
   }
   getMaintenance(maintenancePlanReq.value);
+  currentPage.value = 1
 };
 
-const resetFilters = () => {
+//重置
+const clear = () => {
   checkboxGroup1.value = [-1];
   planName.value = '';
   dateRange.value = [];
@@ -221,23 +360,59 @@ const resetFilters = () => {
   maintenancePlanReq.value.startTime = null;
   maintenancePlanReq.value.endTime = null;
   maintenancePlanReq.value.status = [];
-  getMaintenance(maintenancePlanReq.value);
-};
-
-const getMaintenance = async (maintenancePlanReq) => {
-  const res = await getMaintenancePlan(maintenancePlanReq);
-  data.value = res.data.data;
-};
-
-const getMaintenanceListSize = async () => {
-  const res = await getMaintenancePlanSize()
-  total.value = res.data.data
 }
 
-// 初始数据加载
-onMounted(() => {
-  getMaintenanceListSize();
+const resetFilters = () => {
+  clear()
   getMaintenance(maintenancePlanReq.value);
+};
+
+
+// 全选、反选功能相关
+const checkAll = ref(false);
+const checkedItems = ref([]); // 存储每个计划是否被选中
+const isIndeterminate = ref(false);
+
+const handleCheckAllChange = (value) => {
+  checkedItems.value = value ? data.value.map(() => true) : data.value.map(() => false);
+  isIndeterminate.value = false;
+};
+
+const handleItemChange = () => {
+  const checkedCount = checkedItems.value.filter(Boolean).length;
+  checkAll.value = checkedCount === data.value.length;
+  isIndeterminate.value = checkedCount > 0 && checkedCount < data.value.length;
+};
+
+
+
+/**
+ * 获取保养计划列表
+ * @param maintenancePlanReq
+ * @returns {Promise<void>}
+ */
+const getMaintenance = async (maintenancePlanReq) => {
+  const res = await getMaintenancePlan(maintenancePlanReq);
+  if (res.data.flag){
+    data.value = res.data.data.maintenanceInfoList;
+    total.value = res.data.data.total
+  }
+
+};
+
+
+const equipmentInfo = ref([])
+
+const equipmentMaintenanceType = ref([])
+
+const equipmentStore = useEquipmentInfoStore()
+// 初始数据加载
+onMounted(async () => {
+  await getMaintenance(maintenancePlanReq.value);
+  await equipmentStore.getEquipmentInfoList();
+  await equipmentStore.getEquipmentMaintenanceTypeList();
+  equipmentInfo.value = equipmentStore.equipmentInfo
+  equipmentMaintenanceType.value = equipmentStore.equipmentMaintenanceType
 });
 </script>
 
@@ -377,11 +552,6 @@ onMounted(() => {
   margin: auto;
 }
 
-.action-link {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 
 @media (max-width: 1200px) {
   .filter-content {
@@ -393,4 +563,16 @@ onMounted(() => {
     margin-bottom: 10px;
   }
 }
+
+
+.action-link {
+  margin-right: 10px;
+  font-weight: bold;
+  color: #409EFF;
+}
+
+.el-overlay-dialog {
+  overflow: hidden;
+}
+
 </style>

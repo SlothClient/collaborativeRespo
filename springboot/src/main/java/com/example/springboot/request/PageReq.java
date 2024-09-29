@@ -1,4 +1,4 @@
-package com.example.springboot.utils;
+package com.example.springboot.request;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  */
 
 @Data
-public class Page {
+public class PageReq {
 
     /**
      * 每页条数
@@ -19,12 +19,10 @@ public class Page {
      * 当前页码
      */
     private Integer currentPage;
-
     /**
      * 总记录数（可选）
      */
     private Integer totalRecords;
-
     /**
      * 偏移量，用于分页查询
      */

@@ -1,6 +1,5 @@
 package com.example.springboot.request;
 
-import com.example.springboot.utils.Page;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -13,7 +12,7 @@ import java.util.List;
  */
 
 @Data
-public class MaintenancePlanReq extends Page {
+public class MaintenancePlanReq extends PageReq {
 
     /**
      * 计划状态

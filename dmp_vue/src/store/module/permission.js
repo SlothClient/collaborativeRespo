@@ -3,18 +3,10 @@ import {constantRoutes, router} from "@/router/index.js";
 import {getUserMenu} from "@/api/user/index.js";
 import {ElNotification} from "element-plus";
 import {ref} from 'vue'
-
-
-const componentMap = {
-    // 'system': () => import('@/views/system/index.vue'),  // 系统管理的组件（假设为首页）
-    // 'manage': () => import('@/views/system/manage.vue'),  // 用户管理的组件
-    // 'approval': () => import('@/views/approval/index.vue'),  // 审批的父级组件
-    // 'MyApproval': () => import('@/views/approval/MyApproval.vue'),  // 我的审批组件
-    // 'AdminApprovalManage': () => import('@/views/approval/admin/AdminApprovalManage.vue'),  // 审批管理组件
-    // 'ManagerApprovalManage': () => import('@/views/approval/manage/ManagerApprovalManage.vue')  // 其他审批组件
-};
+const modules = import.meta.glob('@/views/**/*.vue');  // 递归加载 views 目录下的所有 Vue 文件
 
 const filterAsyncRoutes = (routes) => {
+    console.log(modules)
     return routes.map(route => {
         const routeObj = {
             path: route.menuUrl || '',
@@ -29,36 +21,48 @@ const filterAsyncRoutes = (routes) => {
 
         // 处理组件
         if (route.menuUrl) {
-            const componentKey = route.menuUrl.replace(/^\//, '');
-            routeObj.component = componentMap[componentKey]
-            console.log(routeObj.component)
-        } else {
-            console.log("走了这里")
-            routeObj.component = () => import('@/components/layout/dashboard.vue')
+            const menuUrl = route.menuUrl.replace(/^\//, '');  // 去掉路径开头的 "/"
+
+            // 找到匹配的组件路径
+            const componentPath = `/src/views/${menuUrl}.vue`;
+
+            // 使用 import.meta.glob 加载组件
+            if (modules[componentPath]) {
+                routeObj.component = modules[componentPath];  // 赋值为加载的组件函数
+                console.log(modules[componentPath])
+            } else {
+                console.error(`Component not found for path: ${componentPath}`);
+            }
         }
+
         // 递归处理子路由
         if (route.children && route.children.length > 0) {
-            routeObj.children = filterAsyncRoutes(route.children)
+            routeObj.children = filterAsyncRoutes(route.children);
         }
-        console.log(routeObj)
-        return routeObj
-    })
+        return routeObj;
+    });
 }
 
 export const usePermissionStore = defineStore("permission", () => {
     const routes = ref([...constantRoutes])
     const setRoutes = (newRoutes) => {
-        const homeRoute = routes.value.find(route => route.path === '/home')
+        console.log("setRoutes")
+        const homeRoute = routes.value.find(route => route.name === 'dashboard')
+
+        console.log(homeRoute)
         if (homeRoute && homeRoute.children) {
+            console.log("找到了")
             // 过滤掉已存在的路由
             const uniqueNewRoutes = newRoutes.filter(newRoute =>
                 !homeRoute.children.some(existingRoute => existingRoute.path === newRoute.path)
             )
             homeRoute.children.push(...uniqueNewRoutes)
+            console.log(homeRoute.children)
             // 动态注册新路由
             uniqueNewRoutes.forEach(route => {
-                router.addRoute('home', route);
+                router.addRoute('dashboard', route);
             });
+
         }
 
     }
@@ -70,6 +74,7 @@ export const usePermissionStore = defineStore("permission", () => {
                 const asyncRoutes = res.data.data
                 const accessedRoutes = filterAsyncRoutes(asyncRoutes)
                 setRoutes(accessedRoutes)
+                console.log(accessedRoutes)
                 console.log(router.getRoutes())
                 return accessedRoutes
             } else {
