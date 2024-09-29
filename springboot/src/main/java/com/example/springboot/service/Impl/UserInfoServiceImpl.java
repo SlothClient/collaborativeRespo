@@ -51,6 +51,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         //查询用户角色
         List<String> roles = StpUtil.getRoleList();
 
+        System.out.println(roles);
+
         //用户权限
         List<String> permission =StpUtil.getPermissionList().stream()
                 .filter(string -> !string.isEmpty())

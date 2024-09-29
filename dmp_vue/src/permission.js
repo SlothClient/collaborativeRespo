@@ -5,13 +5,14 @@ import {getToken, removeToken} from "@/utils/token.js";
 
 const whiteList = ["/login"];
 router.beforeEach(async (to, from, next) => {
+
     const userStore = useUserStore();
     const permissionStore = usePermissionStore();
     const hasToken = getToken();
 
     if (hasToken) {
         if (to.path === '/login') {
-            next({path: '/home'});
+            next({path: 'dashboard/home'});
         } else {
             if (userStore.user.roles.length === 0) {
                 try {
@@ -29,7 +30,9 @@ router.beforeEach(async (to, from, next) => {
                     console.error(error);
                 }
             } else {
+
                 next();
+
             }
         }
     } else {

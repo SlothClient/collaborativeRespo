@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 
@@ -20,6 +22,8 @@ import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 @TableName(value ="approval_info")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprovalInfo implements Serializable {
     /**
      * 

@@ -19,12 +19,10 @@ public class PageReq {
      * 当前页码
      */
     private Integer currentPage;
-
     /**
      * 总记录数（可选）
      */
     private Integer totalRecords;
-
     /**
      * 偏移量，用于分页查询
      */

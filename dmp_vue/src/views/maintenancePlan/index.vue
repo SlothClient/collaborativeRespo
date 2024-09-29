@@ -156,11 +156,10 @@ import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePl
 import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
 import {
   addPlan,
-  getEquipmentInfo,
-  getEquipmentMaintenanceType,
   getMaintenancePlan, getPlanDetail, undoPlan, updateMaintenance,
 } from "@/api/maintenancePlan/index.js";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
+import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
 
 // 状态映射
 const statusOptions = [
@@ -173,6 +172,8 @@ const statusOptions = [
 
 const currentRowEdit = ref(null)
 const currentRowDetail = ref(null)
+
+//删除
 const handleDelete = (plan) => {
   ElMessageBox.confirm(
       '你确定要撤销' + plan.planName,
@@ -222,6 +223,8 @@ const isMaintenancePlanDetailVisible = ref(false);
 const closeDetailDialog = () => {
   isMaintenancePlanDetailVisible.value = false;
 };
+
+
 const openDetailDialog = async (planId) => {
   const res = await getPlanDetail(planId)
   if (!res.data.flag) {
@@ -235,9 +238,6 @@ const openDetailDialog = async (planId) => {
   isMaintenancePlanDetailVisible.value = true;
 };
 // 添加
-const equipmentInfo = ref([])
-
-const equipmentMaintenanceType = ref([])
 
 const isMaintenancePlanAddVisible = ref(false);
 const closeAddDialog = () => {
@@ -385,33 +385,6 @@ const handleItemChange = () => {
 };
 
 
-/**
- * 获取总记录数 total
- * @returns {Promise<void>}
- */
-// const getMaintenanceListSize = async () => {
-//   const res = await getMaintenancePlanSize()
-//   total.value = res.data.data
-// }
-
-/**
- * 获取所有设备Id及name
- * @returns {Promise<void>}
- */
-const getEquipmentInfoList = async () => {
-  const res = await getEquipmentInfo();
-  equipmentInfo.value = res.data.data
-}
-
-/**
- * 获取维修类型
- * @returns {Promise<void>}
- */
-const getEquipmentMaintenanceTypeList = async () => {
-  const res = await getEquipmentMaintenanceType()
-  equipmentMaintenanceType.value = res.data.data
-}
-
 
 /**
  * 获取保养计划列表
@@ -420,16 +393,26 @@ const getEquipmentMaintenanceTypeList = async () => {
  */
 const getMaintenance = async (maintenancePlanReq) => {
   const res = await getMaintenancePlan(maintenancePlanReq);
-  data.value = res.data.data.maintenanceInfoList;
-  total.value = res.data.data.total
+  if (res.data.flag){
+    data.value = res.data.data.maintenanceInfoList;
+    total.value = res.data.data.total
+  }
+
 };
 
 
+const equipmentInfo = ref([])
+
+const equipmentMaintenanceType = ref([])
+
+const equipmentStore = useEquipmentInfoStore()
 // 初始数据加载
-onMounted(() => {
-  getMaintenance(maintenancePlanReq.value);
-  getEquipmentInfoList();
-  getEquipmentMaintenanceTypeList();
+onMounted(async () => {
+  await getMaintenance(maintenancePlanReq.value);
+  await equipmentStore.getEquipmentInfoList();
+  await equipmentStore.getEquipmentMaintenanceTypeList();
+  equipmentInfo.value = equipmentStore.equipmentInfo
+  equipmentMaintenanceType.value = equipmentStore.equipmentMaintenanceType
 });
 </script>
 

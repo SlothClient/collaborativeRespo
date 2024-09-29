@@ -46,7 +46,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     @Override
     public Result<MaintenanceInfoResp> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
 
-        // 第一步：获取总记录数（不分页）
+        // 第一步：获取总记录数
         int total = maintenanceMapper.getMaintenancePlanCount(maintenancePlanReq);
 
         // 第二步：获取分页后的数据
@@ -76,6 +76,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
         UserInfo userInfo = userInfoMapper.selectById(userId);
         maintenanceInfo.setCreator(userInfo.getUsername());
 
+        //当前审批计划详情
         MaintanceInfoDetail maintanceInfoDetail = MaintanceInfoDetail
                 .builder()
                 .maintanceDesc(maintenanceInfo.getMaintanceDesc())
@@ -103,7 +104,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                 .builder()
                 .planId(maintanceInfoDetail.getPlanId())
                 .approvalStatus(0)
-                .stepOrder(2)
+                .stepOrder(1)
                 .fatherId(approvalInfoApplicant.getFatherId())
                 .build();
         approvalInfoMapper.insert(approvalInfoFirst);

@@ -8,54 +8,49 @@
       size="40%"
       direction="ltr"
   >
-    <div class="drawer-content" v-for="(item, index) in timelineItems" :key="index">
+    <div class="drawer-content" v-for="(item, index) in props.currentRow.approvalInfoList" :key="index">
       <el-timeline hide-timestamp style="max-width: 600px;">
         <el-timeline-item
             class="timeline-item"
-            :type="getTagType(item.status)"
+            :type="getTagType(item.nodeStatus)"
         >
           <el-card class="timeline-card">
             <el-row :gutter="10">
               <el-col :span="20">
                 <el-descriptions :column="1" size="small" class="description-box">
-                  <el-descriptions-item label="发起人">{{ item.name }}</el-descriptions-item>
-                  <el-descriptions-item label="发起时间">{{ item.date }}</el-descriptions-item>
-                  <el-descriptions-item label="设备名称">{{ item.deviceName }}</el-descriptions-item>
-                  <el-descriptions-item label="当前状态">
-                    <el-tag size="small" :type="getTagType(item.status)">
-                      {{ item.status }}
-                    </el-tag>
-                  </el-descriptions-item>
-                  <el-descriptions-item label="计划描述" :span="2">
-                    {{ item.description }}
-                  </el-descriptions-item>
-                </el-descriptions>
-              </el-col>
-            </el-row>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item
-            v-for="(reviewer, rIndex) in item.reviewers"
-            :key="rIndex"
-            class="timeline-item"
-            :type="getTagType(reviewer.status)"
-        >
-          <el-card class="timeline-card">
-            <el-row :gutter="10">
-              <el-col :span="24">
-                <el-descriptions :column="1" size="small" class="description-box">
-                  <el-descriptions-item label="审核人">{{ reviewer.name }}</el-descriptions-item>
-                  <el-descriptions-item label="审核时间" :span="2">
-                    {{ reviewer.timestamp }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="审核状态">
-                    <el-tag size="small" :type="getTagType(reviewer.status)">
-                      {{ reviewer.status }}
-                    </el-tag>
-                  </el-descriptions-item>
-                  <el-descriptions-item label="审核意见" :span="2">
-                    {{ reviewer.comments }}
-                  </el-descriptions-item>
+                  <div v-if="item.stepOrder === 0">
+                    <el-descriptions-item label="发起人">{{
+                        item.username
+                      }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="计划开始时间">{{ props.currentRow.startTime }}</el-descriptions-item>
+                    <el-descriptions-item label="计划结束时间">{{ props.currentRow.endTime }}</el-descriptions-item>
+                    <el-descriptions-item label="设备名称">{{ props.currentRow.equipName }}</el-descriptions-item>
+                    <el-descriptions-item label="当前状态">
+                      <el-tag size="small" :type="getTagType(props.currentRow.planStatus)">
+                        {{ getTagText(props.currentRow.planStatus) }}
+                      </el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="计划描述" :span="2">
+                      {{ props.currentRow.maintenanceDesc }}
+                    </el-descriptions-item>
+                  </div>
+                  <div v-else>
+                    <el-descriptions-item label="审批人">{{
+                        item.username === null ? "还未审批" : item.username
+                      }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="操作时间">{{
+                        item.actionTime === null ? "还未审批" : item.actionTime
+                      }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="审批状态">
+                      <el-tag size="small" :type="getTagType(item.nodeStatus)">
+                        {{ getTagText(item.nodeStatus) }}
+                      </el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="审批意见">{{ item.remark === null ? "还未审批" : item.remark}}</el-descriptions-item>
+                  </div>
                 </el-descriptions>
               </el-col>
             </el-row>
@@ -67,7 +62,7 @@
 </template>
 
 <script setup>
-import {ref, computed} from 'vue';
+import {computed} from 'vue';
 
 const props = defineProps({
   approvalDetailVisible: {
@@ -87,29 +82,13 @@ const drawer = computed({
   set: (value) => emit('closeApprovalDetail', value)
 });
 
-const timelineItems = ref([
-  {
-    deviceName: '设备A',
-    name: '用户1',
-    description: '这是设备A的计划描述内容。',
-    status: '待审核',
-    date: '2023-05-15 10:00:00',
-    reviewers: [
-      {
-        name: '审核人1',
-        status: '已通过',
-        comments: '审核意见A：设备状态良好，可以通过。',
-        timestamp: '2023-05-15 11:30:00',
-      },
-      {
-        name: '审核人2',
-        status: '待审核',
-        comments: '审核意见B：需要进一步检查。',
-        timestamp: '2023-05-15 14:00:00',
-      },
-    ],
-  },
-]);
+const getApplicant = (stepOrder) => {
+  if (stepOrder === 0) {
+    return '发起人:'
+  } else {
+    return '审核人:'
+  }
+}
 
 const closeDrawer = () => {
   drawer.value = false;
@@ -118,16 +97,31 @@ const closeDrawer = () => {
 // 设置标签类型
 const getTagType = (status) => {
   switch (status) {
-    case '待审核':
+    case 0:
       return 'warning';
-    case '已通过':
+    case 1:
+      return 'primary';
+    case 2:
       return 'success';
-    case '已拒绝':
+    case 3:
       return 'danger';
-    case '进行中':
-      return 'info';
     default:
       return 'info';
+  }
+};
+
+const getTagText = (status) => {
+  switch (status) {
+    case 0:
+      return '待审批';
+    case 1:
+      return '审批中';
+    case 2:
+      return '已通过';
+    case 3:
+      return '已驳回';
+    default:
+      return '已撤销';
   }
 };
 </script>
