@@ -7,57 +7,60 @@
       :show-close="true"
       size="40%"
       direction="ltr"
+      :title="'计划'+title+''"
   >
-    <div class="drawer-content" v-for="(item, index) in props.currentRow.approvalInfoList" :key="index">
-      <el-timeline hide-timestamp style="max-width: 600px;">
-        <el-timeline-item
-            class="timeline-item"
-            :type="getTagType(item.nodeStatus)"
-        >
-          <el-card class="timeline-card">
-            <el-row :gutter="10">
-              <el-col :span="20">
-                <el-descriptions :column="1" size="small" class="description-box">
-                  <div v-if="item.stepOrder === 0">
-                    <el-descriptions-item label="发起人">{{
-                        item.username
-                      }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="计划开始时间">{{ props.currentRow.startTime }}</el-descriptions-item>
-                    <el-descriptions-item label="计划结束时间">{{ props.currentRow.endTime }}</el-descriptions-item>
-                    <el-descriptions-item label="设备名称">{{ props.currentRow.equipName }}</el-descriptions-item>
-                    <el-descriptions-item label="当前状态">
-                      <el-tag size="small" :type="getTagType(props.currentRow.planStatus)">
-                        {{ getTagText(props.currentRow.planStatus) }}
-                      </el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="计划描述" :span="2">
-                      {{ props.currentRow.maintenanceDesc }}
-                    </el-descriptions-item>
-                  </div>
-                  <div v-else>
-                    <el-descriptions-item label="审批人">{{
-                        item.username === null ? "还未审批" : item.username
-                      }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="操作时间">{{
-                        item.actionTime === null ? "还未审批" : item.actionTime
-                      }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="审批状态">
-                      <el-tag size="small" :type="getTagType(item.nodeStatus)">
-                        {{ getTagText(item.nodeStatus) }}
-                      </el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="审批意见">{{ item.remark === null ? "还未审批" : item.remark}}</el-descriptions-item>
-                  </div>
-                </el-descriptions>
-              </el-col>
-            </el-row>
-          </el-card>
-        </el-timeline-item>
-      </el-timeline>
-    </div>
+    <el-timeline hide-timestamp class="timeline" style="max-width: 600px;">
+      <el-timeline-item
+          v-for="(item, index) in props.currentRow.approvalInfoList"
+          :key="index"
+          class="timeline-item"
+          placement="top"
+          :type="getTagType(item.nodeStatus)"
+          :timestamp="item.actionTime ? item.actionTime : '还未处理'"
+      >
+        <el-card class="timeline-card">
+          <el-row :gutter="10">
+            <el-col :span="20">
+              <el-descriptions :column="1" size="small" class="description-box">
+                <div v-if="item.stepOrder === 0">
+                  <el-descriptions-item label="发起人">{{ item.username }}</el-descriptions-item>
+                  <el-descriptions-item label="计划开始时间">{{ props.currentRow.startTime }}</el-descriptions-item>
+                  <el-descriptions-item label="计划结束时间">{{ props.currentRow.endTime }}</el-descriptions-item>
+                  <el-descriptions-item label="设备名称">{{ props.currentRow.equipName }}</el-descriptions-item>
+                  <el-descriptions-item label="当前状态">
+                    <el-tag size="small" :type="getTagType(props.currentRow.planStatus)">
+                      {{ getTagText(props.currentRow.planStatus) }}
+                    </el-tag>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="计划描述" :span="2">
+                    {{ props.currentRow.maintenanceDesc }}
+                  </el-descriptions-item>
+                </div>
+                <div v-else>
+                  <el-descriptions-item label="审批人">{{
+                      item.username === null ? "还未审批" : item.username
+                    }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="操作时间">{{
+                      item.actionTime === null ? "还未审批" : item.actionTime
+                    }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="审批状态">
+                    <el-tag size="small" :type="getTagType(item.nodeStatus)">
+                      {{ getTagText(item.nodeStatus) }}
+                    </el-tag>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="审批意见">{{
+                      item.remark === null ? "还未审批" : item.remark
+                    }}
+                  </el-descriptions-item>
+                </div>
+              </el-descriptions>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-timeline-item>
+    </el-timeline>
   </el-drawer>
 </template>
 
@@ -73,6 +76,10 @@ const props = defineProps({
     type: Object,
     default: () => null,
   },
+  title: {
+    type: String,
+    default: ''
+  }
 });
 
 const emit = defineEmits(['closeApprovalDetail']);
@@ -82,19 +89,10 @@ const drawer = computed({
   set: (value) => emit('closeApprovalDetail', value)
 });
 
-const getApplicant = (stepOrder) => {
-  if (stepOrder === 0) {
-    return '发起人:'
-  } else {
-    return '审核人:'
-  }
-}
-
 const closeDrawer = () => {
   drawer.value = false;
 };
 
-// 设置标签类型
 const getTagType = (status) => {
   switch (status) {
     case 0:
@@ -127,6 +125,16 @@ const getTagText = (status) => {
 </script>
 
 <style scoped>
+
+/* 添加过渡效果 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
+{
+  opacity: 0;
+}
 .drawer-content {
   padding: 20px;
   background-color: #ffffff;
@@ -146,7 +154,6 @@ const getTagText = (status) => {
 }
 
 .timeline-item {
-  /* 移除 display: flex; */
   align-items: flex-start;
 }
 
@@ -174,7 +181,7 @@ const getTagText = (status) => {
   color: #333;
 }
 
-/* 添加以下样式 */
+/* Timeline Styles to Ensure Continuous Connection */
 .el-timeline {
   padding-left: 0;
 }
@@ -185,13 +192,18 @@ const getTagText = (status) => {
 
 .el-timeline-item__tail {
   position: absolute;
-  left: 4px;
-  height: 100%;
-  border-left: 2px solid #e4e7ed;
+  left: 14px;
+  top: 0; /* Ensure it starts at the top of the timeline */
+  height: calc(100% + 20px); /* Extend beyond the bottom to connect to next */
+  border-left: 2px solid #e4e7ed; /* Ensures continuity */
 }
 
 .el-timeline-item__node {
   position: absolute;
+  left: 8px;
+  top: 12px; /* Position node properly in line */
+  width: 12px;
+  height: 12px;
   background-color: #e4e7ed;
   border-radius: 50%;
   display: flex;

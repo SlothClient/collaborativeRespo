@@ -48,7 +48,7 @@ export const useUserStore = defineStore('userStore', () => {
                     type: 'success',
                     message: "退出成功"
                 })
-
+                localStorage.removeItem('dynamicRoutes')
             } else {
                 ElNotification({
                     title: "失败",
@@ -65,19 +65,19 @@ export const useUserStore = defineStore('userStore', () => {
 
     const GetUserInfo = async () => {
         try {
-            const {data} = await getUserInfo();
-            if (data.flag) {
+            const res = await getUserInfo();
+            if (res.data.flag) {
                 user.value = {
-                    id: data.data.id,
-                    username: data.data.username,
-                    roles: data.data.roles,
-                    permissions: data.data.permissions,
+                    id: res.data.data.id,
+                    username:res.data.data.username,
+                    roles: res.data.data.roles,
+                    permissions: res.data.data.permissions,
                 }
                 console.log(user.value)
             } else {
                 ElNotification({
                     title: "失败",
-                    message: data.msg,
+                    message: res.data.msg,
                     type: "error"
                 });
             }

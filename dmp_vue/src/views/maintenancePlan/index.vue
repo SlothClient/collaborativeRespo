@@ -42,67 +42,62 @@
       <el-button type="primary" size="small" icon="Filter" class="add-btn">高级查询</el-button>
     </el-row>
 
-    <!-- 卡片区域 -->
-    <div class="card-container">
-      <div class="card-header">
-        <span class="card-title"><el-checkbox
-            v-model="checkAll"
-            :indeterminate="isIndeterminate"
-            @change="handleCheckAllChange">
-            保养计划信息
-          </el-checkbox>
-        </span>
-        <span class="card-title">操作</span>
-      </div>
-      <el-card v-for="(item, index) in data" :key="index" class="card">
-        <div class="card-content">
-          <!-- 计划信息展示 -->
-          <el-row :gutter="10">
-            <el-col :span="1">
-              <el-checkbox v-model="checkedItems[index]" @change="handleItemChange"></el-checkbox>
-            </el-col>
-            <el-col :span="19">
-              <el-descriptions :column="2" size="small" class="description-box">
-                <el-descriptions-item label="计划名称">{{ item.planName }}</el-descriptions-item>
-                <el-descriptions-item label="计划编号">{{ item.planId }}
-                  <el-tag size="small" type="success">{{ getStatusLabel(item.status) }}</el-tag>
-                </el-descriptions-item>
-                <el-descriptions-item label="开始时间">{{ item.startTime }}</el-descriptions-item>
-                <el-descriptions-item label="结束时间">{{ item.endTime }}</el-descriptions-item>
-                <el-descriptions-item label="计划类型" :span="2">
-                  <el-tag size="small" type="info">{{ item.maintanceType }}</el-tag>
-                </el-descriptions-item>
-              </el-descriptions>
-            </el-col>
-            <!-- 操作按钮在最右侧 -->
-            <el-col :span="4">
-              <div class="card-actions">
-                <el-link type="primary" class="action-link" @click="openEditDialog(item)">编辑</el-link>
-                <el-link type="primary" class="action-link" @click="openDetailDialog(item.planId)">详情</el-link>
-                <el-link type="primary" @click.prevent="handleDelete(item)" class="action-link">撤销</el-link>
+    <!-- 数据展示-->
+    <el-table :data="data" stripe style="width: 100%;">
+      <el-table-column type="selection" width="28"></el-table-column>
 
-              </div>
-            </el-col>
-          </el-row>
+      <el-table-column label="保养计划信息">
+        <template #default="scope">
+          <el-card>
+            <el-row :gutter="10">
+              <el-col :span="19">
+                <el-descriptions :column="2" size="small">
+                  <el-descriptions-item label="计划名称">{{ scope.row.planName }}</el-descriptions-item>
+                  <el-descriptions-item label="计划编号">{{ scope.row.planId }}
+                    <el-tag size="small" type="success">{{ getStatusLabel(scope.row.status) }}</el-tag>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="开始时间">{{ scope.row.startTime }}</el-descriptions-item>
+                  <el-descriptions-item label="结束时间">{{ scope.row.endTime }}</el-descriptions-item>
+                  <el-descriptions-item label="计划类型" :span="2">
+                    <el-tag size="small" type="info">{{ scope.row.maintanceType }}</el-tag>
+                  </el-descriptions-item>
+                </el-descriptions>
+              </el-col>
+            </el-row>
+            <el-row class="info-row" :gutter="10">
+              <el-col :span="6">
+                <span class="info-item"><label>创建时间：</label>{{ scope.row.createTime }}</span>
+              </el-col>
+              <el-col :span="6">
+                <span class="info-item"><label>创建人：</label>{{ scope.row.creator }}</span>
+              </el-col>
+              <el-col :span="6">
+                <span class="info-item"><label>更新时间：</label>{{ scope.row.updateTime }}</span>
+              </el-col>
+              <el-col :span="6">
+                <span class="info-item"><label>更新人：</label>{{ scope.row.updatePerson }}</span>
+              </el-col>
+            </el-row>
+          </el-card>
+        </template>
+      </el-table-column>
 
-          <!-- 创建和更新时间 -->
-          <el-row class="info-row" :gutter="10">
-            <el-col :span="6">
-              <span class="info-item"><label>创建时间：</label>{{ item.createTime }}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="info-item"><label>创建人：</label>{{ item.creator }}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="info-item"><label>更新时间：</label>{{ item.updateTime }}</span>
-            </el-col>
-            <el-col :span="6">
-              <span class="info-item"><label>更新人：</label>{{ item.updatePerson }}</span>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-    </div>
+      <el-table-column label="操作" width="100">
+        <template #default="scope">
+          <div class="action-buttons">
+            <el-link type="primary" @click="openEditDialog(scope.row)">
+              <el-icon><Edit /></el-icon> 编辑
+            </el-link>
+            <el-link type="primary" @click="openDetailDialog(scope.row.planId)">
+              <el-icon><Document /></el-icon> 详情
+            </el-link>
+            <el-link type="primary" @click.prevent="handleDelete(scope.row)">
+              <el-icon><Delete /></el-icon> 撤销
+            </el-link>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <!--  分页-->
     <div style="margin: 10px 0">
@@ -420,18 +415,14 @@ onMounted(async () => {
 .page-container {
   padding: 20px;
   background-color: white;
-  //line-height: 10%;
-  //overflow: hidden;
-  height: 100%;
-}
 
+}
 
 .filter-container {
   padding: 20px;
   background-color: #ffffff;
   margin-bottom: 0;
   border-radius: 8px;
-  //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .filter-content {
@@ -478,7 +469,6 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
-/* 新增按钮样式 */
 .add-button-row {
   margin-bottom: 20px;
   margin-left: 1%;
@@ -488,48 +478,10 @@ onMounted(async () => {
   float: right;
 }
 
-/* 卡片容器 */
-.card-container {
-  display: flex;
-  flex-direction: column;
-  //gap: 10px;
+.el-table {
   width: 100%;
 }
 
-/* 卡片样式 */
-.card {
-  width: 100%;
-  //border-radius: 8px;
-  //overflow: hidden;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  //transition: box-shadow 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.card-content {
-  padding: 10px 15px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 15px;
-  margin-bottom: 15px;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: normal;
-  color: #606266;
-}
-
-.description-box {
-  margin-bottom: 10px;
-}
 
 .info-row {
   font-size: 12px;
@@ -542,16 +494,9 @@ onMounted(async () => {
   color: #909399;
 }
 
-.card-actions {
-  padding: 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center; /* 垂直居中 */
-  height: 100%; /* 设置容器高度为 100% */
-  gap: 5px; /* 调整按钮之间的间距 */
-  margin: auto;
+.el-pagination {
+  margin: 10px 0;
 }
-
 
 @media (max-width: 1200px) {
   .filter-content {
@@ -564,15 +509,33 @@ onMounted(async () => {
   }
 }
 
-
-.action-link {
-  margin-right: 10px;
-  font-weight: bold;
-  color: #409EFF;
+.action-buttons {
+  display: flex;
+  flex-direction: column; /* 竖直排列按钮 */
+  gap: 8px; /* 按钮之间的间距 */
+  align-items: flex-start; /* 左对齐按钮 */
 }
 
-.el-overlay-dialog {
-  overflow: hidden;
+.el-link {
+  display: flex;
+  align-items: center; /* 图标与文字居中对齐 */
+}
+
+.el-icon {
+  margin-right: 5px; /* 图标与文字的间距 */
+  font-size: 14px; /* 图标大小 */
+}
+
+.action-link {
+  font-weight: bold;
+  color: #409EFF;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.action-link:hover {
+  color: #66b1ff;
+  transform: translateY(-2px);
 }
 
 </style>

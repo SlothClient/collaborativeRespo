@@ -99,7 +99,7 @@ const submitForm = async (formEl) => {
       } else {
         ElMessage.success('登录成功')
         loading.value = false
-        await router.push('/dashboard')
+        await router.push('/dashboard/home')
       }
     } else {
       console.log('error submit!', fields)
