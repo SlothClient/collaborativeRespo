@@ -121,7 +121,7 @@ const formatStatus = (status) => {
 .dialog-content {
   padding: 20px 0;
   max-height: 600px; /* 限制对话框的最大高度，取消滚动条 */
-  overflow: hidden;
+
 }
 
 .info-section {

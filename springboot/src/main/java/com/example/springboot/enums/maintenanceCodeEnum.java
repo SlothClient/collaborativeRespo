@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public enum maintenanceCodeEnum {
     /**
-     * 初始审批状态
+     * 初始某一级审批状态
      */
     PENDING_APPROVAL("待审批", 0),
     /**

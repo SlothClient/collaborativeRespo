@@ -35,10 +35,9 @@ const router = useRouter();
 const menuItems = computed(() => {
   const homeRoute = router.getRoutes().find(routes => routes.name === 'dashboard');
   if (!homeRoute) {
-    console.error('Home route not found');
+    console.error('没找到dashboard');
     return [];
   }
-  console.log(homeRoute.children )
   return homeRoute.children || [];
 });
 

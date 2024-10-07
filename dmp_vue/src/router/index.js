@@ -15,44 +15,16 @@ export const constantRoutes = [
         path: '/dashboard',
         name: 'dashboard',
         component: () => import('@/layout/container.vue'),
-        children: [
-            // {
-            //     path: 'home',
-            //     name: 'home',
-            //     component: () => import('@/views/home.vue')
-            // },
-            // {
-            //     path: 'Device',
-            //     name: 'device',
-            //     component: () => import('@/views/Device.vue')
-            // },
-            // {
-            //     path: 'maintenance',
-            //     name: 'maintenance',
-            //     component: () => import('@/views/maintenancePlan/index.vue')
-            // },
-            // {
-            //     path: 'WorkHours',
-            //     name: 'workHours',
-            //     component: () => import('@/views/WorkHours.vue')
-            // },
-            // {
-            //     path: 'WorkOrder',
-            //     name: 'workOrder',
-            //     component: () => import('@/views/WorkOrder.vue')
-            // },
-            // {
-            //     path: 'approve',
-            //     name: 'approve',
-            //     component: () => import('@/views/approval/index.vue'),
-            //     meta: {requiresAuth: true, roles: ['admin']} // 示例权限设置
-            // }
-        ]
+        children: []
     },
     {
-        path: '/:pathMatch(.*)*',
+        path: '/NotFound',
         name: 'NotFound',
         component: () => import('@/views/NotFound.vue')
+    },
+    {
+        path: '/*',
+        redirect: '/NotFound'
     }
 ]
 

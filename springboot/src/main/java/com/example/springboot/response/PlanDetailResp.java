@@ -36,13 +36,13 @@ public class PlanDetailResp {
     /**
      * 计划开始时间
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date startTime;
 
     /**
      * 计划结束时间
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date endTime;
 
     /**
@@ -68,13 +68,13 @@ public class PlanDetailResp {
     /**
      * 计划创建时间
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
     private Date createTime;
 
     /**
      * 计划更新时间
      */
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
     private Date updateTime;
 
     /**

@@ -3,9 +3,10 @@ import {constantRoutes, router} from "@/router/index.js";
 import {getUserMenu} from "@/api/user/index.js";
 import {ElNotification} from "element-plus";
 import {ref} from 'vue'
+
 const modules = import.meta.glob('@/views/**/*.vue');  // 递归加载 views 目录下的所有 Vue 文件
 
-const filterAsyncRoutes = (routes) => {
+export  const filterAsyncRoutes = (routes) => {
     console.log(modules)
     return routes.map(route => {
         const routeObj = {
@@ -29,9 +30,8 @@ const filterAsyncRoutes = (routes) => {
             // 使用 import.meta.glob 加载组件
             if (modules[componentPath]) {
                 routeObj.component = modules[componentPath];  // 赋值为加载的组件函数
-                console.log(modules[componentPath])
             } else {
-                console.error(`Component not found for path: ${componentPath}`);
+                console.error(`找不到这个: ${componentPath}`);
             }
         }
 
@@ -48,16 +48,12 @@ export const usePermissionStore = defineStore("permission", () => {
     const setRoutes = (newRoutes) => {
         console.log("setRoutes")
         const homeRoute = routes.value.find(route => route.name === 'dashboard')
-
-        console.log(homeRoute)
         if (homeRoute && homeRoute.children) {
-            console.log("找到了")
             // 过滤掉已存在的路由
             const uniqueNewRoutes = newRoutes.filter(newRoute =>
                 !homeRoute.children.some(existingRoute => existingRoute.path === newRoute.path)
             )
             homeRoute.children.push(...uniqueNewRoutes)
-            console.log(homeRoute.children)
             // 动态注册新路由
             uniqueNewRoutes.forEach(route => {
                 router.addRoute('dashboard', route);
@@ -72,10 +68,9 @@ export const usePermissionStore = defineStore("permission", () => {
             const res = await getUserMenu()
             if (res.data.flag) {
                 const asyncRoutes = res.data.data
+                localStorage.setItem('userMenu',asyncRoutes)
                 const accessedRoutes = filterAsyncRoutes(asyncRoutes)
                 setRoutes(accessedRoutes)
-                console.log(accessedRoutes)
-                console.log(router.getRoutes())
                 return accessedRoutes
             } else {
                 ElNotification({
@@ -99,6 +94,6 @@ export const usePermissionStore = defineStore("permission", () => {
     return {
         routes,
         generateRoutes,
-        setRoutes
+        setRoutes,
     }
 })

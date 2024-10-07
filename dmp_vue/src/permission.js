@@ -1,18 +1,18 @@
 import {router} from "@/router/index.js";
 import {useUserStore} from "@/store/module/user.js"
 import {usePermissionStore} from "@/store/module/permission.js";
-import {getToken, removeToken} from "@/utils/token.js";
+import {getToken, removeToken,} from "@/utils/token.js";
+
 
 const whiteList = ["/login"];
 router.beforeEach(async (to, from, next) => {
-
     const userStore = useUserStore();
     const permissionStore = usePermissionStore();
     const hasToken = getToken();
 
     if (hasToken) {
         if (to.path === '/login') {
-            next({path: 'dashboard/home'});
+            next({path: '/home'});
         } else {
             if (userStore.user.roles.length === 0) {
                 try {
@@ -21,7 +21,10 @@ router.beforeEach(async (to, from, next) => {
 
                     // 重新生成路由
                     const res = await permissionStore.generateRoutes();
+                    console.log("重新生成的路由")
                     console.log(res)
+                    console.log(to.path)
+                    console.log(to.matched)
                     next({...to, replace: true});
                 } catch (error) {
                     // 出错时重置token并跳转到登录页
@@ -30,9 +33,7 @@ router.beforeEach(async (to, from, next) => {
                     console.error(error);
                 }
             } else {
-
                 next();
-
             }
         }
     } else {
@@ -43,3 +44,4 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 });
+

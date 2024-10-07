@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.springboot.enums.maintenanceCodeEnum.*;
+
 /**
  * @author Lenovo
  * @description 针对表【maintance_info】的数据库操作Service实现
@@ -85,26 +87,27 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                 .startTime(maintenanceInfo.getStartTime())
                 .endTime(maintenanceInfo.getEndTime())
                 .equipId(maintenanceInfo.getEquipId())
-                .status(0)
+                .status(PENDING_APPROVAL.getCode()) //设置整个审批状态为审批中
                 .build();
-
         maintenanceMapper.insert(maintanceInfoDetail);
 
+        //申请人
         ApprovalInfo approvalInfoApplicant = ApprovalInfo
                 .builder()
                 .planId(maintanceInfoDetail.getPlanId())
                 .applicantId(userId)
-                .approvalStatus(0)
+                .approvalStatus(APPROVAL_PASS.getCode())//默认申请成功
                 .stepOrder(0)
                 .manipTime(maintenanceInfo.getCreateTime())
                 .build();
         approvalInfoMapper.insert(approvalInfoApplicant);
 
+        //一级审批人
         ApprovalInfo approvalInfoFirst = ApprovalInfo
                 .builder()
                 .planId(maintanceInfoDetail.getPlanId())
-                .approvalStatus(0)
-                .stepOrder(1)
+                .approvalStatus(PENDING_APPROVAL.getCode())//默认为待审批
+                .stepOrder(1) //第一级
                 .fatherId(approvalInfoApplicant.getFatherId())
                 .build();
         approvalInfoMapper.insert(approvalInfoFirst);
@@ -112,8 +115,8 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
         ApprovalInfo approvalInfoSecond = ApprovalInfo
                 .builder()
                 .planId(maintanceInfoDetail.getPlanId())
-                .approvalStatus(0)
-                .stepOrder(2)
+                .approvalStatus(PENDING_APPROVAL.getCode()) //默认为待审批
+                .stepOrder(2) //第二级
                 .fatherId(approvalInfoFirst.getFatherId())
                 .build();
         approvalInfoMapper.insert(approvalInfoSecond);

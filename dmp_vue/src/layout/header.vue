@@ -1,6 +1,6 @@
 <template>
   <div class="header-content">
-    <h1 style="margin:auto;">这里是头</h1>
+    <h1 style="margin:auto;">中药制剂运维系统</h1>
     <el-dropdown @command="handleCommand">
       <el-avatar size='large' src=""/>
       <el-icon class="el-icon--right">

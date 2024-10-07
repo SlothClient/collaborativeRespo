@@ -4,7 +4,7 @@
     <div class="filters">
       <el-input
           v-model="searchQuery"
-          placeholder="搜索设备名称或计划名称"
+          placeholder="搜索设备名称或计划名称(admin)"
           clearable
           class="search-input"
       />
@@ -30,11 +30,11 @@
         ref="tableRef"
         :data="tableData"
         stripe
-        :border="false"
+        :border="true"
         style="width: 100%"
         class="device-table"
     >
-      <el-table-column prop="createTime" label="日期" sortable/>
+      <el-table-column prop="createTime" label="创建日期" sortable/>
       <el-table-column
           prop="maintenanceName"
           label="计划名称"
@@ -71,33 +71,174 @@
       <!-- 操作列 -->
       <el-table-column label="操作">
         <template #default="scope">
-          <el-link @click.prevent="approve(scope.row)" type="success" class="action-link">通过</el-link>
-          <el-link @click.prevent="reject(scope.row)" type="danger" class="action-link">驳回</el-link>
-          <el-popover
-              placement="bottom-start"
-              :width="160"
-              trigger="click"
-          >
-            <div>
-              <el-link @click.prevent="viewDetails(scope.row)" type="primary" class="more-action-link">查看详情
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <!-- 审批和驳回操作
+            当前页面为admin所拥有
+            1.当前计划的状态处于审批中
+            2.该登陆用户的对于该审批状态为待审批或审批中 -->
+            <div style="display: flex;" v-if="userStore.user.roles.indexOf('R001') !==-1">
+              <el-link
+                  v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
+                  @click.prevent="handleCommand('approve', scope.row.planId)"
+                  type="success"
+                  class="action-link"
+              >
+                <el-icon>
+                  <CircleCheck/>
+                </el-icon>
+                通过
               </el-link>
-              <el-link type="danger" @click.prevent="confirmDelete(scope.row)" class="more-action-link">删除</el-link>
+              <el-link
+                  v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
+                  @click.prevent="handleCommand('reject', scope.row.planId)"
+                  type="danger"
+                  class="action-link"
+              >
+                <el-icon>
+                  <CircleClose/>
+                </el-icon>
+                驳回
+              </el-link>
+              <!--              下一级处理中-->
+              <el-link
+                  v-if="scope.row.myStatus === 0 && scope.row.planStatus === 0 "
+                  type="warning"
+                  class="action-link"
+                  disabled
+              >
+                <el-icon>
+                  <CircleCheck/>
+                </el-icon>
+                下一级处理中
+              </el-link>
+              <!-- 已处理，
+               当该登入用户的审核状态不为0即为已处理，同时当前用户已处理那么整个审核计划不可能在为待审核
+               -->
+              <el-link
+                  v-if="scope.row.myStatus !== 0 || (scope.row.planStatus ===3)"
+                  class="action-link"
+                  type="info"
+                  disabled
+              >
+                <el-icon style="margin-right: 5px;">
+                  <Finished/>
+                </el-icon>
+                已处理
+              </el-link>
+
+
+              <!--              <el-link-->
+              <!--                  v-if="scope.row.myStatus !== 0 && scope.row.planStatus === 2"-->
+              <!--                  class="action-link"-->
+              <!--                  type="info"-->
+              <!--              >-->
+              <!--                <el-icon style="margin-right: 5px;">-->
+              <!--                  <Finished/>-->
+              <!--                </el-icon>-->
+              <!--                已通过-->
+              <!--              </el-link>-->
             </div>
-            <template #reference>
-              <el-link type="primary" class="action-link" icon="ArrowDown">
-                更多
+            <div style="display: flex;" v-else>
+              <el-link
+                  v-if="scope.row.myStatus === 0 && scope.row.planStatus === 0"
+                  @click.prevent="handleCommand('approve', scope.row.planId)"
+                  type="success"
+                  class="action-link"
+              >
+                <el-icon>
+                  <CircleCheck/>
+                </el-icon>
+                通过
               </el-link>
-            </template>
-          </el-popover>
+              <el-link
+                  v-if="scope.row.myStatus === 0 &&scope.row.planStatus === 0"
+                  @click.prevent="handleCommand('reject', scope.row.planId)"
+                  type="danger"
+                  class="action-link"
+              >
+                <el-icon>
+                  <CircleClose/>
+                </el-icon>
+                驳回
+              </el-link>
+              <!-- 已处理，
+               当前登陆用户已对该计划做出操作，
+               该用户对该计划的status不为0
+               -->
+              <el-link
+                  v-if="scope.row.myStatus !== 0"
+                  class="action-link"
+                  type="info"
+                  disabled
+              >
+                <el-icon style="margin-right: 5px;">
+                  <Finished/>
+                </el-icon>
+                已处理
+              </el-link>
+
+            </div>
+
+            <el-popover
+                placement="bottom-start"
+                :width="160"
+                trigger="click"
+                popper-class="more-actions-popover"
+            >
+              <div class="more-actions-content">
+                <el-link
+                    @click.prevent="viewDetails(scope.row)"
+                    type="primary"
+                    class="more-action-link"
+                >
+                  <el-icon>
+                    <Document/>
+                  </el-icon>
+                  详情
+                </el-link>
+                <el-link
+                    type="danger"
+                    @click.prevent="confirmDelete(scope.row)"
+                    class="more-action-link"
+                >
+                  <el-icon>
+                    <Delete/>
+                  </el-icon>
+                  删除
+                </el-link>
+              </div>
+
+              <!-- 更多操作按钮 -->
+              <template #reference>
+                <el-link type="primary" class="more-link" style="display: flex; align-items: center;">
+                  <el-icon>
+                    <More/>
+                  </el-icon>
+                  更多
+                </el-link>
+              </template>
+            </el-popover>
+          </div>
+
         </template>
       </el-table-column>
     </el-table>
+
+    <ApprovalPassDialog
+        :visible="approvalOrRejectDialogVisible"
+        @closeDialog="handleCloseDialog"
+        @onSubmit="handleApproval"
+        :currentCommand="currentCommand"
+        :currentRow="currentRow"
+    >
+    </ApprovalPassDialog>
 
     <!--    详情框-->
     <ApprovalDetailDrawer
         :approvalDetailVisible="approvalDetailVisible"
         @close-approval-detail="closeApprovalDetail()"
         :currentRow="currentRow"
+        :title="title"
     ></ApprovalDetailDrawer>
 
     <!-- 分页控件 -->
@@ -123,10 +264,15 @@
 import {ref, onMounted} from 'vue';
 import {ElMessageBox, ElNotification} from 'element-plus';
 import ApprovalDetailDrawer from '@/components/approval/approvalDetailDrawer.vue';
-import {getApprovalDetail, getApprovalList} from '@/api/approval/index.js';
+import {approvalPass, approvalReject, getApprovalDetail, getApprovalList} from '@/api/approval/index.js';
 import {useEquipmentInfoStore} from '@/store/module/equipmentInfo.js';
+import ApprovalPassDialog from "@/components/approval/approvalPassDialog.vue";
+import {useUserStore} from "@/store/module/user.js";
 
+const userStore = useUserStore();
 const equipmentStore = useEquipmentInfoStore();
+
+const title = ref('')
 
 const tableRef = ref();
 
@@ -152,6 +298,60 @@ const approvalDetailVisible = ref(false); // 详情框是否可见
 const currentRow = ref(); // 当前行
 const equipNameFilter = ref([]);
 const maintenanceTypeFilter = ref([]);
+const approvalOrRejectDialogVisible = ref(false);
+const selectedPlanId = ref(null);
+//true表示
+const currentCommand = ref('')
+// 显示对话框
+// 控制对话框显示并传递不同的审批类型
+const handleCommand = (command, planId) => {
+  console.log(currentRow.value)
+  currentCommand.value = command;
+  selectedPlanId.value = planId;
+  approvalOrRejectDialogVisible.value = true;
+};
+
+// 关闭对话框
+const handleCloseDialog = () => {
+  approvalOrRejectDialogVisible.value = false;
+};
+
+// 处理提交操作
+const handleApproval = (comment) => {
+  if (currentCommand.value === 'approve') {
+    // 同意审批逻辑
+    approve(selectedPlanId.value, comment);
+  } else {
+    // 驳回审批逻辑
+    reject(selectedPlanId.value, comment);
+  }
+};
+
+// 审批通过
+const approve = async (planId, approvalRemark) => {
+  console.log(planId)
+  const res = await approvalPass(planId, approvalRemark)
+  if (res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: 'success'
+    })
+    await loadData();
+  }
+};
+
+// 审批驳回
+const reject = async (planId, approvalRemark) => {
+
+  const res = await approvalReject(planId, approvalRemark)
+  if (res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: 'success'
+    })
+  }
+  await loadData();
+};
 
 // 筛选
 const statusFilter = ref([
@@ -232,26 +432,18 @@ const handleFilterChange = (newFilters) => {
 
 // 查看详情
 const viewDetails = async (row) => {
+  console.log(row)
   const res = await getApprovalDetail(row.planId)
-  if(!res.data.flag){
+  if (!res.data.flag) {
     ElNotification({
-      message:res.data.msg,
-      type:'error'
+      message: res.data.msg,
+      type: 'error'
     })
-  }else {
+  } else {
     currentRow.value = res.data.data
+    title.value = row.maintenanceName
     approvalDetailVisible.value = true;
   }
-};
-
-// 审批通过
-const approve = (row) => {
-  row.status = '已通过';
-};
-
-// 审批驳回
-const reject = (row) => {
-  row.status = '已驳回';
 };
 
 // 日期范围变化
@@ -339,7 +531,7 @@ onMounted(async () => {
       })
   );
 
-  loadData();
+  await loadData();
 });
 </script>
 
@@ -375,11 +567,20 @@ onMounted(async () => {
   transition: background-color 0.3s, color 0.3s;
 }
 
+.more-link {
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  justify-content: flex-end; /* 确保更多按钮在最右边 */
+}
+
 .action-link:hover {
   background-color: #f0f0f0;
 }
 
 .more-action-link {
   margin: 5px 20px 5px 5px;
+
 }
 </style>
