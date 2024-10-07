@@ -3,10 +3,14 @@
         <div class="filter">
             <span class="descWords">工单状态：</span>
             <el-button-group class="ml-4">
-                <el-button type="primary">全部</el-button>
-                <el-button type="primary" plain>未开始</el-button>
-                <el-button type="primary" plain>保养中</el-button>
-                <el-button type="primary" plain>已完成</el-button>
+                <el-button :class="{ active: statusFilter === 'no' }" @click="fetchOrders()">全部
+                </el-button>
+                <el-button :class="{ active: statusFilter === 'not_started' }" @click="fetchOrders('not_started')">未开始
+                </el-button>
+                <el-button :class="{ active: statusFilter === 'in_progress' }" @click="fetchOrders('in_progress')">保养中
+                </el-button>
+                <el-button :class="{ active: statusFilter === 'completed' }" @click="fetchOrders('completed')">已完成
+                </el-button>
             </el-button-group>
             <span class="descWords">工单编号：</span>
             <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable />
@@ -15,18 +19,20 @@
                 end-placeholder="End date" format="YYYY-MM-DD HH:mm:ss" date-format="YYYY/MM/DD ddd"
                 time-format="A hh:mm:ss" style="width: 200px" />
             <el-button type="primary" :icon="Search" style="margin-left: 10px;">查询</el-button>
-            <el-button type="primary" :icon="Search">重置</el-button>
+            <el-button type="primary" :icon="Refresh" @click="resetFilters">重置</el-button>
         </div>
         <div class="orders">
+            <!--  v-if="pickedNum > 0" -->
             <div id="pickedPrompt">
                 <div class="picked">
                     已选择<span>{{ pickedNum }}</span>项
                 </div>
-                <div class="clear">
+                <div class="clear" @click="clearSelection">
                     清空
                 </div>
             </div>
-            <el-table :data="orderTable" style="width: 99%;margin: 10px;" :stripe="true" :border="true">
+            <el-table :data="orderTable" style="width: 99%;margin: 10px;" :stripe="true" :border="true"
+                @selection-change="handleSelectionChange" ref="orderTableRef">
                 <el-table-column type="selection" width="55" align="center" />
                 <el-table-column property="id" label="保养工单信息" width="880" align="center">
                     <template #default="scope">
@@ -34,12 +40,14 @@
                             <div>工单编号：<span>{{ scope.row.工单编号 }}</span></div>
                             <div>设备编号：<span>{{ scope.row.设备编号 }}</span></div>
                             <div>派单时间：<span>{{ scope.row.派单时间 }}</span></div>
+                            <br/>
                             <div>开始时间：<span>{{ scope.row.开始时间 }}</span></div>
                             <div>结束时间：<span>{{ scope.row.结束时间 }}</span></div>
-                            <div>标准工时：<span>{{ scope.row.标准工时 }}</span></div>
+                            <br/>
+                            <!-- <div>标准工时：<span>{{ scope.row.标准工时 }}</span></div> -->
                             <div>负责人编号：<span>{{ scope.row.负责人编号 }}</span></div>
-                            <div>工单备注：<span>{{ scope.row.工单备注 }}</span></div>
-                            <div>工作记录：<span>{{ scope.row.工作记录 }}</span></div>
+                            <!-- <div>工单备注：<span>{{ scope.row.工单备注 }}</span></div> -->
+                            <!-- <div>工作记录：<span>{{ scope.row.工作记录 }}</span></div> -->
                         </div>
                     </template>
                 </el-table-column>
@@ -63,7 +71,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue';
+import { Refresh, Search } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -71,18 +79,45 @@ const orderId = ref('');
 const orderSpan = ref([]);
 const orderTable = ref([]);
 const pickedNum = ref(0);
+const statusFilter = ref('no');
+const selectedRows = ref([]); // 新增一个变量来追踪选中的行
+const orderTableRef = ref(null); // 引用 el-table 组件
 
-const fetchOrders = async (status) => {
-    const condition = {};
+const fetchOrders = async (status = 'no') => {
+    const condition = {
+
+    };
+
+    // 激活按钮
+    statusFilter.value = status;
 
     let formData = new FormData();
     formData.append("conditionJson", JSON.stringify(condition));
 
     try {
-        const response = await axios.post('http://localhost:8889/equip/getOrder',formData);
+        const response = await axios.post('http://localhost:8889/equip/getOrder', formData);
 
         if (response.data.status) {
             orderTable.value = response.data.list; // Update orderTable with data from the response
+            // Filter orders based on status
+            if (status) {
+                orderTable.value = orderTable.value.filter(order => {
+                    const now = new Date();
+                    const startTime = new Date(order.开始时间);
+                    const endTime = new Date(order.结束时间);
+
+                    switch (status) {
+                        case 'not_started':
+                            return now < startTime;
+                        case 'in_progress':
+                            return now >= startTime && now <= endTime;
+                        case 'completed':
+                            return now > endTime;
+                        default:
+                            return true; // No filter for 'all'
+                    }
+                });
+            }
         } else {
             console.error("Error:", response.data.msg);
         }
@@ -98,6 +133,7 @@ onMounted(() => {
 const resetFilters = () => {
     orderId.value = '';
     orderSpan.value = [];
+    statusFilter.value = ''; // Reset status filter
     fetchOrders();
 };
 
@@ -108,6 +144,21 @@ const handleEdit = (index, row) => {
 const handleDelete = (index, row) => {
     console.log(index, row);
 };
+
+const handleSelectionChange = (val) => {
+    selectedRows.value = val; // 更新选中的行
+    pickedNum.value = val.length; // 更新已选数量
+};
+
+const clearSelection = () => {
+    if (orderTableRef.value) {
+        orderTableRef.value.clearSelection(); // 清除所有选中的行
+    }
+    pickedNum.value = 0; // 重置已选数量
+    selectedRows.value = []; // 清空选中的行
+};
+
+// 查询，工单编号、时间范围，选择几个条件查询几个条件，不选择默认查询所有
 </script>
 <style scoped>
 .filter {
@@ -149,9 +200,14 @@ const handleDelete = (index, row) => {
 }
 
 .flex-container {
-    display: flex;
+    /* display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 10px; */
+    text-align: left;
+}
+.flex-container > div {
+    display: inline-block;
+    margin: 10px 5px 10px;
 }
 
 .id,
@@ -159,5 +215,10 @@ const handleDelete = (index, row) => {
 .record {
     flex: 1;
     min-width: 200px;
+}
+
+.active {
+    background-color: #409EFF;
+    color: white;
 }
 </style>
