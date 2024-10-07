@@ -18,7 +18,7 @@
           </el-input>
           <el-date-picker
               v-model="dateRange"
-              type="daterange"
+              type="datetimerange"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               size="small"
@@ -38,23 +38,32 @@
       <el-button type="primary" size="small" icon="Plus"
                  @click="isMaintenancePlanAddVisible = !isMaintenancePlanAddVisible" class="add-btn">新增
       </el-button>
-      <el-button type="primary" size="small" icon="User" class="add-btn">分派人员</el-button>
-      <el-button type="primary" size="small" icon="Filter" class="add-btn">高级查询</el-button>
+      <el-button type="primary" size="small" icon="User" class="add-btn" @click="openDispatchOrderDialog">
+        分派人员
+      </el-button>
+      <el-button type="primary" size="small" icon="Filter" class="add-btn"
+                 @click="advancedSearchDialogVisible =!advancedSearchDialogVisible">高级查询
+      </el-button>
     </el-row>
 
     <!-- 数据展示-->
-    <el-table :data="data" stripe style="width: 100%;">
-      <el-table-column type="selection" width="28"></el-table-column>
+    <el-table :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
+      <el-table-column type="selection" width="28" :selectable="selectable"></el-table-column>
 
       <el-table-column label="保养计划信息">
         <template #default="scope">
           <el-card>
-            <el-row :gutter="10">
+            <el-row :gutter="12">
               <el-col :span="19">
                 <el-descriptions :column="2" size="small">
                   <el-descriptions-item label="计划名称">{{ scope.row.planName }}</el-descriptions-item>
                   <el-descriptions-item label="计划编号">{{ scope.row.planId }}
-                    <el-tag size="small" type="success">{{ getStatusLabel(scope.row.status) }}</el-tag>
+                    <el-tag
+                        size="small"
+                        :class="getStatusClass(scope.row.status)"
+                    >
+                      {{ getStatusLabel(scope.row.status) }}
+                    </el-tag>
                   </el-descriptions-item>
                   <el-descriptions-item label="开始时间">{{ scope.row.startTime }}</el-descriptions-item>
                   <el-descriptions-item label="结束时间">{{ scope.row.endTime }}</el-descriptions-item>
@@ -86,13 +95,22 @@
         <template #default="scope">
           <div class="action-buttons">
             <el-link type="primary" @click="openEditDialog(scope.row)">
-              <el-icon><Edit /></el-icon> 编辑
+              <el-icon>
+                <Edit/>
+              </el-icon>
+              编辑
             </el-link>
             <el-link type="primary" @click="openDetailDialog(scope.row.planId)">
-              <el-icon><Document /></el-icon> 详情
+              <el-icon>
+                <Document/>
+              </el-icon>
+              详情
             </el-link>
             <el-link type="primary" @click.prevent="handleDelete(scope.row)">
-              <el-icon><Delete /></el-icon> 撤销
+              <el-icon>
+                <Delete/>
+              </el-icon>
+              撤销
             </el-link>
           </div>
         </template>
@@ -114,6 +132,14 @@
           @current-change="handleCurrentChange"
       />
     </div>
+
+
+    <!--    高级搜索框-->
+    <AdvancedSearchDialog
+        :advancedSearchDialogVisible="advancedSearchDialogVisible"
+        @close-advanced-search-dialog="closeAdvancedSearchDialog"
+        @advanced-search-plan="advancedSearchPlan"
+    ></AdvancedSearchDialog>
 
     <!--    详情框-->
     <maintenance-plan-detail-dialog
@@ -141,6 +167,16 @@
         :equipmentMaintenanceType="equipmentMaintenanceType"
         @edit-maintenance-plan="editMaintenancePlan"
     ></maintenance-plan-edit-dialog>
+
+    <!--    派单-->
+    <dispatch-order
+        :visible="dispatchVisible"
+        @close-dialog="closeDispatchDialog"
+        :selectedPlan="selectedPlan"
+        @dispatch-order="addOrder"
+        @remove-selected-plan="removeSelectedPlan"
+    >
+    </dispatch-order>
   </div>
 </template>
 
@@ -150,20 +186,139 @@ import MaintenancePlanDetailDialog from "@/components/maintenancePlan/maintenanc
 import MaintenancePlanAddDialog from "@/components/maintenancePlan/maintenancePlanAddDialog.vue";
 import MaintenancePlanEditDialog from "@/components/maintenancePlan/maintenancePlanEditDialog.vue";
 import {
-  addPlan,
+  addPlan, addWorkOrder,
   getMaintenancePlan, getPlanDetail, undoPlan, updateMaintenance,
 } from "@/api/maintenancePlan/index.js";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
+import AdvancedSearchDialog from "@/components/maintenancePlan/advancedSearchDialog.vue";
+import DispatchOrder from "@/components/maintenancePlan/dispatchOrder.vue";
+
+const tableRef = ref(null)
+
+//禁用多选框
+const selectable = (row, index) => {
+  return row.status === 2;
+
+}
+
+//派单
+const dispatchVisible = ref(false)
+const closeDispatchDialog = () => {
+  dispatchVisible.value = false
+}
+const openDispatchOrderDialog = () => {
+  dispatchVisible.value = true
+}
+
+const selectedPlan = ref([])
+const handleItemChange = (selection) => {
+  selectedPlan.value = selection
+};
+//移除相关计划
+const removeSelectedPlan = (index, planId) => {
+  const removedPlan = data.value.find(item => item.planId === planId);  // 找到要删除的计划
+
+  // 找到 selectedPlan 中对应的项并删除
+  const planIndex = selectedPlan.value.findIndex(plan => plan.planId === removedPlan.planId);
+  if (planIndex !== -1) {
+    selectedPlan.value.splice(planIndex, 1);  // 同步移除
+  }
+
+  // 取消表格中该行的选中状态
+  if (tableRef.value) {
+    const row = data.value.find(item => item.planId === removedPlan.planId);
+    if (row) {
+      tableRef.value.toggleRowSelection(row, false);  // 取消选中
+    }
+  }
+};
+
+//派单
+const addOrder = async (param) => {
+  console.log('父组件添加', param)
+  const res = await addWorkOrder(param)
+  if (res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: "success"
+    })
+    await getMaintenance(maintenancePlanReq.value);
+  }
+}
+
+
+//高级搜索
+const advancedSearch = ref(null)
+const advancedSearchDialogVisible = ref(false)
+
+const closeAdvancedSearchDialog = () => {
+  advancedSearch.value = null;
+  advancedSearchDialogVisible.value = false
+}
+const advancedSearchPlan = (param) => {
+  maintenancePlanReq.value.planName = param.planName
+  maintenancePlanReq.value.status = param.status
+  maintenancePlanReq.value.startTime = param.startTime
+  maintenancePlanReq.value.endTime = param.endTime
+  maintenancePlanReq.value.maintenanceTypeId = param.maintenanceTypeId
+  maintenancePlanReq.value.equipId = param.equipId
+  maintenancePlanReq.value.creator = param.creator
+  maintenancePlanReq.value.currentPage = 1
+  maintenancePlanReq.value.pageSize = 3
+  getMaintenance(maintenancePlanReq.value);
+}
+
 
 // 状态映射
 const statusOptions = [
   {label: '全部', value: -1},
-  {label: '待开始', value: 0},
-  {label: '已派单', value: 1},
-  {label: '执行中', value: 2},
-  {label: '已完成', value: 3}
+  {label: '待开始', value: 2},
+  {label: '已派单', value: 6},
+  {label: '执行中', value: 7},
+  {label: '已完成', value: 8}
 ];
+const getStatusLabel = (status) => {
+  switch (status) {
+    case 0:
+      return '待审批';
+    case 1:
+      return '审批中';
+    case 2:
+      return '待开始';
+    case 3:
+      return '已驳回';
+    case 6:
+      return '已派单';
+    case 7:
+      return '执行中';
+    case 8:
+      return '已完成';
+    default:
+      return '未知状态'
+  }
+}
+
+const getStatusClass = (status) => {
+  switch (status) {
+    case 0:
+      return 'status-pending';       // 待审批
+    case 1:
+      return 'status-in-approval';   // 审批中
+    case 2:
+      return 'status-to-start';      // 待开始
+    case 3:
+      return 'status-rejected';      // 已驳回
+    case 6:
+      return 'status-assigned';      // 已派单
+    case 7:
+      return 'status-in-progress';   // 执行中
+    case 8:
+      return 'status-completed';     // 已完成
+    default:
+      return 'status-unknown';       // 未知状态
+  }
+}
 
 const currentRowEdit = ref(null)
 const currentRowDetail = ref(null)
@@ -203,13 +358,7 @@ const handleDelete = (plan) => {
       })
 }
 
-const getStatusLabel = (statusValue) => {
-  // 根据statusValue返回相应的label
-  const option = statusOptions.find(option => option.value === statusValue);
-  return option ? option.label : '未知状态';
-}
-
-const checkboxGroup1 = ref([-1]); // 默认选择“全部”
+const checkboxGroup1 = ref([-1]); // 默认选择全部
 const planName = ref("");
 const dateRange = ref([]);
 
@@ -218,8 +367,6 @@ const isMaintenancePlanDetailVisible = ref(false);
 const closeDetailDialog = () => {
   isMaintenancePlanDetailVisible.value = false;
 };
-
-
 const openDetailDialog = async (planId) => {
   const res = await getPlanDetail(planId)
   if (!res.data.flag) {
@@ -233,7 +380,6 @@ const openDetailDialog = async (planId) => {
   isMaintenancePlanDetailVisible.value = true;
 };
 // 添加
-
 const isMaintenancePlanAddVisible = ref(false);
 const closeAddDialog = () => {
   isMaintenancePlanAddVisible.value = false;
@@ -311,7 +457,10 @@ const maintenancePlanReq = ref({
   planName: '',
   startTime: null,
   endTime: null,
-  status: []
+  status: [],
+  equipId: '',
+  maintenanceTypeId: '',
+  creator: ''
 });
 
 //分页
@@ -337,8 +486,7 @@ const searchPlans = () => {
   maintenancePlanReq.value.endTime = dateRange.value[1];
   maintenancePlanReq.value.currentPage = 1;
   if (checkboxGroup1.value.includes(-1)) {
-    // 当包含 '-1' 时，将 checkboxGroup1 设置为 [0, 1, 2, 3]
-    maintenancePlanReq.value.status = statusOptions.slice(1).map(option => option.value);
+    maintenancePlanReq.value.status = [] //statusOptions.slice(1).map(option => option.value);
   } else {
     maintenancePlanReq.value.status = checkboxGroup1.value;
   }
@@ -355,30 +503,17 @@ const clear = () => {
   maintenancePlanReq.value.startTime = null;
   maintenancePlanReq.value.endTime = null;
   maintenancePlanReq.value.status = [];
+  maintenancePlanReq.value.maintenanceTypeId = ''
+  maintenancePlanReq.value.equipId = ''
+  maintenancePlanReq.value.creator = ''
+  maintenancePlanReq.value.currentPage = 1
+  maintenancePlanReq.value.pageSize = 3
 }
 
 const resetFilters = () => {
   clear()
   getMaintenance(maintenancePlanReq.value);
 };
-
-
-// 全选、反选功能相关
-const checkAll = ref(false);
-const checkedItems = ref([]); // 存储每个计划是否被选中
-const isIndeterminate = ref(false);
-
-const handleCheckAllChange = (value) => {
-  checkedItems.value = value ? data.value.map(() => true) : data.value.map(() => false);
-  isIndeterminate.value = false;
-};
-
-const handleItemChange = () => {
-  const checkedCount = checkedItems.value.filter(Boolean).length;
-  checkAll.value = checkedCount === data.value.length;
-  isIndeterminate.value = checkedCount > 0 && checkedCount < data.value.length;
-};
-
 
 
 /**
@@ -388,8 +523,8 @@ const handleItemChange = () => {
  */
 const getMaintenance = async (maintenancePlanReq) => {
   const res = await getMaintenancePlan(maintenancePlanReq);
-  if (res.data.flag){
-    data.value = res.data.data.maintenanceInfoList;
+  if (res.data.flag) {
+    data.value = res.data.data.records;
     total.value = res.data.data.total
   }
 
@@ -406,6 +541,7 @@ onMounted(async () => {
   await getMaintenance(maintenancePlanReq.value);
   await equipmentStore.getEquipmentInfoList();
   await equipmentStore.getEquipmentMaintenanceTypeList();
+  await equipmentStore.getWorkerInfo();
   equipmentInfo.value = equipmentStore.equipmentInfo
   equipmentMaintenanceType.value = equipmentStore.equipmentMaintenanceType
 });
@@ -415,7 +551,6 @@ onMounted(async () => {
 .page-container {
   padding: 20px;
   background-color: white;
-
 }
 
 .filter-container {
@@ -428,7 +563,7 @@ onMounted(async () => {
 .filter-content {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 0;
 }
@@ -455,11 +590,15 @@ onMounted(async () => {
 
 .input-search {
   width: 200px;
+  min-width: 150px;
+  max-width: 300px;
   flex-shrink: 0;
 }
 
 .date-picker {
-  width: 300px;
+  width: 30%;
+  min-width: 250px;
+  max-width: 400px;
   flex-shrink: 0;
 }
 
@@ -476,12 +615,13 @@ onMounted(async () => {
 
 .add-btn {
   float: right;
+  min-width: 80px;
+  width: 100px;
 }
 
 .el-table {
   width: 100%;
 }
-
 
 .info-row {
   font-size: 12px;
@@ -498,44 +638,117 @@ onMounted(async () => {
   margin: 10px 0;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
   .filter-content {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .status-filter, .input-search, .date-picker, .button-group {
     width: 100%;
     margin-bottom: 10px;
   }
+
+  .add-button-row {
+    margin-left: 0;
+    text-align: center;
+  }
 }
 
 .action-buttons {
   display: flex;
-  flex-direction: column; /* 竖直排列按钮 */
-  gap: 8px; /* 按钮之间的间距 */
-  align-items: flex-start; /* 左对齐按钮 */
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 .el-link {
   display: flex;
-  align-items: center; /* 图标与文字居中对齐 */
+  align-items: center;
 }
 
 .el-icon {
-  margin-right: 5px; /* 图标与文字的间距 */
-  font-size: 14px; /* 图标大小 */
+  margin-right: 5px;
+  font-size: 14px;
 }
 
-.action-link {
+/* 状态样式定义 */
+
+.status-pending {
+  background-color: #e0e0e0;
+  color: #606266;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-in-approval {
+  background-color: #fdf6ec;
+  color: #e6a23c;
+  border: 1px solid #e6a23c;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-to-start {
+  background: linear-gradient(90deg, #e6e6e6, #dcdcdc);
+  color: #606266;
+  border: 1px dashed #bfbfbf;
+  border-radius: 4px;
   font-weight: bold;
-  color: #409EFF;
-  cursor: pointer;
-  transition: color 0.3s, transform 0.3s;
+  animation: pulse 2s infinite;
 }
 
-.action-link:hover {
-  color: #66b1ff;
-  transform: translateY(-2px);
+.status-rejected {
+  background-color: #fef0f0;
+  color: #f56c6c;
+  border: 1px solid #f56c6c;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-assigned {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-in-progress {
+  background-color: #fdf6ec;
+  color: #e6a23c;
+  border: 1px solid #e6a23c;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-completed {
+  background-color: #f0f9eb;
+  color: #67c23a;
+  border: 1px solid #67c23a;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.status-unknown {
+  background-color: #e0e0e0;
+  color: #606266;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0px rgba(102, 102, 102, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(102, 102, 102, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(102, 102, 102, 0.7);
+  }
 }
 
 </style>

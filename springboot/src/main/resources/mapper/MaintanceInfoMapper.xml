@@ -83,48 +83,16 @@
             <if test="maintenancePlanReq.endTime != null">
                 AND m.end_time &lt;= #{maintenancePlanReq.endTime}
             </if>
-        </if>
-        <!-- 分页 -->
-        LIMIT #{maintenancePlanReq.pageSize} OFFSET #{maintenancePlanReq.offset};
-    </select>
-
-
-    <select id="getMaintenancePlanCount" resultType="java.lang.Integer">
-        SELECT COUNT(1)
-        FROM maintance_info m
-        LEFT JOIN
-        (SELECT ai.plan_id, ai.manip_time, ai.applicant_id
-        FROM approval_info ai
-        WHERE ai.manip_time = (SELECT MIN(inside_ai.manip_time)
-        FROM approval_info inside_ai
-        WHERE inside_ai.plan_id = ai.plan_id)) first_approval
-        ON m.plan_id = first_approval.plan_id
-        LEFT JOIN
-        (SELECT ai.plan_id, ai.manip_time, ai.applicant_id
-        FROM approval_info ai
-        WHERE ai.manip_time = (SELECT MAX(inside_ai.manip_time)
-        FROM approval_info inside_ai
-        WHERE inside_ai.plan_id = ai.plan_id)) last_approval
-        ON m.plan_id = last_approval.plan_id
-        LEFT JOIN user_info first_user ON first_approval.applicant_id = first_user.user_id
-        LEFT JOIN user_info last_user ON last_approval.applicant_id = last_user.user_id
-        WHERE 1 = 1
-        <!-- 动态条件 -->
-        <if test="maintenancePlanReq != null">
-            <if test="maintenancePlanReq.status != null and maintenancePlanReq.status.size() > 0">
-                AND m.status IN
-                <foreach item="status" collection="maintenancePlanReq.status" open="(" separator="," close=")">
-                    #{status}
-                </foreach>
+            <if test="maintenancePlanReq.creator !=null and maintenancePlanReq.creator != '' ">
+                AND COALESCE(first_user.username, '未开始') = #{maintenancePlanReq.creator}
             </if>
-            <if test="maintenancePlanReq.planName != null and maintenancePlanReq.planName != ''">
-                AND m.plan_name LIKE concat('%', #{maintenancePlanReq.planName}, '%')
+            <if test="maintenancePlanReq.equipId != null and maintenancePlanReq.equipId !='' ">
+                AND m.equip_id = #{maintenancePlanReq.equipId}
             </if>
-            <if test="maintenancePlanReq.startTime != null">
-                AND m.start_time &gt;= #{maintenancePlanReq.startTime}
-            </if>
-            <if test="maintenancePlanReq.endTime != null">
-                AND m.end_time &lt;= #{maintenancePlanReq.endTime}
+            <if test="maintenancePlanReq.maintenanceTypeId != null and maintenancePlanReq.maintenanceTypeId != '' ">
+                AND m.maintance_type = (select maintance_type.maintance_name from maintance_type where
+                maintance_type.type_id =
+                #{maintenancePlanReq.maintenanceTypeId})
             </if>
         </if>
     </select>

@@ -1,10 +1,10 @@
 package com.example.springboot.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.springboot.entity.MaintanceInfoDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboot.request.MaintenancePlanReq;
 import com.example.springboot.response.MaintenanceInfo;
-import com.example.springboot.response.MaintenanceInfoResp;
 import com.example.springboot.utils.Result;
 
 /**
@@ -14,7 +14,7 @@ import com.example.springboot.utils.Result;
 */
 public interface MaintanceInfoService extends IService<MaintanceInfoDetail> {
 
-    Result<MaintenanceInfoResp> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq);
+    Result<IPage<MaintenanceInfo>> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq);
 
     Result addMaintenancePlan(MaintenanceInfo maintenanceInfo);
 
@@ -23,4 +23,6 @@ public interface MaintanceInfoService extends IService<MaintanceInfoDetail> {
     Result getMaintenancePlanDetail(String planId);
 
     Result updateMaintenance(MaintanceInfoDetail maintanceInfoDetail);
+
+//    Result<IPage<MaintenanceInfo>> getAdvancedMaintenancePlan(AdvancedSearchReq advancedSearchReq);
 }

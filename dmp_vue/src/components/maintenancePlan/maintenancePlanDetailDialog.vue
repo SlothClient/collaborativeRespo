@@ -99,13 +99,21 @@ const closeDialog = () => {
 const formatStatus = (status) => {
   switch (status) {
     case 0:
-      return '未开始';
+      return '待审批';
     case 1:
-      return '进行中';
+      return '审批中';
     case 2:
+      return '待开始';
+    case 3:
+      return '已驳回';
+    case 6:
+      return '已派单';
+    case 7:
+      return '执行中';
+    case 8:
       return '已完成';
     default:
-      return '未知';
+      return '未知状态'
   }
 };
 </script>

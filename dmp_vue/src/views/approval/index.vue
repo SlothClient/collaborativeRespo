@@ -264,7 +264,13 @@
 import {ref, onMounted} from 'vue';
 import {ElMessageBox, ElNotification} from 'element-plus';
 import ApprovalDetailDrawer from '@/components/approval/approvalDetailDrawer.vue';
-import {approvalPass, approvalReject, getApprovalDetail, getApprovalList} from '@/api/approval/index.js';
+import {
+  approvalPass,
+  approvalReject,
+  deleteApproval,
+  getApprovalDetail,
+  getApprovalList
+} from '@/api/approval/index.js';
 import {useEquipmentInfoStore} from '@/store/module/equipmentInfo.js';
 import ApprovalPassDialog from "@/components/approval/approvalPassDialog.vue";
 import {useUserStore} from "@/store/module/user.js";
@@ -459,11 +465,15 @@ const confirmDelete = (row) => {
     cancelButtonText: '取消',
     type: 'warning',
   })
-      .then(() => {
-        const index = tableData.value.indexOf(row);
-        if (index !== -1) {
-          tableData.value.splice(index, 1);
+      .then(async () => {
+        const res = await deleteApproval(row.planId)
+        if(res.data.flag){
+          ElNotification({
+            message:res.data.data,
+            type:"success"
+          })
         }
+        await loadData()
       })
       .catch(() => {
         console.log('用户取消了删除操作');

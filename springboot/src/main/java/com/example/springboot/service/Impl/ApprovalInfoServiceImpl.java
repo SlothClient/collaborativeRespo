@@ -231,6 +231,18 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
         return Result.fail("驳回失败，出现未知错误，请联系后台管理员");
     }
 
+    @Override
+    public Result<String> delete(String planId) {
+        int rows = approvalInfoMapper.delete(
+                new LambdaQueryWrapper<ApprovalInfo>()
+                        .eq(ApprovalInfo::getPlanId,planId)
+        );
+        if (rows < 0){
+            return Result.fail("删除失败");
+        }
+        return Result.success("删除成功");
+    }
+
     private ApprovalInfo getApprovalInfoByStepOrder(String planId, int stepOrder) {
         return approvalInfoMapper.selectOne(
                 new LambdaQueryWrapper<ApprovalInfo>()

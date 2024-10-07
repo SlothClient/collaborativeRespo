@@ -20,9 +20,9 @@ public class FiltersReq extends PageReq{
     private List<Integer> status; // 状态
     private String searchQuery; // 搜索关键字（设备名称或描述）
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
     private Date startDate; // 开始日期
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone="GMT+8")
     private Date endDate; // 结束日期
 }
