@@ -157,22 +157,35 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                         .orderByAsc(ApprovalInfo::getStepOrder)
         );
 
+        boolean hasUpdatedPerson = false;  // 标记更新者信息是否已设置
+
+// 遍历审批流程，继续设置更新者信息
         for (ApprovalInfo approvalInfo : approvalInfoList) {
+            System.out.println(approvalInfo);
             if (approvalInfo.getManipTime() != null) {
                 UserInfo userInfo = userInfoMapper.selectById(approvalInfo.getApplicantId());
                 System.out.println(userInfo);
+
+                // 设置创建者信息
                 if (approvalInfo.getStepOrder() == 0) {
                     detailResp.setCreator(userInfo.getUsername());
                     detailResp.setCreateTime(approvalInfo.getManipTime());
-                } else {
+                }
+
+                // 设置更新者信息，确保只更新一次
+                if (approvalInfo.getStepOrder() != 0 && !hasUpdatedPerson) {
                     detailResp.setUpdatePerson(userInfo.getUsername());
                     detailResp.setUpdateTime(approvalInfo.getManipTime());
                     detailResp.setRemark(approvalInfo.getApprovalRemark());
+                    hasUpdatedPerson = true;
                 }
             } else {
-                detailResp.setUpdatePerson("计划还未有人审批");
-                detailResp.setUpdateTime(null);
-                detailResp.setRemark("还未审批");
+                // 若当前 approvalInfo 还未审批，设置默认信息
+                if (!hasUpdatedPerson) {
+                    detailResp.setUpdatePerson("计划还未有人审批");
+                    detailResp.setUpdateTime(null);
+                    detailResp.setRemark("还未审批");
+                }
                 break;
             }
         }

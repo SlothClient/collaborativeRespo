@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 * @author Lenovo
@@ -57,7 +58,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         List<String> permission =StpUtil.getPermissionList().stream()
                 .filter(string -> !string.isEmpty())
                 .distinct()
-                .toList();
+                .collect(Collectors.toList());
         UserInfoResp userInfoResp = UserInfoResp.builder()
                 .username(user.getUsername())
                 .Id(userId)

@@ -372,6 +372,9 @@ const statusMap = {
   1: '审批中',
   2: '已通过',
   3: '已驳回',
+  6: '已通过',
+  7: '已通过',
+  8: '已通过',
 };
 
 // 搜索功能
@@ -410,6 +413,12 @@ const getStatusTagType = (status) => {
     case 1:
       return 'primary';
     case 2:
+      return 'success';
+    case 6:
+      return 'success';
+    case 7:
+      return 'success';
+    case 8:
       return 'success';
     case 3:
       return 'danger';
