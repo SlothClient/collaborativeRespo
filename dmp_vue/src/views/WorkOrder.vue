@@ -1,7 +1,10 @@
 <template>
+    <!-- 工单页容器 -->
     <div id="order">
+        <!-- 搜索、筛选元素容器 -->
         <div class="filter">
             <span class="descWords">工单状态：</span>
+            <!-- 工单状态组容器 -->
             <div id="statusGroup">
                 <el-button-group class="ml-4">
                     <el-button :class="{ active: statusFilter === 'no' }" @click="fetchOrders()">全部
@@ -25,8 +28,10 @@
             <el-button type="primary" :icon="Search" style="margin-left: 10px;">查询</el-button>
             <el-button type="primary" :icon="Refresh" @click="resetFilters">重置</el-button>
         </div>
+        <!-- 工单记录展示容器 -->
         <div class="orders">
             <!--  v-if="pickedNum > 0" -->
+            <!-- 选中提示框容器 -->
             <div id="pickedPrompt">
                 <div class="picked">
                     已选择<span>{{ pickedNum }}</span>项
@@ -35,6 +40,7 @@
                     清空
                 </div>
             </div>
+            <!-- 工单记录容器 -->
             <el-table :data="orderTable" style="width: 99%;margin: 10px;" :stripe="true" :border="true"
                 @selection-change="handleSelectionChange" ref="orderTableRef">
                 <el-table-column type="selection" width="55" align="center" />
@@ -73,8 +79,10 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <!-- 分页容器 -->
             <div id="pagination">
                 <span style="margin-right: 20px;">共<span style="color: #409eff;">{{ totalOrders }}</span>条</span>
+                <!-- 直接使用:报错，无法显示分页器，使用v-model:不报错 -->
                 <el-pagination background layout="prev, pager, next, sizes" @change="fetchOrders(statusFilter)"
                     v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:total="totalOrders"
                     :page-sizes="[3, 5, 10]" />
@@ -99,6 +107,12 @@ const orderTableRef = ref(null); // 引用 el-table 组件
 const currentPage = ref(1); // 当前页码
 const pageSize = ref(3); // 每页显示的条目数
 const totalOrders = ref(0); // 总条目数
+/**
+ * 异步获取订单数据
+ *
+ * @param status 订单状态，默认为'no'，表示获取所有订单；'not_started'表示未开始，'in_progress'表示进行中，'completed'表示已完成
+ * @returns 无返回值
+ */
 const fetchOrders = async (status = 'no') => {
     const condition = {
         offset: (currentPage.value - 1) * pageSize.value,
@@ -153,30 +167,58 @@ const fetchOrders = async (status = 'no') => {
     }
 };
 
+// 页面加载，获取订单
 onMounted(() => {
     fetchOrders();
 });
 
+/**
+ * 重置过滤器
+ *
+ * 重置订单ID、订单时间范围和订单状态过滤器，并重新请求订单数据。
+ */
 const resetFilters = () => {
     orderId.value = '';
     orderSpan.value = [];
-    statusFilter.value = ''; // Reset status filter
+    statusFilter.value = '';
     fetchOrders();
 };
 
+/**
+ * 处理编辑事件
+ *
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ */
 const handleEdit = (index, row) => {
     console.log(index, row);
 };
 
+/**
+ * 删除指定行的函数
+ *
+ * @param index 要删除行的索引
+ * @param row 要删除行的数据对象
+ */
 const handleDelete = (index, row) => {
     console.log(index, row);
 };
 
+/**
+ * 处理记录选中事件
+ *
+ * @param val 当前选择的行数据数组
+ */
 const handleSelectionChange = (val) => {
     selectedRows.value = val; // 更新选中的行
     pickedNum.value = val.length; // 更新已选数量
 };
 
+/**
+ * 清除所有选中项
+ *
+ * 清除订单表中的所有选中项，并重置已选数量和选中的行数组
+ */
 const clearSelection = () => {
     if (orderTableRef.value) {
         orderTableRef.value.clearSelection(); // 清除所有选中的行
