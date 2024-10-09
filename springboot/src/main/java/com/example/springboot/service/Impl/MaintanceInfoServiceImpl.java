@@ -2,24 +2,23 @@ package com.example.springboot.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.springboot.entity.ApprovalInfo;
-import com.example.springboot.entity.EquipInfo;
-import com.example.springboot.entity.MaintanceInfoDetail;
-import com.example.springboot.entity.UserInfo;
-import com.example.springboot.mapper.ApprovalInfoMapper;
-import com.example.springboot.mapper.EquipInfoMapper;
-import com.example.springboot.mapper.UserInfoMapper;
+import com.example.springboot.entity.*;
+import com.example.springboot.mapper.*;
 import com.example.springboot.request.MaintenancePlanReq;
 import com.example.springboot.response.MaintenanceInfo;
-import com.example.springboot.response.MaintenanceInfoResp;
 import com.example.springboot.response.PlanDetailResp;
 import com.example.springboot.service.MaintanceInfoService;
-import com.example.springboot.mapper.MaintanceInfoMapper;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.springboot.enums.maintenanceCodeEnum.*;
@@ -45,30 +44,32 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     @Autowired
     private EquipInfoMapper equipInfoMapper;
 
+
     @Override
-    public Result<MaintenanceInfoResp> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
+    public Result<IPage<MaintenanceInfo>> getMaintenancePlan(MaintenancePlanReq maintenancePlanReq) {
 
-        // 第一步：获取总记录数
-        int total = maintenanceMapper.getMaintenancePlanCount(maintenancePlanReq);
+//        int total = maintenanceMapper.getMaintenancePlanCount(maintenancePlanReq);
 
-        // 第二步：获取分页后的数据
-        List<MaintenanceInfo> maintenanceRespList = maintenanceMapper.getMaintenancePlan(maintenancePlanReq);
+        IPage<MaintenanceInfo> page = new Page<>(maintenancePlanReq.getCurrentPage(), maintenancePlanReq.getPageSize());
+
 
         // 如果查询结果为空，返回查询为空的提示
-        if (maintenanceRespList.isEmpty()) {
-            return Result.fail("查询为空");
-        }
+//        if (maintenanceRespList.isEmpty()) {
+//            return Result.fail("查询为空");
+//        }
 
         // 打印总数
-        System.out.println(total);
+//        System.out.println(total);
 
         // 构建返回响应对象
-        MaintenanceInfoResp maintenanceInfoResp = MaintenanceInfoResp.builder()
-                .maintenanceInfoList(maintenanceRespList)
-                .total(total) // 使用从第一个查询获取的总数
-                .build();
+//        MaintenanceInfoResp maintenanceInfoResp = MaintenanceInfoResp.builder()
+//                .maintenanceInfoList(maintenanceRespList)
+//                .total(total) // 使用从第一个查询获取的总数
+//                .build();
 
-        return Result.success(maintenanceInfoResp);
+        IPage<MaintenanceInfo> maintenancePage = maintenanceMapper.getMaintenancePlan(page, maintenancePlanReq);
+
+        return Result.success(maintenancePage);
     }
 
 
@@ -108,7 +109,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                 .planId(maintanceInfoDetail.getPlanId())
                 .approvalStatus(PENDING_APPROVAL.getCode())//默认为待审批
                 .stepOrder(1) //第一级
-                .fatherId(approvalInfoApplicant.getFatherId())
+                .fatherId(approvalInfoApplicant.getApprovalId())
                 .build();
         approvalInfoMapper.insert(approvalInfoFirst);
 
@@ -117,7 +118,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                 .planId(maintanceInfoDetail.getPlanId())
                 .approvalStatus(PENDING_APPROVAL.getCode()) //默认为待审批
                 .stepOrder(2) //第二级
-                .fatherId(approvalInfoFirst.getFatherId())
+                .fatherId(approvalInfoFirst.getApprovalId())
                 .build();
         approvalInfoMapper.insert(approvalInfoSecond);
 
@@ -145,7 +146,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
         MaintanceInfoDetail maintanceInfoDetail = maintenanceMapper.selectById(planId);
 
-        if (maintanceInfoDetail == null){
+        if (maintanceInfoDetail == null) {
             return Result.fail("该计划详情为空，请联系管理员检查");
         }
 
@@ -156,22 +157,35 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                         .orderByAsc(ApprovalInfo::getStepOrder)
         );
 
+        boolean hasUpdatedPerson = false;  // 标记更新者信息是否已设置
+
+// 遍历审批流程，继续设置更新者信息
         for (ApprovalInfo approvalInfo : approvalInfoList) {
+            System.out.println(approvalInfo);
             if (approvalInfo.getManipTime() != null) {
                 UserInfo userInfo = userInfoMapper.selectById(approvalInfo.getApplicantId());
                 System.out.println(userInfo);
+
+                // 设置创建者信息
                 if (approvalInfo.getStepOrder() == 0) {
                     detailResp.setCreator(userInfo.getUsername());
                     detailResp.setCreateTime(approvalInfo.getManipTime());
-                } else {
+                }
+
+                // 设置更新者信息，确保只更新一次
+                if (approvalInfo.getStepOrder() != 0 && !hasUpdatedPerson) {
                     detailResp.setUpdatePerson(userInfo.getUsername());
                     detailResp.setUpdateTime(approvalInfo.getManipTime());
                     detailResp.setRemark(approvalInfo.getApprovalRemark());
+                    hasUpdatedPerson = true;
                 }
             } else {
-                detailResp.setUpdatePerson("计划还未有人审批");
-                detailResp.setUpdateTime(null);
-                detailResp.setRemark("还未审批");
+                // 若当前 approvalInfo 还未审批，设置默认信息
+                if (!hasUpdatedPerson) {
+                    detailResp.setUpdatePerson("计划还未有人审批");
+                    detailResp.setUpdateTime(null);
+                    detailResp.setRemark("还未审批");
+                }
                 break;
             }
         }
@@ -195,7 +209,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
         MaintanceInfoDetail infoDetail = maintenanceMapper.selectById(maintanceInfoDetail.getPlanId());
 
-        if(infoDetail == null){
+        if (infoDetail == null) {
             return Result.fail("修改失败并未找到该计划，请联系后台管理员解决");
         }
         infoDetail.setStartTime(maintanceInfoDetail.getStartTime());
@@ -212,7 +226,107 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
         return Result.success("保养计划修改成功");
 
 
+    }
 
+
+    @Scheduled(cron = "0 0 0 * * ?") // 每天午夜执行
+    public void dynamicMaintenancePlanCreate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = formatter.format(new Date());
+        System.out.println("定时任务执行: " + currentTime);
+
+        // 查询所有设备
+        List<EquipInfo> equipInfoList = equipInfoMapper.selectList(
+                new LambdaQueryWrapper<EquipInfo>()
+                        .select(EquipInfo::getEquipId,
+                                EquipInfo::getFixBig,
+                                EquipInfo::getFixMedium,
+                                EquipInfo::getFixSmall,
+                                EquipInfo::getEquipName,
+                                EquipInfo::getPurchaseDate)
+        );
+
+        // 遍历所有设备并生成保养计划
+        for (EquipInfo equipInfo : equipInfoList) {
+            int daysSincePurchase = getDaysSincePurchase(equipInfo.getPurchaseDate());
+
+            String maintenanceType = null;
+            int maintenanceCycle = 0;
+
+            // 判断是否需要大修、中修或小修
+            if (daysSincePurchase % equipInfo.getFixBig() == 0) {
+                maintenanceCycle = equipInfo.getFixBig();
+                maintenanceType = "大修周期";
+            } else if (daysSincePurchase % equipInfo.getFixMedium() == 0) {
+                maintenanceCycle = equipInfo.getFixMedium();
+                maintenanceType = "中修周期";
+            } else if (daysSincePurchase % equipInfo.getFixSmall() == 0) {
+                maintenanceCycle = equipInfo.getFixSmall();
+                maintenanceType = "小修周期";
+            }
+
+            // 如果需要维护，则生成计划并插入数据库
+            if (maintenanceCycle > 0) {
+
+                MaintanceInfoDetail maintenanceInfo = MaintanceInfoDetail
+                        .builder()
+                        .equipId(equipInfo.getEquipId())
+                        .planName("定期维护-" + maintenanceType)
+                        .maintanceType(maintenanceType)
+                        .status(PENDING_APPROVAL.getCode())
+                        .maintanceDesc("保养计划" + equipInfo.getEquipName() + maintenanceType)
+                        .startTime(new Date())
+                        .endTime(getDateAfterDays(7))
+                        .build();
+
+                // 插入保养计划
+                maintenanceMapper.insert(maintenanceInfo);
+
+                ApprovalInfo applicantApproval = ApprovalInfo
+                        .builder()
+                        .manipTime(new Date())
+                        .planId(maintenanceInfo.getPlanId())
+                        .applicantId("U003")
+                        .approvalStatus(APPROVAL_PASS.getCode())
+                        .stepOrder(0)
+                        .build();
+
+                // 插入审批流程
+                approvalInfoMapper.insert(applicantApproval);
+
+                ApprovalInfo approvalInfoFirst = ApprovalInfo
+                        .builder()
+                        .planId(maintenanceInfo.getPlanId())
+                        .approvalStatus(PENDING_APPROVAL.getCode())//默认为待审批
+                        .stepOrder(1) //第一级
+                        .fatherId(applicantApproval.getApprovalId())
+                        .build();
+                approvalInfoMapper.insert(approvalInfoFirst);
+
+                ApprovalInfo approvalInfoSecond = ApprovalInfo
+                        .builder()
+                        .planId(maintenanceInfo.getPlanId())
+                        .approvalStatus(PENDING_APPROVAL.getCode()) //默认为待审批
+                        .stepOrder(2) //第二级
+                        .fatherId(approvalInfoFirst.getApprovalId())
+                        .build();
+                approvalInfoMapper.insert(approvalInfoSecond);
+            }
+        }
+    }
+
+    // 计算设备购买至今的天数
+    private int getDaysSincePurchase(Date purchaseDate) {
+        long diffInMillies = Math.abs(new Date().getTime() - purchaseDate.getTime());
+        return (int) (diffInMillies / (1000 * 60 * 60 * 24));
+    }
+
+    // 获取当前日期的n天后日期
+    private Date getDateAfterDays(int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, days);
+        return calendar.getTime();
     }
 
 }

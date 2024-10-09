@@ -36,7 +36,7 @@ public class ApprovalController {
     @SaCheckLogin
     @ResponseBody
     @GetMapping("/getApprovalDetail")
-    public Result<ApprovalDetailResp>  getApprovalDetail(@RequestParam("planId") String planID) {
+    public Result<ApprovalDetailResp> getApprovalDetail(@RequestParam("planId") String planID) {
         System.out.println(planID);
         return approvalInfoService.getApprovalDetail(planID);
     }
@@ -46,7 +46,7 @@ public class ApprovalController {
     @GetMapping("/approve")
     @SaCheckRole(value = {"R001", "R002"}, mode = SaMode.OR)
     public Result<String> approve(@RequestParam("planId") String planId, @RequestParam("approvalRemark") String approvalRemark) {
-        return approvalInfoService.approve(planId,approvalRemark);
+        return approvalInfoService.approve(planId, approvalRemark);
     }
 
     @SaCheckLogin
@@ -54,7 +54,15 @@ public class ApprovalController {
     @GetMapping("/reject")
     @SaCheckRole(value = {"R001", "R002"}, mode = SaMode.OR)
     public Result<String> reject(@RequestParam("planId") String planId, @RequestParam("approvalRemark") String approvalRemark) {
-        return approvalInfoService.reject(planId,approvalRemark);
+        return approvalInfoService.reject(planId, approvalRemark);
+    }
+
+    @SaCheckLogin
+    @ResponseBody
+    @GetMapping("/deleteApproval")
+    @SaCheckRole(value = {"R001", "R002"}, mode = SaMode.OR)
+    public Result<String> delete(@RequestParam("planId") String planId) {
+        return approvalInfoService.delete(planId);
     }
 
 

@@ -36,4 +36,11 @@ public class MaintenancePlanReq extends PageReq {
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date endTime ;
 
+    private String equipId;
+
+    private String maintenanceTypeId; // 维修类型ID
+
+    private String creator;
+
+
 }

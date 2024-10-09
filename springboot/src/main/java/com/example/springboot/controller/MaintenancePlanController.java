@@ -1,11 +1,14 @@
 package com.example.springboot.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.springboot.entity.MaintanceInfoDetail;
+import com.example.springboot.entity.WorkerInfo;
 import com.example.springboot.request.MaintenancePlanReq;
+import com.example.springboot.request.WorkOrderReq;
 import com.example.springboot.response.MaintenanceInfo;
-import com.example.springboot.response.MaintenanceInfoResp;
 import com.example.springboot.service.MaintanceInfoService;
+import com.example.springboot.service.WorkerInfoService;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,9 @@ public class MaintenancePlanController {
     @Autowired
     MaintanceInfoService maintanceInfoService;
 
+    @Autowired
+    WorkerInfoService workerInfoService;
+
     /**
      * 查询所有保养计划列表
      *
@@ -33,7 +39,7 @@ public class MaintenancePlanController {
     @SaCheckLogin
     @ResponseBody
     @PostMapping("/getMaintenancePlan")
-    public Result<MaintenanceInfoResp> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
+    public Result<IPage<MaintenanceInfo>> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
         System.out.println(maintenancePlanReq);
         return maintanceInfoService.getMaintenancePlan(maintenancePlanReq);
     }
@@ -81,4 +87,16 @@ public class MaintenancePlanController {
         return maintanceInfoService.updateMaintenance(maintanceInfoDetail);
     }
 
+    @SaCheckLogin
+    @ResponseBody
+    @PostMapping("/getWorkerInfo")
+    public Result<List<WorkerInfo>>getWorkerInfo(){
+        return workerInfoService.getWorkerInfo();
+    }
+
+    @ResponseBody
+    @PostMapping("/addWorkOrder")
+    public Result<String> addWorkOrder(@RequestBody List<WorkOrderReq> workOrderReqList){
+        return workerInfoService.addWorkOrder(workOrderReqList);
+    }
 }

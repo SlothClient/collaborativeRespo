@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.OrderMapper">
+
+    <select id="getOrdersByPage" parameterType="com.example.springboot.utils.Condition" resultType="com.example.springboot.entity.OrderInfo">
+        select order_info.*,maintance_info.plan_name
+        from order_info,maintance_info
+        where order_info.plan_id = maintance_info.plan_id
+        limit #{limit} offset #{offset}
+    </select>
+    <select id="getOrdersCount">
+        select count(*) from order_info
+    </select>
+</mapper>

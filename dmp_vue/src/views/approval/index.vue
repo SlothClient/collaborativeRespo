@@ -264,7 +264,13 @@
 import {ref, onMounted} from 'vue';
 import {ElMessageBox, ElNotification} from 'element-plus';
 import ApprovalDetailDrawer from '@/components/approval/approvalDetailDrawer.vue';
-import {approvalPass, approvalReject, getApprovalDetail, getApprovalList} from '@/api/approval/index.js';
+import {
+  approvalPass,
+  approvalReject,
+  deleteApproval,
+  getApprovalDetail,
+  getApprovalList
+} from '@/api/approval/index.js';
 import {useEquipmentInfoStore} from '@/store/module/equipmentInfo.js';
 import ApprovalPassDialog from "@/components/approval/approvalPassDialog.vue";
 import {useUserStore} from "@/store/module/user.js";
@@ -366,6 +372,9 @@ const statusMap = {
   1: '审批中',
   2: '已通过',
   3: '已驳回',
+  6: '已通过',
+  7: '已通过',
+  8: '已通过',
 };
 
 // 搜索功能
@@ -404,6 +413,12 @@ const getStatusTagType = (status) => {
     case 1:
       return 'primary';
     case 2:
+      return 'success';
+    case 6:
+      return 'success';
+    case 7:
+      return 'success';
+    case 8:
       return 'success';
     case 3:
       return 'danger';
@@ -459,11 +474,15 @@ const confirmDelete = (row) => {
     cancelButtonText: '取消',
     type: 'warning',
   })
-      .then(() => {
-        const index = tableData.value.indexOf(row);
-        if (index !== -1) {
-          tableData.value.splice(index, 1);
+      .then(async () => {
+        const res = await deleteApproval(row.planId)
+        if(res.data.flag){
+          ElNotification({
+            message:res.data.data,
+            type:"success"
+          })
         }
+        await loadData()
       })
       .catch(() => {
         console.log('用户取消了删除操作');

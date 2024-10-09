@@ -15,3 +15,7 @@ export const approvalPass = (planId,approvalRemark) => {
 export const approvalReject= (planId,approvalRemark) => {
     return request.get(`/approval/reject?planId=${planId}&approvalRemark=${approvalRemark}`)
 }
+
+export const deleteApproval = (planId) =>{
+    return request.get(`approval/deleteApproval?planId=${planId}`)
+}

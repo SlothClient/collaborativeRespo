@@ -23,4 +23,6 @@ public interface ApprovalInfoService extends IService<ApprovalInfo> {
     Result<String> approve(String planId,String approvalRemark);
 
     Result<String> reject(String planId, String approvalRemark);
+
+    Result<String> delete(String planId);
 }

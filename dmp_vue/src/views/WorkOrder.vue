@@ -37,16 +37,18 @@
                 <el-table-column property="id" label="保养工单信息" width="880" align="center">
                     <template #default="scope">
                         <div class="flex-container">
-                            <div>工单编号：<span>{{ scope.row.工单编号 }}</span></div>
-                            <div>设备编号：<span>{{ scope.row.设备编号 }}</span></div>
-                            <div>派单时间：<span>{{ scope.row.派单时间 }}</span></div>
-                            <br/>
-                            <div>开始时间：<span>{{ scope.row.开始时间 }}</span></div>
-                            <div>结束时间：<span>{{ scope.row.结束时间 }}</span></div>
-                            <br/>
+                            <div>计划名称：<span>{{ scope.row.planName }}</span></div>
+                            <div>工单编号：<span>{{ scope.row.orderId }}</span></div>
+                            <div>设备编号：<span>{{ scope.row.equipId }}</span></div>
+                            <br />
                             <!-- <div>标准工时：<span>{{ scope.row.标准工时 }}</span></div> -->
-                            <div>负责人编号：<span>{{ scope.row.负责人编号 }}</span></div>
-                            <!-- <div>工单备注：<span>{{ scope.row.工单备注 }}</span></div> -->
+                            <div>负责人员：<span>{{ scope.row.workerId }}</span></div>
+                            <div>工单备注：<span>{{ scope.row.orderDesc }}</span></div>
+                            <br />
+                            <div>派单时间：<span>{{ scope.row.startTime }}</span></div>
+                            <div>派单人：<span>{{ '暂无' }}</span></div>
+                            <div>更新时间：<span>{{ '暂无' }}</span></div>
+                            <div>更新人：<span>{{ '暂无' }}</span></div>
                             <!-- <div>工作记录：<span>{{ scope.row.工作记录 }}</span></div> -->
                         </div>
                     </template>
@@ -67,6 +69,19 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div id="pagination">
+                <span style="margin-right: 20px;">共<span style="color: #409eff;">{{ totalOrders }}</span>条</span>
+                <el-pagination 
+                    background 
+                    layout="prev, pager, next, sizes" 
+                    @change="fetchOrders(statusFilter)"
+                    v-model:current-page="currentPage" 
+                    v-model:page-size="pageSize" 
+                    v-model:total="totalOrders"
+                    :page-sizes="[3,5,10]"
+                />
+            </div>
+            
         </div>
     </div>
 </template>
@@ -83,38 +98,52 @@ const statusFilter = ref('no');
 const selectedRows = ref([]); // 新增一个变量来追踪选中的行
 const orderTableRef = ref(null); // 引用 el-table 组件
 
+const currentPage = ref(1); // 当前页码
+const pageSize = ref(3); // 每页显示的条目数
+const totalOrders = ref(0); // 总条目数
 const fetchOrders = async (status = 'no') => {
     const condition = {
-
+        offset: (currentPage.value - 1) * pageSize.value,
+        limit: pageSize.value,
     };
 
-    // 激活按钮
+    // 激活按钮，显示被选中
     statusFilter.value = status;
 
     let formData = new FormData();
     formData.append("conditionJson", JSON.stringify(condition));
 
     try {
-        const response = await axios.post('http://localhost:8889/equip/getOrder', formData);
+        const response = await axios.post('/api/getOrdersByPage', formData);
 
         if (response.data.status) {
-            orderTable.value = response.data.list; // Update orderTable with data from the response
-            // Filter orders based on status
+            orderTable.value = response.data.list; // 接收后端数据
+            totalOrders.value = response.data.totalCount; // 存储总条目数
+
+            // 根据激活（选中）状态筛选数据，默认状态是全部，即不筛选
             if (status) {
                 orderTable.value = orderTable.value.filter(order => {
                     const now = new Date();
-                    const startTime = new Date(order.开始时间);
-                    const endTime = new Date(order.结束时间);
+                    const startTime = new Date(order.startTime);
+                    // bug:endTime为null时，new Date(order.endTime)创建出来是标准时间仍然是对象而非null
+                    // const endTime = new Date(order.endTime);
+                    // 修复bug：事先判断
+                    const endTime = order.endTime ? new Date(order.endTime) : null;
+
 
                     switch (status) {
                         case 'not_started':
                             return now < startTime;
                         case 'in_progress':
-                            return now >= startTime && now <= endTime;
+                            // 未结单就是执行中
+                            return endTime === null ? (now >= startTime) : (now >= startTime && now < endTime);
+                        // return now >= startTime && now <= endTime;
                         case 'completed':
-                            return now > endTime;
+                            // 未结单就是执行中，不返回
+                            return endTime === null ? (null) : (now > endTime);
+                        // return now > endTime;
                         default:
-                            return true; // No filter for 'all'
+                            return true; // 工单状态为全部，不筛选
                     }
                 });
             }
@@ -205,7 +234,8 @@ const clearSelection = () => {
     gap: 10px; */
     text-align: left;
 }
-.flex-container > div {
+
+.flex-container>div {
     display: inline-block;
     margin: 10px 5px 10px;
 }
@@ -220,5 +250,26 @@ const clearSelection = () => {
 .active {
     background-color: #409EFF;
     color: white;
+}
+
+#pagination-deprecated {
+    width: fit-content;
+    /* 调整分页容器内样式，内部容器左右排列，上下水平居中 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* 固定位置 */
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%); /* 向左偏移50%以达到居中效果 */
+}
+#pagination {
+    width: fit-content;
+    margin: 30px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
