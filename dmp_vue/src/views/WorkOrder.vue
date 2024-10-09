@@ -95,6 +95,7 @@
 import { Refresh, Search } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { ElMessage } from 'element-plus'; // 导入 ElMessage
 
 const orderId = ref('');
 const orderSpan = ref([]);
@@ -145,7 +146,6 @@ const fetchOrders = async (status = 'no') => {
                     // 修复bug：事先判断
                     const endTime = order.endTime ? new Date(order.endTime) : null;
 
-
                     switch (status) {
                         case 'not_started':
                             return now < startTime;
@@ -161,15 +161,16 @@ const fetchOrders = async (status = 'no') => {
                             return true; // 工单状态为全部，不筛选
                     }
                 });
+                ElMessage.success("查询筛选成功！");
             }
         } else {
             // 错误处理，但此处不一定为错误导致，可能没有符合筛选条件的数据，除了错误提示之外也要接收数据
             orderTable.value = response.data.list;
             totalOrders.value = response.data.totalCount;
-            console.error("Error:", response.data.msg);
+            ElMessage.error(response.data.msg);
         }
     } catch (error) {
-        console.error("Error fetching orders:", error);
+        ElMessage.error("获取工单时出错，请稍后再试！");
     }
 };
 
