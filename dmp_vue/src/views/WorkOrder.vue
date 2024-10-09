@@ -2,16 +2,20 @@
     <div id="order">
         <div class="filter">
             <span class="descWords">工单状态：</span>
-            <el-button-group class="ml-4">
-                <el-button :class="{ active: statusFilter === 'no' }" @click="fetchOrders()">全部
-                </el-button>
-                <el-button :class="{ active: statusFilter === 'not_started' }" @click="fetchOrders('not_started')">未开始
-                </el-button>
-                <el-button :class="{ active: statusFilter === 'in_progress' }" @click="fetchOrders('in_progress')">保养中
-                </el-button>
-                <el-button :class="{ active: statusFilter === 'completed' }" @click="fetchOrders('completed')">已完成
-                </el-button>
-            </el-button-group>
+            <div id="statusGroup">
+                <el-button-group class="ml-4">
+                    <el-button :class="{ active: statusFilter === 'no' }" @click="fetchOrders()">全部
+                    </el-button>
+                    <el-button :class="{ active: statusFilter === 'not_started' }"
+                        @click="fetchOrders('not_started')">未开始
+                    </el-button>
+                    <el-button :class="{ active: statusFilter === 'in_progress' }"
+                        @click="fetchOrders('in_progress')">保养中
+                    </el-button>
+                    <el-button :class="{ active: statusFilter === 'completed' }" @click="fetchOrders('completed')">已完成
+                    </el-button>
+                </el-button-group>
+            </div>
             <span class="descWords">工单编号：</span>
             <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable />
             <span class="descWords">时间范围：</span>
@@ -71,17 +75,11 @@
             </el-table>
             <div id="pagination">
                 <span style="margin-right: 20px;">共<span style="color: #409eff;">{{ totalOrders }}</span>条</span>
-                <el-pagination 
-                    background 
-                    layout="prev, pager, next, sizes" 
-                    @change="fetchOrders(statusFilter)"
-                    v-model:current-page="currentPage" 
-                    v-model:page-size="pageSize" 
-                    v-model:total="totalOrders"
-                    :page-sizes="[3,5,10]"
-                />
+                <el-pagination background layout="prev, pager, next, sizes" @change="fetchOrders(statusFilter)"
+                    v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:total="totalOrders"
+                    :page-sizes="[3, 5, 10]" />
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -202,6 +200,11 @@ const clearSelection = () => {
     margin: 0 0 0 10px;
 }
 
+/* 修复组件宽度收缩span内文字换行 */
+.filter .descWords {
+    min-width: fit-content;
+}
+
 .cell div span {
     color: rgb(71, 196, 238);
 }
@@ -263,13 +266,20 @@ const clearSelection = () => {
     position: absolute;
     bottom: 50px;
     left: 50%;
-    transform: translateX(-50%); /* 向左偏移50%以达到居中效果 */
+    transform: translateX(-50%);
+    /* 向左偏移50%以达到居中效果 */
 }
+
 #pagination {
     width: fit-content;
     margin: 30px auto;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* 修复组件宽度收缩状态按钮组换行 */
+#statusGroup {
+    min-width: fit-content;
 }
 </style>
