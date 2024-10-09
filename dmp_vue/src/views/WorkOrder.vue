@@ -20,12 +20,12 @@
                 </el-button-group>
             </div>
             <span class="descWords">工单编号：</span>
-            <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable />
+            <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable @keyup.enter="fetchOrders(statusFilter)"/>
             <span class="descWords">时间范围：</span>
             <el-date-picker v-model="orderSpan" type="datetimerange" start-placeholder="Start date"
                 end-placeholder="End date" format="YYYY-MM-DD HH:mm:ss" date-format="YYYY/MM/DD ddd"
                 time-format="A hh:mm:ss" style="width: 200px" />
-            <el-button type="primary" :icon="Search" style="margin-left: 10px;">查询</el-button>
+            <el-button type="primary" :icon="Search" style="margin-left: 10px;" @click="fetchOrders(statusFilter)">查询</el-button>
             <el-button type="primary" :icon="Refresh" @click="resetFilters">重置</el-button>
         </div>
         <!-- 工单记录展示容器 -->
@@ -117,6 +117,9 @@ const fetchOrders = async (status = 'no') => {
     const condition = {
         offset: (currentPage.value - 1) * pageSize.value,
         limit: pageSize.value,
+        orderId: orderId.value ? orderId.value : null, // 添加工单编号
+        startTime: orderSpan.value[0] ? orderSpan.value[0].getTime() : null, // 开始时间
+        endTime: orderSpan.value[1] ? orderSpan.value[1].getTime() : null, // 结束时间
     };
 
     // 激活按钮，显示被选中
@@ -160,6 +163,9 @@ const fetchOrders = async (status = 'no') => {
                 });
             }
         } else {
+            // 错误处理，但此处不一定为错误导致，可能没有符合筛选条件的数据，除了错误提示之外也要接收数据
+            orderTable.value = response.data.list;
+            totalOrders.value = response.data.totalCount;
             console.error("Error:", response.data.msg);
         }
     } catch (error) {
@@ -227,7 +233,7 @@ const clearSelection = () => {
     selectedRows.value = []; // 清空选中的行
 };
 
-// 查询，工单编号、时间范围，选择几个条件查询几个条件，不选择默认查询所有
+// 查询，工单编号、时间范围，选择几个条件查询几个条件，不选择默认无条件（空条件）查询，即查询所有记录
 </script>
 <style scoped>
 .filter {

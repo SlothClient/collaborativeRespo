@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
     public List<OrderInfo> getOrdersByPage(Condition condition);
-    public int getOrdersCount();
+    public int getOrdersCountByCondition(Condition condition);
 }

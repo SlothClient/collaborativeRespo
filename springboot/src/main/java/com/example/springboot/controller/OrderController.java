@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,19 +25,7 @@ public class OrderController {
      * 分页查询工单
      */
     public ResultMap getOrdersByPage(String conditionJson){
-        try {
-            List<OrderInfo> list = orderService.getOrdersByPage(conditionJson);
-            resultMap.setStatus(true);
-            resultMap.setList(list);
-            int totalCount = orderService.getOrdersCount();
-            resultMap.setTotalCount(totalCount);
-            resultMap.setMsg("success");
-        }
-        catch (Exception e){
-            resultMap.setStatus(false);
-            resultMap.setMsg(e.getMessage());
-        }
-        return resultMap;
+        return resultMap.handleRequest(conditionJson);
     }
 
     @RequestMapping("/getOrdersByCondition")

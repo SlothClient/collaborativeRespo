@@ -26,8 +26,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int getOrdersCount() {
-        return orderMapper.getOrdersCount();
+    public int getOrdersCountByCondition(String conditionJson) throws JsonProcessingException {
+        Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
+        return orderMapper.getOrdersCountByCondition(condition);
     }
 
     @Override

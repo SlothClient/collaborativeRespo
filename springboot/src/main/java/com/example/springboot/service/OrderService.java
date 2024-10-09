@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface OrderService {
     public List<OrderInfo> getOrdersByPage(String conditionJson) throws JsonProcessingException;
-    public int getOrdersCount();
+    public int getOrdersCountByCondition(String conditionJson) throws JsonProcessingException;
     public List<OrderInfo> getOrdersByCondition(String conditionJson);
 }
