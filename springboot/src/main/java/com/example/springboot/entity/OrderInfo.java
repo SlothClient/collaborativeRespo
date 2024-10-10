@@ -60,6 +60,7 @@ public class OrderInfo implements Serializable {
     private String orderRecord;
 
     private String planName;
+    private String planTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -84,6 +85,7 @@ public class OrderInfo implements Serializable {
             && (this.getWorkerId() == null ? other.getWorkerId() == null : this.getWorkerId().equals(other.getWorkerId()))
             && (this.getOrderDesc() == null ? other.getOrderDesc() == null : this.getOrderDesc().equals(other.getOrderDesc()))
             && (this.getPlanName() == null ? other.getPlanName() == null : this.getPlanName().equals(other.getPlanName()))
+            && (this.getPlanTime() == null ? other.getPlanTime() == null : this.getPlanTime().equals(other.getPlanTime()))
             && (this.getOrderRecord() == null ? other.getOrderRecord() == null : this.getOrderRecord().equals(other.getOrderRecord()));
     }
 
@@ -93,6 +95,7 @@ public class OrderInfo implements Serializable {
         int result = 1;
         result = prime * result + ((getOrderId() == null) ? 0 : getOrderId().hashCode());
         result = prime * result + ((getPlanName() == null) ? 0 : getPlanName().hashCode());
+        result = prime * result + ((getPlanTime() == null) ? 0 : getPlanTime().hashCode());
         result = prime * result + ((getEquipId() == null) ? 0 : getEquipId().hashCode());
         result = prime * result + ((getPlanId() == null) ? 0 : getPlanId().hashCode());
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
@@ -113,6 +116,7 @@ public class OrderInfo implements Serializable {
         sb.append(", equipId=").append(equipId);
         sb.append(", planId=").append(planId);
         sb.append(", planName=").append(planName);
+        sb.append(", planTime=").append(planTime);
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
         sb.append(", workerId=").append(workerId);

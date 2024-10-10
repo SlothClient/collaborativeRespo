@@ -48,7 +48,7 @@
                     <template #default="scope">
                         <div class="flex-container">
                             <div>计划名称：<span>{{ scope.row.planName }}</span></div>
-                            <div>工单编号：<span>{{ scope.row.orderId }}</span></div>
+                            <div>计划时间：<span>{{ scope.row.planTime }}</span></div>
                             <div>设备编号：<span>{{ scope.row.equipId }}</span></div>
                             <br />
                             <!-- <div>标准工时：<span>{{ scope.row.标准工时 }}</span></div> -->
@@ -87,8 +87,8 @@
                     v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:total="totalOrders"
                     :page-sizes="[3, 5, 10]" />
             </div>
-
         </div>
+        <detailDialog />
     </div>
 </template>
 <script setup lang="ts">
@@ -96,6 +96,7 @@ import { Refresh, Search } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus'; // 导入 ElMessage
+import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
 
 const orderId = ref('');
 const orderSpan = ref([]);

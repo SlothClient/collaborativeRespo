@@ -4,7 +4,7 @@
 <mapper namespace="com.example.springboot.mapper.OrderMapper">
     <!-- 分页查询，可通过工单编号和时间范围筛选 -->
     <select id="getOrdersByPage" parameterType="com.example.springboot.utils.Condition" resultType="com.example.springboot.entity.OrderInfo">
-        select order_info.*,maintance_info.plan_name
+        select order_info.*,maintance_info.plan_name,maintance_info.end_time planTime
         from order_info,maintance_info
         <where>
             /* 必须条件设置为永真 */
