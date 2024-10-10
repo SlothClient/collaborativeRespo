@@ -88,7 +88,11 @@
                     :page-sizes="[3, 5, 10]" />
             </div>
         </div>
-        <detailDialog />
+        <detailDialog
+        :visible.sync="dialogVisible"
+        :orderData="selectedOrder"
+        @update:visible="dialogVisible = $event"
+        />
     </div>
 </template>
 <script setup lang="ts">
@@ -200,6 +204,7 @@ const resetFilters = () => {
  */
 const handleEdit = (index, row) => {
     console.log(index, row);
+    dialogVisible.value = true;
 };
 
 /**
@@ -236,6 +241,10 @@ const clearSelection = () => {
 };
 
 // 查询，工单编号、时间范围，选择几个条件查询几个条件，不选择默认无条件（空条件）查询，即查询所有记录
+
+// 详情框
+const dialogVisible = ref(false);
+const selectedOrder = ref(null);
 </script>
 <style scoped>
 .filter {
