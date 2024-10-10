@@ -88,10 +88,10 @@
                     :page-sizes="[3, 5, 10]" />
             </div>
         </div>
-        <detailDialog
-        :visible.sync="dialogVisible"
-        :orderData="selectedOrder"
-        @update:visible="dialogVisible = $event"
+        <detailDialog 
+            :dialogVisible="dialogVisible"
+            :selectedOrder="selectedOrder"
+            @update:dialogVisible="dialogVisible = $event"
         />
     </div>
 </template>
@@ -101,6 +101,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
+import { ro, tr } from 'element-plus/es/locale';
 
 const orderId = ref('');
 const orderSpan = ref([]);
@@ -197,17 +198,6 @@ const resetFilters = () => {
 };
 
 /**
- * 处理编辑事件
- *
- * @param {number} index - 当前行的索引
- * @param {Object} row - 当前行的数据对象
- */
-const handleEdit = (index, row) => {
-    console.log(index, row);
-    dialogVisible.value = true;
-};
-
-/**
  * 删除指定行的函数
  *
  * @param index 要删除行的索引
@@ -244,7 +234,21 @@ const clearSelection = () => {
 
 // 详情框
 const dialogVisible = ref(false);
-const selectedOrder = ref(null);
+const selectedOrder = ref(new Object);
+/**
+ * 处理编辑事件
+ *
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ */
+ const handleEdit = (index, row) => {
+    // 打印查看
+    console.log(index, row);
+    // 打开详情框
+    dialogVisible.value = true;
+    // 发送选中数据到详情框组件
+    selectedOrder.value = row;
+};
 </script>
 <style scoped>
 .filter {
