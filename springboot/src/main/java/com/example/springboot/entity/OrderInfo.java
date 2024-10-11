@@ -61,6 +61,7 @@ public class OrderInfo implements Serializable {
 
     private String planName;
     private String planTime;
+    private String workerName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -86,6 +87,7 @@ public class OrderInfo implements Serializable {
             && (this.getOrderDesc() == null ? other.getOrderDesc() == null : this.getOrderDesc().equals(other.getOrderDesc()))
             && (this.getPlanName() == null ? other.getPlanName() == null : this.getPlanName().equals(other.getPlanName()))
             && (this.getPlanTime() == null ? other.getPlanTime() == null : this.getPlanTime().equals(other.getPlanTime()))
+            && (this.getWorkerName() == null ? other.getWorkerName() == null : this.getWorkerName().equals(other.getWorkerName()))
             && (this.getOrderRecord() == null ? other.getOrderRecord() == null : this.getOrderRecord().equals(other.getOrderRecord()));
     }
 
@@ -101,6 +103,7 @@ public class OrderInfo implements Serializable {
         result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
         result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
         result = prime * result + ((getWorkerId() == null) ? 0 : getWorkerId().hashCode());
+        result = prime * result + ((getWorkerName() == null) ? 0 : getWorkerName().hashCode());
         result = prime * result + ((getOrderDesc() == null) ? 0 : getOrderDesc().hashCode());
         result = prime * result + ((getOrderRecord() == null) ? 0 : getOrderRecord().hashCode());
         return result;
@@ -120,6 +123,7 @@ public class OrderInfo implements Serializable {
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
         sb.append(", workerId=").append(workerId);
+        sb.append(", workerName=").append(workerName);
         sb.append(", orderDesc=").append(orderDesc);
         sb.append(", orderRecord=").append(orderRecord);
         sb.append(", serialVersionUID=").append(serialVersionUID);

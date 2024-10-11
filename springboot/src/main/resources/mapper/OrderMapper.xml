@@ -4,12 +4,12 @@
 <mapper namespace="com.example.springboot.mapper.OrderMapper">
     <!-- 分页查询，可通过工单编号和时间范围筛选 -->
     <select id="getOrdersByPage" parameterType="com.example.springboot.utils.Condition" resultType="com.example.springboot.entity.OrderInfo">
-        select order_info.*,maintance_info.plan_name,maintance_info.end_time planTime
-        from order_info,maintance_info
+        select order_info.*,maintance_info.plan_name,maintance_info.end_time planTime,worker_info.worker_name
+        from order_info,maintance_info,worker_info
         <where>
             /* 必须条件设置为永真 */
             <if test="true">
-                order_info.plan_id = maintance_info.plan_id
+                order_info.plan_id = maintance_info.plan_id and order_info.worker_id = worker_info.worker_id
             </if>
             <if test="orderId != null and orderId != ''">
                 and order_id like CONCAT('%',#{orderId},'%')
@@ -45,4 +45,10 @@
         from equip_info eq,maintance_info mt,order_info od
         where eq.equip_id = #{equipId} and mt.plan_id = od.plan_id and mt.plan_id = #{planId}
     </select>
+    <!-- 提交工作记录 -->
+    <update id="addWorkRecord" parameterType="com.example.springboot.utils.Condition">
+        update order_info
+        set order_record = #{orderRecord}
+        where order_id = #{orderId}
+    </update>
 </mapper>

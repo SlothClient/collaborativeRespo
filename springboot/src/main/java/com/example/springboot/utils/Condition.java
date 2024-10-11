@@ -10,6 +10,15 @@ public class Condition {
     private Date endTime;
     private String equipId;
     private String planId;
+    private String orderRecord;
+
+    public String getOrderRecord() {
+        return orderRecord;
+    }
+
+    public void setOrderRecord(String orderRecord) {
+        this.orderRecord = orderRecord;
+    }
 
     public String getEquipId() {
         return equipId;

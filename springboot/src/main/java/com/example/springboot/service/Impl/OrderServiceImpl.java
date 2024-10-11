@@ -42,4 +42,14 @@ public class OrderServiceImpl implements OrderService {
         Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
         return orderMapper.getSelectedEquipInfo(condition);
     }
+
+    @Override
+    public void addWorkRecord(String conditionJson) throws JsonProcessingException {
+        Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
+        int count = orderMapper.addWorkRecord(condition);
+        if(count == 0){
+            throw new RuntimeException("添加工作记录失败！");
+        }
+    }
+
 }

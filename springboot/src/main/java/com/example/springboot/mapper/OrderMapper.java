@@ -13,4 +13,5 @@ public interface OrderMapper {
     public List<OrderInfo> getOrdersByPage(Condition condition);
     public int getOrdersCountByCondition(Condition condition);
     public List<EquipInfo> getSelectedEquipInfo(Condition condition);
+    public int addWorkRecord(Condition condition);
 }

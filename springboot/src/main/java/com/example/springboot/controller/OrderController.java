@@ -65,4 +65,19 @@ public class OrderController {
         }
         return resultMap;
     }
+
+    @RequestMapping("/addWorkRecord")
+    @ResponseBody
+    public ResultMap addWorkRecord(String conditionJson){
+        try{
+            orderService.addWorkRecord(conditionJson);
+            resultMap.setStatus(true);
+            resultMap.setMsg("success");
+        }
+        catch (Exception e){
+            resultMap.setStatus(false);
+            resultMap.setMsg(e.getMessage());
+        }
+        return resultMap;
+    }
 }
