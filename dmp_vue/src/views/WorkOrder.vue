@@ -52,7 +52,7 @@
                             <div>设备编号：<span>{{ scope.row.equipId }}</span></div>
                             <br />
                             <!-- <div>标准工时：<span>{{ scope.row.标准工时 }}</span></div> -->
-                            <div>负责人员：<span>{{ scope.row.workerId }}</span></div>
+                            <div>负责人员：<span>{{ scope.row.workerId }}-{{ scope.row.workerName }}</span></div>
                             <div>工单备注：<span>{{ scope.row.orderDesc }}</span></div>
                             <br />
                             <div>派单时间：<span>{{ scope.row.startTime }}</span></div>
@@ -69,13 +69,12 @@
                     show-overflow-tooltip />
                 <el-table-column property="record" label="工单记录" /> -->
                 <el-table-column label="操作" align="center">
+                    <!-- 后期修改成图标，悬停显示描述 -->
                     <template #default="scope">
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)" type="primary">
                             工单详情
                         </el-button>
-                        <el-button size="small" type="success" @click="handleDelete(scope.$index, scope.row)">
-                            更多
-                        </el-button>
+                        <el-link type="primary" id="recordLink" @click="handleWorkRecord(scope.$index,scope.row)">工作记录</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,10 +87,17 @@
                     :page-sizes="[3, 5, 10]" />
             </div>
         </div>
+        <!-- 详情框组件 -->
         <detailDialog 
             :dialogVisible="dialogVisible"
             :selectedOrder="selectedOrder"
             @update:dialogVisible="dialogVisible = $event"
+        />
+        <!-- 工作记录框组件 -->
+        <recordDialog 
+            :recordDialogVisible="recordDialogVisible"
+            :selectedOrder="selectedOrder"
+            @update:recordDialogVisible="recordDialogVisible = $event"
         />
     </div>
 </template>
@@ -101,6 +107,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
+import recordDialog from '@/components/workOrder/recordDialog.vue'; // 导入工作记录对话框组件
 import { ro, tr } from 'element-plus/es/locale';
 
 const orderId = ref('');
@@ -198,16 +205,6 @@ const resetFilters = () => {
 };
 
 /**
- * 删除指定行的函数
- *
- * @param index 要删除行的索引
- * @param row 要删除行的数据对象
- */
-const handleDelete = (index, row) => {
-    console.log(index, row);
-};
-
-/**
  * 处理记录选中事件
  *
  * @param val 当前选择的行数据数组
@@ -232,7 +229,7 @@ const clearSelection = () => {
 
 // 查询，工单编号、时间范围，选择几个条件查询几个条件，不选择默认无条件（空条件）查询，即查询所有记录
 
-// 详情框
+// -----------------------------------------详情框-----------------------------------------
 const dialogVisible = ref(false);
 const selectedOrder = ref(new Object);
 /**
@@ -246,6 +243,23 @@ const selectedOrder = ref(new Object);
     console.log(index, row);
     // 打开详情框
     dialogVisible.value = true;
+    // 发送选中数据到详情框组件
+    selectedOrder.value = row;
+};
+
+// -----------------------------------------工作记录框-----------------------------------------
+const recordDialogVisible = ref(false);
+/**
+ * 处理工作记录事件
+ *
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ */
+ const handleWorkRecord = (index, row) => {
+    // 打印查看
+    console.log(index, row);
+    // 打开详情框
+    recordDialogVisible.value = true;
     // 发送选中数据到详情框组件
     selectedOrder.value = row;
 };
@@ -344,5 +358,9 @@ const selectedOrder = ref(new Object);
 /* 修复组件宽度收缩状态按钮组换行 */
 #statusGroup {
     min-width: fit-content;
+}
+
+#recordLink {
+    margin-left: 10px;
 }
 </style>

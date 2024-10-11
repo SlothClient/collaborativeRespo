@@ -16,7 +16,7 @@
                             <el-date-picker v-model="formInline.planTime" type="datetime" clearable />
                         </el-form-item>
                         <el-form-item label="负责人员">
-                            <el-input v-model="formInline.workerId" clearable />
+                            <el-input v-model="formInline.workerName" clearable />
                         </el-form-item>
                         <el-form-item label="工单描述">
                             <el-input v-model="formInline.orderDesc" type="textarea" style="width: 540px;" clearable />
@@ -27,7 +27,7 @@
             <div id="equipInfo">
                 <div class="formTitle">保养设备</div>
                 <div id="equipTable">
-                    <el-table :data="tableData" border style="width: 100%">
+                    <el-table :data="equipData" border style="width: 100%">
                         <el-table-column prop="equipName" label="设备名称" align="center" />
                         <el-table-column prop="equipId" label="设备编号" align="center" />
                         <el-table-column prop="lastMaintance" label="执行时间" align="center" />
@@ -55,7 +55,7 @@ const formInline = reactive({
     planId: '计划编号',
     planName: '计划名称',
     planTime: '计划时间',
-    workerId: '负责人员',
+    workerName: '负责人员',
     orderDesc: '工单描述'
 })
 
@@ -63,7 +63,7 @@ const onSubmit = () => {
     console.log('submit!')
 }
 
-const tableData = ref([
+const equipData = ref([
     {
         date: '2016-05-03',
         name: 'Tom',
@@ -99,7 +99,8 @@ const props = defineProps({
         required: true
     }
 })
-
+// 使用selectedOrder获取设备信息
+import { useEquipInfo } from '@/hook/useEquipInfo';
 const centerDialogVisible = ref(props.dialogVisible)
 const emit = defineEmits(['update:dialogVisible']);
 // 监听对话框的关闭事件并发出更新事件
@@ -110,12 +111,16 @@ const closeDialog = () => {
 
 // 监听父组件传递的dialogVisible变化
 watch(
-    () => props.dialogVisible, (newVal) => {
+    () => props.dialogVisible, 
+    async(newVal) => {
         // console.log(2333);
         centerDialogVisible.value = newVal;
         if(newVal){
-            getSelectedEquipInfo();
-            ElMessage.success('获取设备信息成功!')
+            // 一旦父组件dialogVisible发生变化，当前组件和工作记录对话框组件都会执行获取选中设备信息操作
+            // 考虑在一个组件中发请求，另一组建通过组件之间的通信获取数据
+            const { tableData,getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
+            await getSelectedEquipInfo();
+            equipData.value = tableData.value;
         }
     });
 
@@ -123,30 +128,6 @@ watch(
 watch(() => props.selectedOrder, (newVal) => {
     Object.assign(formInline, newVal)
 })
-
-/**
- * 根据selectedOrder中的设备id和计划id获取设备信息并更新tableData
- */
-const getSelectedEquipInfo=async() => {
-    const condition = {
-        planId: props.selectedOrder.planId,
-        equipId: props.selectedOrder.equipId
-    }
-    const formData = new FormData()
-    formData.append('conditionJson', JSON.stringify(condition))
-    try{
-        const response = await axios.post('/api/getSelectedEquipInfo', formData);
-        if(response.data.status){
-            tableData.value = response.data.list
-        }
-        else{
-            ElMessage.error(response.data.msg)
-        }
-    }
-    catch(e){
-        console.log('请求错误!');
-    }
-}
 
 onMounted(() => {
     // onMounted钩子修改#equipTable表头样式，也改不到。。。
