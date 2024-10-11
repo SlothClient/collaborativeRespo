@@ -13,13 +13,13 @@
                 <el-tag size="small">执行中</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="工作记录">
-                <textarea id="record" placeholder="在此处提交工作记录..."></textarea>
+                <textarea id="record" placeholder="在此处提交工作记录..." v-model="orderRecord"></textarea>
             </el-descriptions-item>
         </el-descriptions>
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="centerDialogVisible = false" type="info" plain>取消</el-button>
-                <el-button type="primary" @click="centerDialogVisible = false">
+                <el-button type="primary" @click="handleSubmit">
                     提交
                 </el-button>
             </div>
@@ -27,7 +27,8 @@
     </el-dialog>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { handleError, ref, watch } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 const props = defineProps({
     recordDialogVisible: {
         type: Boolean,
@@ -53,6 +54,8 @@ const closeDialog = () => {
 };
 // 使用selectedOrder获取设备信息
 import { useEquipInfo } from '@/hook/useEquipInfo';
+import axios from 'axios';
+import { es } from 'element-plus/es/locale';
 const equipData = ref({
     equipName: ''
 });
@@ -67,10 +70,10 @@ watch(
 // 选中工单数据变化时，更新本组件的状态
 watch(
     () => props.selectedOrder,
-    async(newVal) => {
+    async (newVal) => {
         receivedData.value = newVal;
-        if(newVal){
-            const { tableData,getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
+        if (newVal) {
+            const { tableData, getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
             await getSelectedEquipInfo();
             console.log(tableData.value);
             equipData.value = tableData.value[0];
@@ -78,6 +81,38 @@ watch(
     }
 )
 
+// 提交工作记录
+const orderRecord = ref('');
+const submitRecord = async () => {
+    const condition = {
+        orderId: receivedData.value.orderId,
+        orderRecord: orderRecord.value
+    }
+    const formData = new FormData();
+    formData.append('conditionJson', JSON.stringify(condition));
+    try {
+        const response = await axios.post('/api/addWorkRecord', formData);
+        if (response.data.status) {
+            ElMessage.success('提交成功');
+            closeDialog();
+        }
+        else {
+            ElMessage.error(response.data.message);
+        }
+    }
+    catch (err) {
+        ElMessage.error(err);
+    }
+};
+
+// 提交确认
+const handleSubmit = (done: () => void) => {
+    ElMessageBox.confirm('请确认提交', '提示')
+        .then(() => {
+            submitRecord();
+            done()
+        })
+}
 </script>
 <style scoped>
 /* 分割线 */
