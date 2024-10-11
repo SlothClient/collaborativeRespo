@@ -8,6 +8,24 @@ public class Condition {
     private String orderId;
     private Date startTime;
     private Date endTime;
+    private String equipId;
+    private String planId;
+
+    public String getEquipId() {
+        return equipId;
+    }
+
+    public void setEquipId(String equipId) {
+        this.equipId = equipId;
+    }
+
+    public String getPlanId() {
+        return planId;
+    }
+
+    public void setPlanId(String planId) {
+        this.planId = planId;
+    }
 
     public String getOrderId() {
         return orderId;

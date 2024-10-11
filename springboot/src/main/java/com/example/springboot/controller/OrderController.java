@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.entity.EquipInfo;
 import com.example.springboot.entity.OrderInfo;
 import com.example.springboot.service.OrderService;
 import com.example.springboot.utils.ResultMap;
@@ -42,6 +43,24 @@ public class OrderController {
         }
         catch (Exception e){
             resultMap.setStatus(false);
+            resultMap.setList(new ArrayList<>());
+            resultMap.setMsg(e.getMessage());
+        }
+        return resultMap;
+    }
+
+    @RequestMapping("/getSelectedEquipInfo")
+    @ResponseBody
+    public ResultMap getSelectedEquipInfo(String conditionJson){
+        try {
+            List<EquipInfo> list = orderService.getSelectedEquipInfo(conditionJson);
+            resultMap.setStatus(true);
+            resultMap.setList(list);
+            resultMap.setMsg("success");
+        }
+        catch (Exception e){
+            resultMap.setStatus(false);
+            resultMap.setList(new ArrayList<>());
             resultMap.setMsg(e.getMessage());
         }
         return resultMap;

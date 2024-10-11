@@ -1,5 +1,6 @@
 package com.example.springboot.service.Impl;
 
+import com.example.springboot.entity.EquipInfo;
 import com.example.springboot.entity.OrderInfo;
 import com.example.springboot.mapper.OrderMapper;
 import com.example.springboot.service.OrderService;
@@ -34,5 +35,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderInfo> getOrdersByCondition(String conditionJson) {
         return null;
+    }
+
+    @Override
+    public List<EquipInfo> getSelectedEquipInfo(String conditionJson) throws JsonProcessingException {
+        Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
+        return orderMapper.getSelectedEquipInfo(condition);
     }
 }

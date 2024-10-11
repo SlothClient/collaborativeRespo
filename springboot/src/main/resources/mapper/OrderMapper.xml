@@ -34,4 +34,15 @@
             </if>
         </where>
     </select>
+    <!-- 获取选中工单记录的设备信息 -->
+    <select id="getSelectedEquipInfo" parameterType="com.example.springboot.utils.Condition" resultType="com.example.springboot.entity.SelectedEquipInfo">
+        select eq.equip_name,
+               eq.equip_id,
+               eq.last_maintance,
+               mt.maintance_desc,
+               od.order_desc,
+               od.order_record
+        from equip_info eq,maintance_info mt,order_info od
+        where eq.equip_id = #{equipId} and mt.plan_id = od.plan_id and mt.plan_id = #{planId}
+    </select>
 </mapper>
