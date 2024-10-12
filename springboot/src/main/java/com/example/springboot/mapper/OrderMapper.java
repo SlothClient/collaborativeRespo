@@ -14,4 +14,6 @@ public interface OrderMapper {
     public int getOrdersCountByCondition(Condition condition);
     public List<EquipInfo> getSelectedEquipInfo(Condition condition);
     public int addWorkRecord(Condition condition);
+    public int submitOrder(Condition condition);
+    public int autoAddHours(Condition condition);
 }

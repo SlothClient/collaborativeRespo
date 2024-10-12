@@ -52,4 +52,16 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public void submitOrder(String conditionJson) throws JsonProcessingException {
+        Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
+        int count = orderMapper.submitOrder(condition);
+        int count1 = orderMapper.autoAddHours(condition);
+        if(count == 0){
+            throw new RuntimeException("结单错误！");
+        }
+        if(count1 == 0){
+            throw new RuntimeException("自动增加工时错误！");
+        }
+    }
 }

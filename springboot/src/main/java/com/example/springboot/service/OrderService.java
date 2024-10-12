@@ -13,4 +13,5 @@ public interface OrderService {
     public List<OrderInfo> getOrdersByCondition(String conditionJson);
     public List<EquipInfo> getSelectedEquipInfo(String conditionJson) throws JsonProcessingException;
     public void addWorkRecord(String conditionJson) throws JsonProcessingException;
+    public void submitOrder(String conditionJson) throws JsonProcessingException;
 }

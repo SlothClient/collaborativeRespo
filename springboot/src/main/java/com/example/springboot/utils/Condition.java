@@ -11,6 +11,15 @@ public class Condition {
     private String equipId;
     private String planId;
     private String orderRecord;
+    private String workerId;
+
+    public String getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(String workerId) {
+        this.workerId = workerId;
+    }
 
     public String getOrderRecord() {
         return orderRecord;

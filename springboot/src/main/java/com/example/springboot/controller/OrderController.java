@@ -80,4 +80,19 @@ public class OrderController {
         }
         return resultMap;
     }
+
+    @RequestMapping("/submitOrder")
+    @ResponseBody
+    public ResultMap submitOrder(String conditionJson){
+        try{
+            orderService.submitOrder(conditionJson);
+            resultMap.setStatus(true);
+            resultMap.setMsg("success");
+        }
+        catch (Exception e){
+            resultMap.setStatus(false);
+            resultMap.setMsg(e.getMessage());
+        }
+        return resultMap;
+    }
 }
