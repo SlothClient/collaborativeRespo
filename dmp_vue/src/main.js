@@ -8,6 +8,7 @@ import pinia from "@/store/index.js";
 import App from './App.vue'
 import {router} from './router'
 import './permission.js'
+import emitter from './utils/emitter'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

@@ -16,7 +16,7 @@ export function useEquipInfo(selectedOrder) {
             planId: selectedOrder.planId,
             equipId: selectedOrder.equipId
         };
-        console.log(condition);
+        // console.log(condition);
         const formData = new FormData();
         formData.append('conditionJson', JSON.stringify(condition));
 
@@ -24,7 +24,7 @@ export function useEquipInfo(selectedOrder) {
             const response = await axios.post('/api/getSelectedEquipInfo', formData);
             if (response.data.status) {
                 tableData.value = response.data.list;
-                console.log(tableData);
+                // console.log(tableData);
                 ElMessage.success('获取设备信息成功!');
             } else {
                 ElMessage.error(response.data.msg);

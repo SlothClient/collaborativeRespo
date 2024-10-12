@@ -47,8 +47,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, reactive, watch, onMounted } from 'vue'
-import axios from 'axios';
-import { ElMessage } from 'element-plus';
+// 对话框之间的数据通信
+import emitter from '@/utils/emitter';
 
 // 模版数据
 const formInline = reactive({
@@ -116,17 +116,27 @@ watch(
         // console.log(2333);
         centerDialogVisible.value = newVal;
         if(newVal){
+            console.log("详情框Visible变化了");
+            
             // 一旦父组件dialogVisible发生变化，当前组件和工作记录对话框组件都会执行获取选中设备信息操作
             // 考虑在一个组件中发请求，另一组建通过组件之间的通信获取数据
-            const { tableData,getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
-            await getSelectedEquipInfo();
-            equipData.value = tableData.value;
+            
         }
     });
 
 // 如果selectedOrder变化，也需要更新formInline的数据
-watch(() => props.selectedOrder, (newVal) => {
+watch(() => props.selectedOrder, 
+async(newVal) => {
+    console.log('详情框selectedOrder变化了');
+    
     Object.assign(formInline, newVal)
+    if(newVal){
+        const { tableData,getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
+            await getSelectedEquipInfo();
+            equipData.value = tableData.value;
+            // 发数据，触发事件
+            emitter.emit('equipInfoTranferrer',equipData)
+    }
 })
 
 onMounted(() => {
@@ -138,7 +148,7 @@ onMounted(() => {
     
     // 对话框组件只在工单组件加载时加载，而不是打开对话框的时候，因为打开关闭控制的是display，所以下面的信息获取无效
     // getSelectedEquipInfo();
-    ElMessage.success('组件加载成功!')
+    // ElMessage.success('组件加载成功!')
 })
 </script>
 <style scoped>

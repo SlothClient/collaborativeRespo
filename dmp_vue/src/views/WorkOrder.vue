@@ -20,12 +20,14 @@
                 </el-button-group>
             </div>
             <span class="descWords">工单编号：</span>
-            <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable @keyup.enter="fetchOrders(statusFilter)"/>
+            <el-input v-model="orderId" style="width: 200px" placeholder="请输入工单编号" :prefix-icon="Search" clearable
+                @keyup.enter="fetchOrders(statusFilter)" />
             <span class="descWords">时间范围：</span>
             <el-date-picker v-model="orderSpan" type="datetimerange" start-placeholder="Start date"
                 end-placeholder="End date" format="YYYY-MM-DD HH:mm:ss" date-format="YYYY/MM/DD ddd"
                 time-format="A hh:mm:ss" style="width: 200px" />
-            <el-button type="primary" :icon="Search" style="margin-left: 10px;" @click="fetchOrders(statusFilter)">查询</el-button>
+            <el-button type="primary" :icon="Search" style="margin-left: 10px;"
+                @click="fetchOrders(statusFilter)">查询</el-button>
             <el-button type="primary" :icon="Refresh" @click="resetFilters">重置</el-button>
         </div>
         <!-- 工单记录展示容器 -->
@@ -74,7 +76,20 @@
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)" type="primary">
                             工单详情
                         </el-button>
-                        <el-link type="primary" id="recordLink" @click="handleWorkRecord(scope.$index,scope.row)">工作记录</el-link>
+                        <el-dropdown>
+                            <span class="el-dropdown-link">
+                                更多
+                                <el-icon class="el-icon--right">
+                                    <arrow-down />
+                                </el-icon>
+                            </span>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item @click="handleWorkRecord(scope.$index, scope.row)">工作记录</el-dropdown-item>
+                                    <el-dropdown-item>提交工单</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,17 +103,11 @@
             </div>
         </div>
         <!-- 详情框组件 -->
-        <detailDialog 
-            :dialogVisible="dialogVisible"
-            :selectedOrder="selectedOrder"
-            @update:dialogVisible="dialogVisible = $event"
-        />
+        <detailDialog :dialogVisible="dialogVisible" :selectedOrder="selectedOrder"
+            @update:dialogVisible="dialogVisible = $event" />
         <!-- 工作记录框组件 -->
-        <recordDialog 
-            :recordDialogVisible="recordDialogVisible"
-            :selectedOrder="selectedOrder"
-            @update:recordDialogVisible="recordDialogVisible = $event"
-        />
+        <recordDialog :recordDialogVisible="recordDialogVisible" :selectedOrder="selectedOrder"
+            @update:recordDialogVisible="recordDialogVisible = $event" />
     </div>
 </template>
 <script setup lang="ts">
@@ -238,9 +247,9 @@ const selectedOrder = ref(new Object);
  * @param {number} index - 当前行的索引
  * @param {Object} row - 当前行的数据对象
  */
- const handleEdit = (index, row) => {
+const handleEdit = (index, row) => {
     // 打印查看
-    console.log(index, row);
+    // console.log(index, row);
     // 打开详情框
     dialogVisible.value = true;
     // 发送选中数据到详情框组件
@@ -255,9 +264,9 @@ const recordDialogVisible = ref(false);
  * @param {number} index - 当前行的索引
  * @param {Object} row - 当前行的数据对象
  */
- const handleWorkRecord = (index, row) => {
+const handleWorkRecord = (index, row) => {
     // 打印查看
-    console.log(index, row);
+    // console.log(index, row);
     // 打开详情框
     recordDialogVisible.value = true;
     // 发送选中数据到详情框组件
@@ -362,5 +371,16 @@ const recordDialogVisible = ref(false);
 
 #recordLink {
     margin-left: 10px;
+}
+
+/* 更多按钮 */
+.el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+  padding: 7px 11px;
+  font-size: 13px;
+  font-family: Arial;
 }
 </style>
