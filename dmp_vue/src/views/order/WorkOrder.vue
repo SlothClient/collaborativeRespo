@@ -274,11 +274,10 @@ const handleWorkRecord = (index, row) => {
     selectedOrder.value = row;
 };
 // -----------------------------------------临时提交工单框-----------------------------------------
-const handleSubmit = (row,done: () => void) => {
+const handleSubmit = (row) => {
     ElMessageBox.confirm('请确认提交', '提示')
         .then(() => {
             submitOrder(row);
-            done()
         })
 }
 
