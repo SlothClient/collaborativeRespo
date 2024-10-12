@@ -25,6 +25,7 @@
               format="YYYY/MM/DD HH:mm:ss"
               value-format="YYYY/MM/DD HH:mm:ss"
               class="date-picker"
+              style="width: 200px"
           ></el-date-picker>
           <div class="button-group">
             <el-button type="primary" size="small" icon="Search" @click="searchPlans">查询</el-button>
@@ -205,6 +206,7 @@ const selectable = (row, index) => {
 //派单
 const dispatchVisible = ref(false)
 const closeDispatchDialog = () => {
+  selectedPlan.value.forEach(item => item.orderDesc = '')
   dispatchVisible.value = false
 }
 const openDispatchOrderDialog = () => {

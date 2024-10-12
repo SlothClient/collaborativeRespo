@@ -61,6 +61,8 @@
             format="YYYY/MM/DD HH:mm:ss"
             value-format="YYYY/MM/DD HH:mm:ss"
             class="form-date-picker"
+            size="large"
+            style="width: 450px"
         />
       </div>
 

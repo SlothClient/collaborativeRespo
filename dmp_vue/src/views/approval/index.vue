@@ -306,7 +306,6 @@ const equipNameFilter = ref([]);
 const maintenanceTypeFilter = ref([]);
 const approvalOrRejectDialogVisible = ref(false);
 const selectedPlanId = ref(null);
-//true表示
 const currentCommand = ref('')
 // 显示对话框
 // 控制对话框显示并传递不同的审批类型
@@ -319,6 +318,7 @@ const handleCommand = (command, planId) => {
 
 // 关闭对话框
 const handleCloseDialog = () => {
+
   approvalOrRejectDialogVisible.value = false;
 };
 

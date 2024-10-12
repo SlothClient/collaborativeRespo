@@ -317,8 +317,8 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
     // 计算设备购买至今的天数
     private int getDaysSincePurchase(Date purchaseDate) {
-        long diffInMillies = Math.abs(new Date().getTime() - purchaseDate.getTime());
-        return (int) (diffInMillies / (1000 * 60 * 60 * 24));
+        long diffInMillis = Math.abs(new Date().getTime() - purchaseDate.getTime());
+        return (int) (diffInMillis / (1000 * 60 * 60 * 24));
     }
 
     // 获取当前日期的n天后日期

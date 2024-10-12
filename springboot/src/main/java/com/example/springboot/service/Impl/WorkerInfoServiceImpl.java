@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.springboot.enums.maintenanceCodeEnum.PLAN_DISPATCHED;
+import static com.example.springboot.enums.maintenanceCodeEnum.PLAN_PENDING;
 
 /**
  * @author Lenovo
@@ -49,6 +51,15 @@ public class WorkerInfoServiceImpl extends ServiceImpl<WorkerInfoMapper, WorkerI
     @Override
     public Result<String> addWorkOrder(List<WorkOrderReq> workOrderReqList) {
         for (WorkOrderReq workOrderReq : workOrderReqList) {
+
+            MaintanceInfoDetail infoDetail = maintanceInfoMapper.selectById(workOrderReq.getPlanId());
+
+            if (infoDetail != null) {
+                boolean b = !Objects.equals(infoDetail.getStatus(), PLAN_PENDING.getCode());
+
+                return Result.fail("存在状态不为待开始的计划");
+            }
+
             OrderInfo orderInfo = OrderInfo.
                     builder()
                     .workerId(workOrderReq.getWorkerId())
