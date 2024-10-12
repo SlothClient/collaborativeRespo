@@ -86,7 +86,7 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item @click="handleWorkRecord(scope.$index, scope.row)">工作记录</el-dropdown-item>
-                                    <el-dropdown-item>提交工单</el-dropdown-item>
+                                    <el-dropdown-item @click="handleSubmit(scope.row)">提交工单</el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
                         </el-dropdown>
@@ -114,10 +114,11 @@
 import { Refresh, Search } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { ElMessage } from 'element-plus'; // 导入 ElMessage
+import { ElMessage, ElMessageBox } from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
 import recordDialog from '@/components/workOrder/recordDialog.vue'; // 导入工作记录对话框组件
 import { ro, tr } from 'element-plus/es/locale';
+import { now } from 'moment';
 
 const orderId = ref('');
 const orderSpan = ref([]);
@@ -272,6 +273,37 @@ const handleWorkRecord = (index, row) => {
     // 发送选中数据到详情框组件
     selectedOrder.value = row;
 };
+// -----------------------------------------临时提交工单框-----------------------------------------
+const handleSubmit = (row,done: () => void) => {
+    ElMessageBox.confirm('请确认提交', '提示')
+        .then(() => {
+            submitOrder(row);
+            done()
+        })
+}
+
+const submitOrder = async(row) => {
+    const condition = {
+        orderId: row.orderId,
+        workerId: row.workerId,
+        startTime: new Date(row.startTime).toISOString(),
+        endTime: new Date().toISOString()
+    }
+    const formData = new FormData();
+    formData.append('conditionJson', JSON.stringify(condition));
+    try{
+        const response = await axios.post('/api/submitOrder', formData);
+        if(response.data.status){
+            ElMessage.success("提交成功！");
+            fetchOrders(); // 提交成功后刷新工单列表
+        }else{
+            ElMessage.error(response.data.msg);
+        }
+    }
+    catch(err){
+        ElMessage.error("请求错误！"+err);
+    }
+}
 </script>
 <style scoped>
 .filter {

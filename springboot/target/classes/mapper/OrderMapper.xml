@@ -51,4 +51,20 @@
         set order_record = #{orderRecord}
         where order_id = #{orderId}
     </update>
+    <!-- 结单：添加结束时间 -->
+    <update id="submitOrder" parameterType="com.example.springboot.utils.Condition">
+        update order_info
+        set end_time = #{endTime}
+        where order_id = #{orderId}
+    </update>
+    <!-- 结单：自动计算工时 -->
+    <update id="autoAddHours" parameterType="com.example.springboot.utils.Condition">
+        update worker_info
+        set pay_hour = ROUND(
+        DATEDIFF(#{endTime}, #{startTime}) * 24 +
+        HOUR(TIMEDIFF(#{endTime}, #{startTime})) +
+        MINUTE(TIMEDIFF(#{endTime}, #{startTime})) / 60,
+        2)
+        where worker_id = #{workerId}
+    </update>
 </mapper>
