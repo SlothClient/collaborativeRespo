@@ -143,14 +143,17 @@ const planOption = ref({
     title: {
         text: '计划类型',
         subtext: '保养/维修',
-        left: 'right'
+        left: 'right',
+        padding: [20,10,0,0]
+
     },
     tooltip: {
         trigger: 'item'
     },
     legend: {
         orient: 'vertical',
-        left: 'left'
+        left: 'left',
+        top: 20
     },
     series: [
         {
@@ -168,7 +171,8 @@ const planOption = ref({
                     shadowOffsetX: 0,
                     shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-            }
+            },
+            bottom: -200
         }
     ]
 })
@@ -176,20 +180,27 @@ const planOption = ref({
 const workerOption = ref({
     title: {
         text: '工时排名',
-        subtext: 'hours'
+        padding: [20,0,10,10],
+        right: 10
     },
     tooltip: {
         trigger: 'axis'
     },
     legend: {
-        data: ['单量', '工时']
+        data: ['单量', '工时'],
+        top: 45,
+        right: 10
     },
     toolbox: {
         show: true,
         feature: {
             dataView: { show: true, readOnly: false },
             saveAsImage: { show: true }
-        }
+        },
+        left: 10,
+        top: 10
+
+
     },
     calculable: true,
     xAxis: [
@@ -237,13 +248,18 @@ const workerOption = ref({
                 data: [{ type: 'average', name: 'Avg' }]
             }
         }
-    ]
+    ],
+    grid: {
+        top: "15%",
+        bottom: "10%"
+    }
 })
 
 const equipOption = ref({
     title: {
         text: '设备计划数',
-        left: 'center'
+        left: 'center',
+        padding: [20,0,0,0]
     },
     tooltip: {
         trigger: 'axis'
@@ -262,7 +278,11 @@ const equipOption = ref({
             data: [150, 230, 224, 218, 135, 147, 260],
             type: 'line'
         }
-    ]
+    ],
+    grid: {
+        top: "15%",
+        bottom: "10%"
+    }
 })
 
 onMounted(() => {
