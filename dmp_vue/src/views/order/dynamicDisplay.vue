@@ -18,15 +18,15 @@
                 <div class="titleDown">已完成工单数</div>
             </div>
         </div>
-        <div id="midiumCharts">
+        <div ref="chartsContainer" id="midiumCharts">
             <div class="midiumChart">
-                <v-chart id="equipPlan" :option="equipOption"></v-chart>
+                <v-chart ref="equipPlan" id="equipPlan" :option="equipOption"></v-chart>
             </div>
             <div class="midiumChart">
-                <v-chart id="planType" :option="planOption"></v-chart>
+                <v-chart ref="planType" id="planType" :option="planOption"></v-chart>
             </div>
             <div class="midiumChart">
-                <v-chart id="workerRank" :option="workerOption"></v-chart>
+                <v-chart ref="workerRank" id="workerRank" :option="workerOption"></v-chart>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import axios from "axios";
 import { ElMessage } from "element-plus";
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, onBeforeUnmount } from "vue";
 
 const bigNums = reactive({
     totalOrder: 23,
@@ -297,6 +297,34 @@ onMounted(() => {
     getPlanTypes();
     getWorkerRank();
 })
+
+const equipPlan = ref(null);
+const planType = ref(null);
+const workerRank = ref(null);
+const chartsContainer = ref(null);
+
+const resizeCharts = () => {
+    equipPlan.value?.resize();
+    planType.value?.resize();
+    workerRank.value?.resize();
+};
+
+onMounted(() => {
+    const observer = new ResizeObserver(() => {
+        resizeCharts();
+    });
+
+    if (chartsContainer.value) {
+        observer.observe(chartsContainer.value);
+    }
+
+    resizeCharts(); // 初始化时调用一次 resize
+    window.addEventListener('resize', resizeCharts);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', resizeCharts);
+});
 </script>
 <style scoped>
 #dynamicOrder * {
