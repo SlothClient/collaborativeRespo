@@ -144,7 +144,7 @@ const planOption = ref({
         text: '计划类型',
         subtext: '保养/维修',
         left: 'right',
-        padding: [20,10,0,0]
+        padding: [20, 10, 0, 0]
 
     },
     tooltip: {
@@ -180,7 +180,7 @@ const planOption = ref({
 const workerOption = ref({
     title: {
         text: '工时排名',
-        padding: [20,0,10,10],
+        padding: [20, 0, 10, 10],
         right: 10
     },
     tooltip: {
@@ -205,13 +205,19 @@ const workerOption = ref({
     calculable: true,
     xAxis: [
         {
+            name: '工人',
+            nameTextStyle: {
+                align: "left",
+                verticalAlign: "bottom",
+                lineHeight: 40
+            },
             type: 'category',
-            // prettier-ignore
             data: ['张三', '李四', '王五', '赵六']
         }
     ],
     yAxis: [
         {
+            name: '工单/工时',
             type: 'value'
         }
     ],
@@ -240,8 +246,8 @@ const workerOption = ref({
             ],
             markPoint: {
                 data: [
-                    { type: 'max',name: 'Max' },
-                    { type: 'min',name: 'Min' }
+                    { type: 'max', name: 'Max' },
+                    { type: 'min', name: 'Min' }
                 ]
             },
             markLine: {
@@ -259,7 +265,7 @@ const equipOption = ref({
     title: {
         text: '设备计划数',
         left: 'center',
-        padding: [20,0,0,0]
+        padding: [20, 0, 0, 0]
     },
     tooltip: {
         trigger: 'axis'
