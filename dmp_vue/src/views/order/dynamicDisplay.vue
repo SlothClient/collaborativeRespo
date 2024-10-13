@@ -291,13 +291,6 @@ const equipOption = ref({
     }
 })
 
-onMounted(() => {
-    getBigNums();
-    getEquipPlans();
-    getPlanTypes();
-    getWorkerRank();
-})
-
 const equipPlan = ref(null);
 const planType = ref(null);
 const workerRank = ref(null);
@@ -309,7 +302,7 @@ const resizeCharts = () => {
     workerRank.value?.resize();
 };
 
-onMounted(() => {
+onMounted(async() => {
     const observer = new ResizeObserver(() => {
         resizeCharts();
     });
@@ -320,6 +313,13 @@ onMounted(() => {
 
     resizeCharts(); // 初始化时调用一次 resize
     window.addEventListener('resize', resizeCharts);
+
+    // 等着数据加载完成就不会出现数据还没到就先渲染了图表导致内容为空，await就行了，笑
+    await getBigNums();
+    await getEquipPlans();
+    await getPlanTypes();
+    await getWorkerRank();
+    // resizeCharts(); // 获取到数据后时调用一次 resize
 });
 
 onBeforeUnmount(() => {
