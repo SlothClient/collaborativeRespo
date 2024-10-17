@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.UserInfo">
+        <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="userpwd" column="userpwd" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <!-- 示例映射文件 -->
+    <resultMap id="userInfoResultMap" type="com.example.springboot.response.UserInfoResp">
+        <result property="Id" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="roleName" column="role_name"/> <!-- 确保这里使用的是 Java 类中的属性名 -->
+        <result property="userpwd" column="userpwd"/>
+        <!-- 其他属性 -->
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id,username,userpwd
+    </sql>
+    <insert id="addUserInfoList">
+
+    </insert>
+    <update id="updateUserInfo">
+        UPDATE user_info u
+        JOIN user_role ur ON u.user_id = ur.user_id
+        <set>
+            <if test="username != null">u.username = #{username},</if>
+            <if test="userpwd != null">u.userpwd = #{userpwd},</if>
+            <if test="role_name != null">
+                ur.role_id = (SELECT r.role_id FROM role_info r WHERE r.role_name = #{roleName}),
+            </if>
+        </set>
+        WHERE u.user_id = #{Id}
+    </update>
+    <select id="getUserMenu" resultType="com.example.springboot.response.MenuResp">
+        SELECT DISTINCT m.*
+        FROM user_info u
+                 JOIN user_role ur ON u.user_id = ur.user_id
+                 JOIN role_menu rm ON ur.role_id = rm.role_id
+                 JOIN menu_info m ON rm.menu_id = m.menu_id
+        WHERE u.user_id = #{userId}
+        ORDER BY m.menu_order;
+    </select>
+    <select id="getUserInfoList" resultType="com.example.springboot.response.UserInfoResp">
+        SELECT u.username,u.userpwd,r.role_name
+        FROM user_info u
+                 JOIN user_role ur ON u.user_id = ur.user_id
+                 JOIN role_info r ON ur.role_id = r.role_id
+        <if test="userReq != null">
+            <if test="userReq.username != null and userReq.username != ''">
+                AND u.username LIKE concat('%', #{userReq.username}, '%')
+            </if>
+            <if test="userReq.roleName != null and userReq.roleName != ''">
+                AND r.role_name LIKE concat('%', #{userReq.roleName}, '%')
+            </if>
+        </if>
+    </select>
+
+</mapper>

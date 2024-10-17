@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.EquipInfoMapper">
+    <!-- Result Map for EquipInfo entity -->
+<!--    <resultMap id="EquipInfoResultMap" type="com.example.springboot.entity.EquipInfo">-->
+<!--        <id property="equipId" column="equip_id"/>-->
+<!--        <result property="equipName" column="equip_name"/>-->
+<!--        <result property="equipPic" column="equip_pic"/>-->
+<!--        <result property="equipStatus" column="equip_status"/>-->
+<!--        <result property="validTime" column="valid_time"/>-->
+<!--        <result property="purchaseDate" column="purchase_date"/>-->
+<!--        <result property="fixBig" column="fix_big"/>-->
+<!--        <result property="fixMedium" column="fix_medium"/>-->
+<!--        <result property="fixSmall" column="fix_small"/>-->
+<!--        <result property="countBig" column="count_big"/>-->
+<!--        <result property="countMedium" column="count_medium"/>-->
+<!--        <result property="countSmall" column="count_small"/>-->
+<!--        <result property="lastMaintance" column="last_maintance"/>-->
+<!--        <result property="remarks" column="remarks"/>-->
+<!--    </resultMap>-->
+
+<!--    <select id="getEquipInfoList" resultMap="EquipInfoResultMap">-->
+<!--        SELECT-->
+<!--        equip_id,-->
+<!--        equip_name,-->
+<!--        equip_pic,-->
+<!--        equip_status,-->
+<!--        valid_time,-->
+<!--        purchase_date,-->
+<!--        fix_big,-->
+<!--        fix_medium,-->
+<!--        fix_small,-->
+<!--        count_big,-->
+<!--        count_medium,-->
+<!--        count_small,-->
+<!--        last_maintance,-->
+<!--        remarks-->
+<!--        FROM-->
+<!--        equip_info-->
+<!--        <where>-->
+<!--            <if test="equipInfoReq != null and equipInfoReq.equipName != null and equipInfoReq.equipName != ''">-->
+<!--                AND equip_name LIKE concat('%', #{equipInfoReq.equipName}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+</mapper>

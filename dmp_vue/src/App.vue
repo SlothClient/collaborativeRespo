@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style scope>
+<style scoped>
 *{
   padding: 0;
   margin: 0;
