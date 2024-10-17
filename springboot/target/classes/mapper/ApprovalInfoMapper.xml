@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.ApprovalInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.ApprovalInfo">
+        <id property="approvalId" column="approval_id" jdbcType="VARCHAR"/>
+        <result property="planId" column="plan_id" jdbcType="VARCHAR"/>
+        <result property="fatherId" column="father_id" jdbcType="VARCHAR"/>
+        <result property="applicantId" column="applicant_id" jdbcType="VARCHAR"/>
+        <result property="manipTime" column="manip_time" jdbcType="TIMESTAMP"/>
+        <result property="approvalStatus" column="approval_status" jdbcType="TINYINT"/>
+        <result property="stepOrder" column="step_order" jdbcType="TINYINT"/>
+        <result property="approvalRemark" column="approval_remark" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        approval_id,plan_id,father_id,
+        applicant_id,manip_time,approval_status,
+        step_order,approval_remark
+    </sql>
+    <select id="selectApprovalRespPage" resultType="com.example.springboot.response.ApprovalResp">
+        SELECT
+        m.plan_id AS planId,
+        m.plan_name AS maintenanceName,
+        m.status AS planStatus,
+        a.approval_status AS myStatus,
+        e.equip_name AS equipName,
+        m.maintance_type AS maintenanceType,
+        ai.manip_time AS createTime
+        FROM
+        maintance_info m
+        INNER JOIN
+        approval_info a ON m.plan_id = a.plan_id AND a.step_order = #{stepOrder}
+        LEFT JOIN
+        equip_info e ON m.equip_id = e.equip_id
+        LEFT JOIN
+        approval_info ai ON m.plan_id = ai.plan_id AND ai.step_order = 0
+        <where>
+            <if test="filters.equipId != null and filters.equipId.size() > 0">
+                AND m.equip_id IN
+                <foreach item="item" index="index" collection="filters.equipId" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="filters.maintenanceTypeId != null and filters.maintenanceTypeId.size() > 0">
+                AND m.maintance_type IN (
+                SELECT maintance_name
+                FROM maintance_type
+                WHERE type_id IN
+                <foreach item="item" index="index" collection="filters.maintenanceTypeId" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="filters.status != null and filters.status.size() > 0">
+                AND m.status IN
+                <foreach item="item" index="index" collection="filters.status" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="filters.startDate != null and filters.endDate != null">
+                AND m.start_time &gt;= #{filters.startDate}
+                AND m.end_time &lt;= #{filters.endDate}
+            </if>
+            <if test="filters.searchQuery != null and filters.searchQuery != ''">
+                AND (
+                e.equip_name LIKE CONCAT('%', #{filters.searchQuery}, '%')
+                OR m.plan_name LIKE CONCAT('%', #{filters.searchQuery}, '%')
+                )
+            </if>
+        </where>
+        ORDER BY ai.manip_time DESC
+    </select>
+
+
+    <resultMap id="ApprovalNodeResultMap" type="com.example.springboot.response.ApprovalNode">
+        <result column="username" property="username"/>
+        <result column="actionTime" property="actionTime"/>
+        <result column="remark" property="remark"/>
+        <result column="stepOrder" property="stepOrder" />
+        <result column="nodeStatus" property="nodeStatus"/>
+    </resultMap>
+
+    <resultMap id="ApprovalDetailRespResultMap" type="com.example.springboot.response.ApprovalDetailResp">
+        <!-- 普通字段映射 -->
+        <result column="maintanceDesc"  property="maintenanceDesc"/>
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="planStatus" property="planStatus"/>
+        <result column="equipName" property="equipName"/>
+
+        <!-- 嵌套集合，放在 result 之后 -->
+        <collection property="approvalInfoList" ofType="com.example.springboot.response.ApprovalNode" resultMap="ApprovalNodeResultMap"/>
+    </resultMap>
+
+    <select id="getApprovalDetail" resultMap="ApprovalDetailRespResultMap">
+        SELECT user_info.username            AS username,
+               approval_info.manip_time      AS actionTime,
+               approval_info.approval_remark AS remark,
+               approval_info.step_order      AS stepOrder,
+               approval_info.approval_status AS nodeStatus,
+               maintance_info.maintance_desc AS maintanceDesc,
+               maintance_info.start_time     AS startTime,
+               maintance_info.end_time       AS endTime,
+               maintance_info.`status`       AS planStatus,
+               equip_info.equip_name         AS equipName
+        FROM approval_info
+                 INNER JOIN
+             maintance_info
+             ON
+                 approval_info.plan_id = maintance_info.plan_id
+                 LEFT JOIN
+             user_info
+             ON
+                 approval_info.applicant_id = user_info.user_id
+                 INNER JOIN
+             equip_info
+             ON
+                 maintance_info.equip_id = equip_info.equip_id
+        WHERE maintance_info.plan_id = #{planId}
+        ORDER BY approval_info.step_order
+    </select>
+
+<!--    <select id="getApprovalDetail" resultType="com.example.springboot.response.ApprovalDetailResp">-->
+<!--        SELECT user_info.username            AS username,-->
+<!--               approval_info.manip_time      AS actionTime,-->
+<!--               approval_info.approval_remark AS remark,-->
+<!--               approval_info.step_order      AS stepOrder,-->
+<!--               approval_info.approval_status AS nodeStatus,-->
+<!--               maintance_info.maintance_desc AS maintenanceDesc,-->
+<!--               maintance_info.start_time     AS startTime,-->
+<!--               maintance_info.end_time       AS endTime,-->
+<!--               maintance_info.`status`       AS planStatus,-->
+<!--               equip_info.equip_name         AS equipName-->
+<!--        FROM approval_info-->
+<!--                 INNER JOIN-->
+<!--             maintance_info-->
+<!--             ON-->
+<!--                 approval_info.plan_id = maintance_info.plan_id-->
+<!--                 LEFT JOIN-->
+<!--             user_info-->
+<!--             ON-->
+<!--                 approval_info.applicant_id = user_info.user_id-->
+<!--                 INNER JOIN-->
+<!--             equip_info-->
+<!--             ON-->
+<!--                 maintance_info.equip_id = equip_info.equip_id-->
+<!--        WHERE maintance_info.plan_id = #{planId}-->
+<!--        ORDER BY approval_info.step_order-->
+<!--    </select>-->
+</mapper>

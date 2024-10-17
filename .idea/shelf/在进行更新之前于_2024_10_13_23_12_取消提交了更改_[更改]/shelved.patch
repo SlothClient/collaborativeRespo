@@ -1,0 +1,200 @@
+Index: dmp_vue/src/api/maintenancePlan/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {request} from \"@/utils/request.js\";\r\n\r\nexport const getMaintenancePlan = (maintenancePlanReq) => {\r\n    return request.post(\"/maintenance/getMaintenancePlan\", maintenancePlanReq);\r\n}\r\n\r\n\r\nexport const getEquipmentInfo = () => {\r\n    return request.post(\"/equipment/getEquipmentInfo\")\r\n}\r\n\r\nexport const getEquipmentMaintenanceType = () => {\r\n    return request.post(\"/equipment/getEquipmentMaintenanceType\")\r\n}\r\n\r\n\r\nexport const addPlan = (plan) => {\r\n    return request.post(\"/maintenance/addMaintenancePlan\", plan)\r\n}\r\n\r\nexport const undoPlan = (planId) => {\r\n    return request.get(`/maintenance/undoMaintenancePlan?planId=${planId}`)\r\n}\r\n\r\nexport const getPlanDetail = (planId) => {\r\n    return request.post(`/maintenance/getMaintenancePlanDetail?planId=${planId}`)\r\n}\r\n\r\nexport const updateMaintenance = (newPlan) => {\r\n    return request.post('/maintenance/updateMaintenance', newPlan)\r\n}\r\n\r\n\r\nexport const getWorkerList = () => {\r\n    return request.post('/maintenance/getWorkerInfo')\r\n}\r\n\r\n\r\nexport const addWorkOrder = (param) => {\r\n    return request.post('/maintenance/addWorkOrder',param)\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dmp_vue/src/api/maintenancePlan/index.js b/dmp_vue/src/api/maintenancePlan/index.js
+--- a/dmp_vue/src/api/maintenancePlan/index.js	(revision c1f3979da216fcec7124d654156e8b6f34085ca2)
++++ b/dmp_vue/src/api/maintenancePlan/index.js	(date 1728832323627)
+@@ -38,4 +38,4 @@
+ 
+ export const addWorkOrder = (param) => {
+     return request.post('/maintenance/addWorkOrder',param)
+-}
+\ No newline at end of file
++}
+Index: dmp_vue/src/store/module/equipmentInfo.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {defineStore} from \"pinia\";\r\nimport {ref} from \"vue\";\r\nimport {getEquipmentInfo, getEquipmentMaintenanceType, getWorkerList} from \"@/api/maintenancePlan/index.js\";\r\n\r\n\r\nexport const useEquipmentInfoStore = defineStore(\"equipmentInfo\", () => {\r\n    const equipmentInfo = ref([]);\r\n    const equipmentMaintenanceType = ref([]);\r\n    const workerInfo = ref([])\r\n\r\n    const getEquipmentInfoList = async () => {\r\n        if (equipmentInfo.value.length === 0) {\r\n            const res = await getEquipmentInfo();\r\n            equipmentInfo.value = res.data.data;\r\n        }\r\n    };\r\n\r\n    const getEquipmentMaintenanceTypeList = async () => {\r\n        if (equipmentMaintenanceType.value.length === 0) {\r\n            const res = await getEquipmentMaintenanceType();\r\n            equipmentMaintenanceType.value = res.data.data;\r\n        }\r\n    };\r\n\r\n    const getWorkerInfo = async () => {\r\n        if (workerInfo.value.length === 0) {\r\n            const res = await getWorkerList()\r\n            workerInfo.value = res.data.data\r\n        }\r\n    }\r\n\r\n    return {\r\n        equipmentInfo,\r\n        workerInfo,\r\n        equipmentMaintenanceType,\r\n        getEquipmentInfoList,\r\n        getEquipmentMaintenanceTypeList,\r\n        getWorkerInfo\r\n    };\r\n}, {\r\n    persist: true // 开启持久化\r\n});
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dmp_vue/src/store/module/equipmentInfo.js b/dmp_vue/src/store/module/equipmentInfo.js
+--- a/dmp_vue/src/store/module/equipmentInfo.js	(revision c1f3979da216fcec7124d654156e8b6f34085ca2)
++++ b/dmp_vue/src/store/module/equipmentInfo.js	(date 1728832323628)
+@@ -7,6 +7,7 @@
+     const equipmentInfo = ref([]);
+     const equipmentMaintenanceType = ref([]);
+     const workerInfo = ref([])
++    const maintenancePlan = ref([])
+ 
+     const getEquipmentInfoList = async () => {
+         if (equipmentInfo.value.length === 0) {
+@@ -33,6 +34,7 @@
+         equipmentInfo,
+         workerInfo,
+         equipmentMaintenanceType,
++        maintenancePlan,
+         getEquipmentInfoList,
+         getEquipmentMaintenanceTypeList,
+         getWorkerInfo
+Index: dmp_vue/src/views/maintenancePlan/index.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n  <div class=\"page-container\">\r\n    <!-- 顶部搜索和过滤功能区域 -->\r\n    <el-row class=\"filter-container\">\r\n      <el-col :span=\"24\">\r\n        <div class=\"filter-content\">\r\n          <div class=\"status-filter\">\r\n            <span class=\"status-label\">计划状态：</span>\r\n            <el-checkbox-group v-model=\"checkboxGroup1\" size=\"small\" class=\"status-checkbox-group\">\r\n              <el-checkbox-button v-for=\"(status, index) in statusOptions\" :key=\"index\" :value=\"status.value\"\r\n                                  :label=\"status.label\" class=\"status-filter-btn\">\r\n                {{ status.label }}\r\n              </el-checkbox-button>\r\n            </el-checkbox-group>\r\n          </div>\r\n          <el-input v-model=\"planName\" placeholder=\"输入计划名称\" size=\"small\" class=\"input-search\">\r\n            <template #prepend>计划名称:</template>\r\n          </el-input>\r\n          <el-date-picker\r\n              v-model=\"dateRange\"\r\n              type=\"datetimerange\"\r\n              start-placeholder=\"开始日期\"\r\n              end-placeholder=\"结束日期\"\r\n              size=\"small\"\r\n              format=\"YYYY/MM/DD HH:mm:ss\"\r\n              value-format=\"YYYY/MM/DD HH:mm:ss\"\r\n              class=\"date-picker\"\r\n              style=\"width: 200px\"\r\n          ></el-date-picker>\r\n          <div class=\"button-group\">\r\n            <el-button type=\"primary\" size=\"small\" icon=\"Search\" @click=\"searchPlans\">查询</el-button>\r\n            <el-button size=\"small\" icon=\"Refresh\" @click=\"resetFilters\">重置</el-button>\r\n          </div>\r\n        </div>\r\n      </el-col>\r\n    </el-row>\r\n\r\n    <el-row class=\"add-button-row\">\r\n      <el-button type=\"primary\" size=\"small\" icon=\"Plus\"\r\n                 @click=\"isMaintenancePlanAddVisible = !isMaintenancePlanAddVisible\" class=\"add-btn\">新增\r\n      </el-button>\r\n      <el-button type=\"primary\" size=\"small\" icon=\"User\" class=\"add-btn\" @click=\"openDispatchOrderDialog\">\r\n        分派人员\r\n      </el-button>\r\n      <el-button type=\"primary\" size=\"small\" icon=\"Filter\" class=\"add-btn\"\r\n                 @click=\"advancedSearchDialogVisible =!advancedSearchDialogVisible\">高级查询\r\n      </el-button>\r\n    </el-row>\r\n\r\n    <!-- 数据展示-->\r\n    <el-table :data=\"data\" stripe style=\"width: 100%;\" @selection-change=\"handleItemChange\" ref=\"tableRef\">\r\n      <el-table-column type=\"selection\" width=\"28\" :selectable=\"selectable\"></el-table-column>\r\n\r\n      <el-table-column label=\"保养计划信息\">\r\n        <template #default=\"scope\">\r\n          <el-card>\r\n            <el-row :gutter=\"12\">\r\n              <el-col :span=\"19\">\r\n                <el-descriptions :column=\"2\" size=\"small\">\r\n                  <el-descriptions-item label=\"计划名称\">{{ scope.row.planName }}</el-descriptions-item>\r\n                  <el-descriptions-item label=\"计划编号\">{{ scope.row.planId }}\r\n                    <el-tag\r\n                        size=\"small\"\r\n                        :class=\"getStatusClass(scope.row.status)\"\r\n                    >\r\n                      {{ getStatusLabel(scope.row.status) }}\r\n                    </el-tag>\r\n                  </el-descriptions-item>\r\n                  <el-descriptions-item label=\"开始时间\">{{ scope.row.startTime }}</el-descriptions-item>\r\n                  <el-descriptions-item label=\"结束时间\">{{ scope.row.endTime }}</el-descriptions-item>\r\n                  <el-descriptions-item label=\"计划类型\" :span=\"2\">\r\n                    <el-tag size=\"small\" type=\"info\">{{ scope.row.maintanceType }}</el-tag>\r\n                  </el-descriptions-item>\r\n                </el-descriptions>\r\n              </el-col>\r\n            </el-row>\r\n            <el-row class=\"info-row\" :gutter=\"10\">\r\n              <el-col :span=\"6\">\r\n                <span class=\"info-item\"><label>创建时间：</label>{{ scope.row.createTime }}</span>\r\n              </el-col>\r\n              <el-col :span=\"6\">\r\n                <span class=\"info-item\"><label>创建人：</label>{{ scope.row.creator }}</span>\r\n              </el-col>\r\n              <el-col :span=\"6\">\r\n                <span class=\"info-item\"><label>更新时间：</label>{{ scope.row.updateTime }}</span>\r\n              </el-col>\r\n              <el-col :span=\"6\">\r\n                <span class=\"info-item\"><label>更新人：</label>{{ scope.row.updatePerson }}</span>\r\n              </el-col>\r\n            </el-row>\r\n          </el-card>\r\n        </template>\r\n      </el-table-column>\r\n\r\n      <el-table-column label=\"操作\" width=\"100\">\r\n        <template #default=\"scope\">\r\n          <div class=\"action-buttons\">\r\n            <el-link type=\"primary\" @click=\"openEditDialog(scope.row)\">\r\n              <el-icon>\r\n                <Edit/>\r\n              </el-icon>\r\n              编辑\r\n            </el-link>\r\n            <el-link type=\"primary\" @click=\"openDetailDialog(scope.row.planId)\">\r\n              <el-icon>\r\n                <Document/>\r\n              </el-icon>\r\n              详情\r\n            </el-link>\r\n            <el-link type=\"primary\" @click.prevent=\"handleDelete(scope.row)\">\r\n              <el-icon>\r\n                <Delete/>\r\n              </el-icon>\r\n              撤销\r\n            </el-link>\r\n          </div>\r\n        </template>\r\n      </el-table-column>\r\n    </el-table>\r\n\r\n    <!--  分页-->\r\n    <div style=\"margin: 10px 0\">\r\n      <el-pagination\r\n          :background=\"true\"\r\n          v-model:current-page=\"currentPage\"\r\n          v-model:page-size=\"pageSize\"\r\n          :page-sizes=\"[3, 5, 10, 100]\"\r\n          large\r\n          :disabled=\"false\"\r\n          layout=\"total, sizes, prev, pager, next, jumper\"\r\n          :total=\"total\"\r\n          @size-change=\"handleSizeChange\"\r\n          @current-change=\"handleCurrentChange\"\r\n      />\r\n    </div>\r\n\r\n\r\n    <!--    高级搜索框-->\r\n    <AdvancedSearchDialog\r\n        :advancedSearchDialogVisible=\"advancedSearchDialogVisible\"\r\n        @close-advanced-search-dialog=\"closeAdvancedSearchDialog\"\r\n        @advanced-search-plan=\"advancedSearchPlan\"\r\n    ></AdvancedSearchDialog>\r\n\r\n    <!--    详情框-->\r\n    <maintenance-plan-detail-dialog\r\n        :maintenancePlanDetailVisible=\"isMaintenancePlanDetailVisible\"\r\n        @close-dialog=\"closeDetailDialog()\"\r\n        :maintenancePlanDetail=\"currentRowDetail\"\r\n    ></maintenance-plan-detail-dialog>\r\n\r\n    <!--    增加框-->\r\n    <maintenance-plan-add-dialog\r\n        :maintenancePlanAddVisible=\"isMaintenancePlanAddVisible\"\r\n        @close-dialog=\"closeAddDialog()\"\r\n        @add-maintenance-plan=\"addMaintenancePlan\"\r\n        :equipmentInfoList=\"equipmentInfo\"\r\n        :equipmentMaintenanceType=\"equipmentMaintenanceType\"\r\n\r\n    ></maintenance-plan-add-dialog>\r\n\r\n    <!--    修改框-->\r\n    <maintenance-plan-edit-dialog\r\n        :maintenancePlanEditVisible=\"isMaintenancePlanEditVisible\"\r\n        @close-dialog=\"closeEditDialog()\"\r\n        :currentRow=\"currentRowEdit\"\r\n        :equipmentInfoList=\"equipmentInfo\"\r\n        :equipmentMaintenanceType=\"equipmentMaintenanceType\"\r\n        @edit-maintenance-plan=\"editMaintenancePlan\"\r\n    ></maintenance-plan-edit-dialog>\r\n\r\n    <!--    派单-->\r\n    <dispatch-order\r\n        :visible=\"dispatchVisible\"\r\n        @close-dialog=\"closeDispatchDialog\"\r\n        :selectedPlan=\"selectedPlan\"\r\n        @dispatch-order=\"addOrder\"\r\n        @remove-selected-plan=\"removeSelectedPlan\"\r\n    >\r\n    </dispatch-order>\r\n  </div>\r\n</template>\r\n\r\n<script setup>\r\nimport {onMounted, ref} from 'vue';\r\nimport MaintenancePlanDetailDialog from \"@/components/maintenancePlan/maintenancePlanDetailDialog.vue\";\r\nimport MaintenancePlanAddDialog from \"@/components/maintenancePlan/maintenancePlanAddDialog.vue\";\r\nimport MaintenancePlanEditDialog from \"@/components/maintenancePlan/maintenancePlanEditDialog.vue\";\r\nimport {\r\n  addPlan, addWorkOrder,\r\n  getMaintenancePlan, getPlanDetail, undoPlan, updateMaintenance,\r\n} from \"@/api/maintenancePlan/index.js\";\r\nimport {ElMessage, ElMessageBox, ElNotification} from \"element-plus\";\r\nimport {useEquipmentInfoStore} from \"@/store/module/equipmentInfo.js\";\r\nimport AdvancedSearchDialog from \"@/components/maintenancePlan/advancedSearchDialog.vue\";\r\nimport DispatchOrder from \"@/components/maintenancePlan/dispatchOrder.vue\";\r\n\r\nconst tableRef = ref(null)\r\n\r\n//禁用多选框\r\nconst selectable = (row, index) => {\r\n  return row.status === 2;\r\n\r\n}\r\n\r\n//派单\r\nconst dispatchVisible = ref(false)\r\nconst closeDispatchDialog = () => {\r\n  selectedPlan.value.forEach(item => item.orderDesc = '')\r\n  dispatchVisible.value = false\r\n}\r\nconst openDispatchOrderDialog = () => {\r\n  dispatchVisible.value = true\r\n}\r\n\r\nconst selectedPlan = ref([])\r\nconst handleItemChange = (selection) => {\r\n  selectedPlan.value = selection\r\n};\r\n//移除相关计划\r\nconst removeSelectedPlan = (index, planId) => {\r\n  const removedPlan = data.value.find(item => item.planId === planId);  // 找到要删除的计划\r\n\r\n  // 找到 selectedPlan 中对应的项并删除\r\n  const planIndex = selectedPlan.value.findIndex(plan => plan.planId === removedPlan.planId);\r\n  if (planIndex !== -1) {\r\n    selectedPlan.value.splice(planIndex, 1);  // 同步移除\r\n  }\r\n\r\n  // 取消表格中该行的选中状态\r\n  if (tableRef.value) {\r\n    const row = data.value.find(item => item.planId === removedPlan.planId);\r\n    if (row) {\r\n      tableRef.value.toggleRowSelection(row, false);  // 取消选中\r\n    }\r\n  }\r\n};\r\n\r\n//派单\r\nconst addOrder = async (param) => {\r\n  console.log('父组件添加', param)\r\n  const res = await addWorkOrder(param)\r\n  if (res.data.flag) {\r\n    ElNotification({\r\n      message: res.data.data,\r\n      type: \"success\"\r\n    })\r\n    await getMaintenance(maintenancePlanReq.value);\r\n  }\r\n}\r\n\r\n\r\n//高级搜索\r\nconst advancedSearch = ref(null)\r\nconst advancedSearchDialogVisible = ref(false)\r\n\r\nconst closeAdvancedSearchDialog = () => {\r\n  advancedSearch.value = null;\r\n  advancedSearchDialogVisible.value = false\r\n}\r\nconst advancedSearchPlan = (param) => {\r\n  maintenancePlanReq.value.planName = param.planName\r\n  maintenancePlanReq.value.status = param.status\r\n  maintenancePlanReq.value.startTime = param.startTime\r\n  maintenancePlanReq.value.endTime = param.endTime\r\n  maintenancePlanReq.value.maintenanceTypeId = param.maintenanceTypeId\r\n  maintenancePlanReq.value.equipId = param.equipId\r\n  maintenancePlanReq.value.creator = param.creator\r\n  maintenancePlanReq.value.currentPage = 1\r\n  maintenancePlanReq.value.pageSize = 3\r\n  getMaintenance(maintenancePlanReq.value);\r\n}\r\n\r\n\r\n// 状态映射\r\nconst statusOptions = [\r\n  {label: '全部', value: -1},\r\n  {label: '待开始', value: 2},\r\n  {label: '已派单', value: 6},\r\n  {label: '执行中', value: 7},\r\n  {label: '已完成', value: 8}\r\n];\r\nconst getStatusLabel = (status) => {\r\n  switch (status) {\r\n    case 0:\r\n      return '待审批';\r\n    case 1:\r\n      return '审批中';\r\n    case 2:\r\n      return '待开始';\r\n    case 3:\r\n      return '已驳回';\r\n    case 6:\r\n      return '已派单';\r\n    case 7:\r\n      return '执行中';\r\n    case 8:\r\n      return '已完成';\r\n    default:\r\n      return '未知状态'\r\n  }\r\n}\r\n\r\nconst getStatusClass = (status) => {\r\n  switch (status) {\r\n    case 0:\r\n      return 'status-pending';       // 待审批\r\n    case 1:\r\n      return 'status-in-approval';   // 审批中\r\n    case 2:\r\n      return 'status-to-start';      // 待开始\r\n    case 3:\r\n      return 'status-rejected';      // 已驳回\r\n    case 6:\r\n      return 'status-assigned';      // 已派单\r\n    case 7:\r\n      return 'status-in-progress';   // 执行中\r\n    case 8:\r\n      return 'status-completed';     // 已完成\r\n    default:\r\n      return 'status-unknown';       // 未知状态\r\n  }\r\n}\r\n\r\nconst currentRowEdit = ref(null)\r\nconst currentRowDetail = ref(null)\r\n\r\n//删除\r\nconst handleDelete = (plan) => {\r\n  ElMessageBox.confirm(\r\n      '你确定要撤销' + plan.planName,\r\n      '删除计划',\r\n      {\r\n        confirmButtonText: '确定',\r\n        cancelButtonText: '取消',\r\n        type: 'warning',\r\n      }\r\n  )\r\n      .then(async () => {\r\n        const res = await undoPlan(plan.planId)\r\n\r\n        if (res.data.flag) {\r\n          ElNotification({\r\n            message: res.data.data,\r\n            type: \"success\"\r\n          })\r\n          await getMaintenance(maintenancePlanReq.value);\r\n        } else {\r\n          ElNotification({\r\n            message: res.data.data,\r\n            type: \"error\"\r\n          })\r\n        }\r\n      })\r\n      .catch(() => {\r\n        ElMessage({\r\n          type: 'info',\r\n          message: '取消删除',\r\n        })\r\n      })\r\n}\r\n\r\nconst checkboxGroup1 = ref([-1]); // 默认选择全部\r\nconst planName = ref(\"\");\r\nconst dateRange = ref([]);\r\n\r\n// 详情框\r\nconst isMaintenancePlanDetailVisible = ref(false);\r\nconst closeDetailDialog = () => {\r\n  isMaintenancePlanDetailVisible.value = false;\r\n};\r\nconst openDetailDialog = async (planId) => {\r\n  const res = await getPlanDetail(planId)\r\n  if (!res.data.flag) {\r\n    ElNotification({\r\n      message: res.data.data,\r\n      type: \"error\"\r\n    })\r\n    return\r\n  }\r\n  currentRowDetail.value = res.data.data\r\n  isMaintenancePlanDetailVisible.value = true;\r\n};\r\n// 添加\r\nconst isMaintenancePlanAddVisible = ref(false);\r\nconst closeAddDialog = () => {\r\n  isMaintenancePlanAddVisible.value = false;\r\n};\r\n/**\r\n * 添加保养计划\r\n * @param Plan\r\n * @returns {Promise<void>}\r\n */\r\nconst addMaintenancePlan = async (Plan) => {\r\n  const res = await addPlan(Plan);\r\n  if (!res.data.flag) {\r\n    ElNotification({\r\n      message: res.data.msg,\r\n      type: \"error\"\r\n    })\r\n  } else {\r\n    ElNotification({\r\n      message: res.data.data,\r\n      type: \"success\"\r\n    })\r\n    await getMaintenance(maintenancePlanReq.value);\r\n  }\r\n\r\n}\r\n\r\n// 修改\r\nconst isMaintenancePlanEditVisible = ref(false);\r\nconst closeEditDialog = () => {\r\n  isMaintenancePlanEditVisible.value = false;\r\n};\r\nconst openEditDialog = (row) => {\r\n  currentRowEdit.value = row\r\n  console.log(row)\r\n  isMaintenancePlanEditVisible.value = true;\r\n};\r\n\r\nconst editMaintenancePlan = async (val) => {\r\n  console.log(val)\r\n  const editPlan = {\r\n    equipId: val.equipId,\r\n    planName: val.planName,\r\n    startTime: val.startTime,\r\n    endTime: val.endTime,\r\n    maintanceDesc: val.maintanceDesc,\r\n    maintanceType: val.maintanceType,\r\n    planId: val.planId\r\n  }\r\n  const res = await updateMaintenance(editPlan)\r\n  if (!res.data.flag) {\r\n    ElNotification({\r\n      message: res.data.msg,\r\n      type: \"error\"\r\n    })\r\n  } else {\r\n    ElNotification({\r\n      message: res.data.data,\r\n      type: \"success\"\r\n    })\r\n    clear()\r\n    await getMaintenance(maintenancePlanReq.value)\r\n  }\r\n\r\n}\r\n\r\nconst data = ref([\r\n  // 示例数据\r\n]);\r\n\r\n\r\n//搜索请求\r\nconst maintenancePlanReq = ref({\r\n  currentPage: 1,\r\n  pageSize: 3,\r\n  planName: '',\r\n  startTime: null,\r\n  endTime: null,\r\n  status: [],\r\n  equipId: '',\r\n  maintenanceTypeId: '',\r\n  creator: ''\r\n});\r\n\r\n//分页\r\nconst currentPage = ref(1);\r\nconst pageSize = ref(3);\r\nconst total = ref(data.value.length);\r\n\r\nconst handleCurrentChange = (newPage) => {\r\n  maintenancePlanReq.value.currentPage = newPage;\r\n  getMaintenance(maintenancePlanReq.value);\r\n};\r\n\r\nconst handleSizeChange = (newPageSize) => {\r\n  maintenancePlanReq.value.pageSize = newPageSize;\r\n  getMaintenance(maintenancePlanReq.value);\r\n};\r\n\r\n\r\n//搜索\r\nconst searchPlans = () => {\r\n  maintenancePlanReq.value.planName = planName.value;\r\n  maintenancePlanReq.value.startTime = dateRange.value[0];\r\n  maintenancePlanReq.value.endTime = dateRange.value[1];\r\n  maintenancePlanReq.value.currentPage = 1;\r\n  if (checkboxGroup1.value.includes(-1)) {\r\n    maintenancePlanReq.value.status = [] //statusOptions.slice(1).map(option => option.value);\r\n  } else {\r\n    maintenancePlanReq.value.status = checkboxGroup1.value;\r\n  }\r\n  getMaintenance(maintenancePlanReq.value);\r\n  currentPage.value = 1\r\n};\r\n\r\n//重置\r\nconst clear = () => {\r\n  checkboxGroup1.value = [-1];\r\n  planName.value = '';\r\n  dateRange.value = [];\r\n  maintenancePlanReq.value.planName = '';\r\n  maintenancePlanReq.value.startTime = null;\r\n  maintenancePlanReq.value.endTime = null;\r\n  maintenancePlanReq.value.status = [];\r\n  maintenancePlanReq.value.maintenanceTypeId = ''\r\n  maintenancePlanReq.value.equipId = ''\r\n  maintenancePlanReq.value.creator = ''\r\n  maintenancePlanReq.value.currentPage = 1\r\n  maintenancePlanReq.value.pageSize = 3\r\n}\r\n\r\nconst resetFilters = () => {\r\n  clear()\r\n  getMaintenance(maintenancePlanReq.value);\r\n};\r\n\r\n\r\n/**\r\n * 获取保养计划列表\r\n * @param maintenancePlanReq\r\n * @returns {Promise<void>}\r\n */\r\nconst getMaintenance = async (maintenancePlanReq) => {\r\n  const res = await getMaintenancePlan(maintenancePlanReq);\r\n  if (res.data.flag) {\r\n    data.value = res.data.data.records;\r\n    total.value = res.data.data.total\r\n  }\r\n\r\n};\r\n\r\n\r\nconst equipmentInfo = ref([])\r\n\r\nconst equipmentMaintenanceType = ref([])\r\n\r\nconst equipmentStore = useEquipmentInfoStore()\r\n// 初始数据加载\r\nonMounted(async () => {\r\n  await getMaintenance(maintenancePlanReq.value);\r\n  await equipmentStore.getEquipmentInfoList();\r\n  await equipmentStore.getEquipmentMaintenanceTypeList();\r\n  await equipmentStore.getWorkerInfo();\r\n  equipmentInfo.value = equipmentStore.equipmentInfo\r\n  equipmentMaintenanceType.value = equipmentStore.equipmentMaintenanceType\r\n});\r\n</script>\r\n\r\n<style scoped>\r\n.page-container {\r\n  padding: 20px;\r\n  background-color: white;\r\n}\r\n\r\n.filter-container {\r\n  padding: 20px;\r\n  background-color: #ffffff;\r\n  margin-bottom: 0;\r\n  border-radius: 8px;\r\n}\r\n\r\n.filter-content {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-wrap: wrap;\r\n  gap: 15px;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.status-filter {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-shrink: 0;\r\n}\r\n\r\n.status-label {\r\n  white-space: nowrap;\r\n  margin-right: 10px;\r\n}\r\n\r\n.status-checkbox-group {\r\n  display: flex;\r\n  flex-wrap: nowrap;\r\n}\r\n\r\n.status-filter-btn {\r\n  margin-right: 0;\r\n}\r\n\r\n.input-search {\r\n  width: 200px;\r\n  min-width: 150px;\r\n  max-width: 300px;\r\n  flex-shrink: 0;\r\n}\r\n\r\n.date-picker {\r\n  width: 30%;\r\n  min-width: 250px;\r\n  max-width: 400px;\r\n  flex-shrink: 0;\r\n}\r\n\r\n.button-group {\r\n  display: flex;\r\n  gap: 10px;\r\n  flex-shrink: 0;\r\n}\r\n\r\n.add-button-row {\r\n  margin-bottom: 20px;\r\n  margin-left: 1%;\r\n}\r\n\r\n.add-btn {\r\n  float: right;\r\n  min-width: 80px;\r\n  width: 100px;\r\n}\r\n\r\n.el-table {\r\n  width: 100%;\r\n}\r\n\r\n.info-row {\r\n  font-size: 12px;\r\n  line-height: 1.5;\r\n  color: #606266;\r\n}\r\n\r\n.info-item label {\r\n  font-weight: 500;\r\n  color: #909399;\r\n}\r\n\r\n.el-pagination {\r\n  margin: 10px 0;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  .filter-content {\r\n    flex-direction: column;\r\n    align-items: flex-start;\r\n  }\r\n\r\n  .status-filter, .input-search, .date-picker, .button-group {\r\n    width: 100%;\r\n    margin-bottom: 10px;\r\n  }\r\n\r\n  .add-button-row {\r\n    margin-left: 0;\r\n    text-align: center;\r\n  }\r\n}\r\n\r\n.action-buttons {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  align-items: flex-start;\r\n}\r\n\r\n.el-link {\r\n  display: flex;\r\n  align-items: center;\r\n}\r\n\r\n.el-icon {\r\n  margin-right: 5px;\r\n  font-size: 14px;\r\n}\r\n\r\n/* 状态样式定义 */\r\n\r\n.status-pending {\r\n  background-color: #e0e0e0;\r\n  color: #606266;\r\n  border: 1px solid #bfbfbf;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-in-approval {\r\n  background-color: #fdf6ec;\r\n  color: #e6a23c;\r\n  border: 1px solid #e6a23c;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-to-start {\r\n  background: linear-gradient(90deg, #e6e6e6, #dcdcdc);\r\n  color: #606266;\r\n  border: 1px dashed #bfbfbf;\r\n  border-radius: 4px;\r\n  font-weight: bold;\r\n  animation: pulse 2s infinite;\r\n}\r\n\r\n.status-rejected {\r\n  background-color: #fef0f0;\r\n  color: #f56c6c;\r\n  border: 1px solid #f56c6c;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-assigned {\r\n  background-color: #ecf5ff;\r\n  color: #409eff;\r\n  border: 1px solid #409eff;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-in-progress {\r\n  background-color: #fdf6ec;\r\n  color: #e6a23c;\r\n  border: 1px solid #e6a23c;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-completed {\r\n  background-color: #f0f9eb;\r\n  color: #67c23a;\r\n  border: 1px solid #67c23a;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n.status-unknown {\r\n  background-color: #e0e0e0;\r\n  color: #606266;\r\n  border: 1px solid #bfbfbf;\r\n  border-radius: 4px;\r\n  padding: 2px 8px;\r\n}\r\n\r\n@keyframes pulse {\r\n  0% {\r\n    box-shadow: 0 0 0px rgba(102, 102, 102, 0.7);\r\n  }\r\n  50% {\r\n    box-shadow: 0 0 10px rgba(102, 102, 102, 0.7);\r\n  }\r\n  100% {\r\n    box-shadow: 0 0 0px rgba(102, 102, 102, 0.7);\r\n  }\r\n}\r\n\r\n</style>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dmp_vue/src/views/maintenancePlan/index.vue b/dmp_vue/src/views/maintenancePlan/index.vue
+--- a/dmp_vue/src/views/maintenancePlan/index.vue	(revision c1f3979da216fcec7124d654156e8b6f34085ca2)
++++ b/dmp_vue/src/views/maintenancePlan/index.vue	(date 1728832323629)
+@@ -529,7 +529,6 @@
+     data.value = res.data.data.records;
+     total.value = res.data.data.total
+   }
+-
+ };
+ 
+ 
+Index: dmp_vue/src/components/maintenancePlan/addDispatchOrder.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n  <el-dialog v-model=\"dialogTableVisible\" title=\"Shipping address\" width=\"800\">\r\n    <el-table :data=\"gridData\">\r\n      <el-table-column property=\"date\" label=\"Date\" width=\"150\" />\r\n      <el-table-column property=\"name\" label=\"Name\" width=\"200\" />\r\n      <el-table-column property=\"address\" label=\"Address\" />\r\n    </el-table>\r\n  </el-dialog>\r\n</template>\r\n\r\n<script setup>\r\n\r\n</script>\r\n\r\n\r\n\r\n<style scoped>\r\n\r\n</style>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dmp_vue/src/components/maintenancePlan/addDispatchOrder.vue b/dmp_vue/src/components/maintenancePlan/addDispatchOrder.vue
+--- a/dmp_vue/src/components/maintenancePlan/addDispatchOrder.vue	(revision c1f3979da216fcec7124d654156e8b6f34085ca2)
++++ b/dmp_vue/src/components/maintenancePlan/addDispatchOrder.vue	(date 1728832323627)
+@@ -1,19 +1,50 @@
+ <template>
+-  <el-dialog v-model="dialogTableVisible" title="Shipping address" width="800">
+-    <el-table :data="gridData">
+-      <el-table-column property="date" label="Date" width="150" />
+-      <el-table-column property="name" label="Name" width="200" />
+-      <el-table-column property="address" label="Address" />
++  <el-dialog v-model="dialogVisible"
++             title="添加计划"
++             width="800"
++             :before-close="closeDialog"
++  >
++    <el-table :data="EquipmentInfoStore.maintenancePlan">
++      <el-table-column property="planName" label="计划名"/>
++      <el-table-column property="equip" label="设备"/>
++      <el-table-column property="maintanceType" label="保养类型"/>
++      <el-table-column property="creator" label="创建人"/>
+     </el-table>
+   </el-dialog>
+ </template>
+ 
+ <script setup>
+ 
++import {onMounted, ref, watch} from "vue";
++import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
++
++
++const emits = defineEmits(["closeDialog"])
++
++const props = defineProps({
++  addDispatchOrder: {
++    type: Boolean,
++    default: false
++  }
++})
++
++const dialogVisible = ref(props.addDispatchOrder)
++
++watch(() => props.addDispatchOrder, (newVal) => {
++  dialogVisible.value = newVal
++})
++
++const closeDialog = () => {
++  dialogVisible.value = false
++  emits('closeDialog')
++}
++
++const EquipmentInfoStore = useEquipmentInfoStore();
++
++
+ </script>
+ 
+ 
+-
+ <style scoped>
+ 
+ </style>
+\ No newline at end of file
+Index: dmp_vue/src/components/maintenancePlan/dispatchOrder.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><template>\r\n  <el-dialog\r\n      v-model=\"dialogVisible\"\r\n      :before-close=\"closeDialog\"\r\n      title=\"计划派单\"\r\n      width=\"800px\"\r\n      center\r\n  >\r\n    <el-form label-width=\"120px\">\r\n      <el-form-item label=\"请选择工人\">\r\n        <el-select\r\n            v-model=\"selectedWorker\"\r\n            placeholder=\"请选择工人\"\r\n            aria-label=\"工人\"\r\n            clearable\r\n        >\r\n          <el-option\r\n              v-for=\"worker in workers\"\r\n              :key=\"worker.workerId\"\r\n              :label=\"worker.workerName\"\r\n              :value=\"worker.workerId\"\r\n          />\r\n        </el-select>\r\n      </el-form-item>\r\n    </el-form>\r\n\r\n    <el-table :data=\"tableData\" border style=\"width: 100%; margin-bottom: 20px\">\r\n      <el-table-column prop=\"planName\" label=\"计划名\" align=\"center\" />\r\n      <el-table-column prop=\"equipName\" label=\"设备\" align=\"center\" />\r\n      <el-table-column label=\"工单描述\" align=\"center\">\r\n        <template #default=\"scope\">\r\n          <el-input\r\n              v-model=\"scope.row.orderDesc\"\r\n              placeholder=\"请输入工单描述\"\r\n              clearable\r\n          />\r\n        </template>\r\n      </el-table-column>\r\n      <el-table-column align=\"center\" label=\"移除\">\r\n        <template #default=\"scope\">\r\n          <el-button\r\n              link\r\n              type=\"primary\"\r\n              size=\"small\"\r\n              @click.prevent=\"deleteRow(scope.$index, scope.row.planId)\"\r\n              icon=\"Delete\"\r\n          >\r\n            Remove\r\n          </el-button>\r\n        </template>\r\n      </el-table-column>\r\n    </el-table>\r\n\r\n    <el-button class=\"mt-4\" style=\"width: 100%\" @click=\"onAddItem\">\r\n      <el-icon>\r\n        <CirclePlus />\r\n      </el-icon>\r\n      添加计划\r\n    </el-button>\r\n\r\n    <div class=\"dialog-footer\">\r\n      <el-button @click=\"closeDialog\">取消</el-button>\r\n      <el-button type=\"primary\" @click=\"confirm\">确定</el-button>\r\n    </div>\r\n  </el-dialog>\r\n</template>\r\n\r\n<script setup>\r\nimport { ref, computed, watch } from 'vue';\r\nimport { useEquipmentInfoStore } from '@/store/module/equipmentInfo.js';\r\nimport { ElNotification } from 'element-plus';\r\nimport moment from \"moment\";\r\n\r\nconst props = defineProps({\r\n  visible: {\r\n    type: Boolean,\r\n    default: false,\r\n  },\r\n  selectedPlan: {\r\n    type: Array,\r\n    default: () => [],\r\n  },\r\n});\r\n\r\nconst emits = defineEmits(['closeDialog', 'dispatchOrder', 'removeSelectedPlan']);\r\n\r\nconst dialogVisible = ref(props.visible);\r\n\r\nwatch(() => props.visible, (newVal) => {\r\n  dialogVisible.value = newVal;\r\n});\r\n\r\nconst equipInfoStore = useEquipmentInfoStore();\r\nconst workers = equipInfoStore.workerInfo;\r\nconst equipmentInfo = equipInfoStore.equipmentInfo;\r\n\r\n// 计算属性：当 props.selectedPlan 改变时，生成表格数据\r\nconst tableData = computed(() => {\r\n  return props.selectedPlan.map((item) => ({\r\n    ...item,\r\n    equipName: equipmentInfo.find((equip) => equip.equipId === item.equipId)?.equipName || '',\r\n    orderDesc: item.orderDesc || '', // 保证 orderDesc 为空时有默认值\r\n  }));\r\n});\r\n\r\nconst selectedWorker = ref(null);\r\n\r\nconst closeDialog = () => {\r\n  dialogVisible.value = false;\r\n  emits('closeDialog');\r\n};\r\n\r\n// 确认派单\r\nconst confirm = () => {\r\n  // 检查是否有选择工人\r\n  if (!selectedWorker.value) {\r\n    ElNotification({\r\n      type: 'error',\r\n      message: '未选择工人',\r\n    });\r\n    return;\r\n  }\r\n\r\n  // 检查工单描述是否为空\r\n  const hasEmptyOrderDesc = tableData.value.some((item) => !item.orderDesc.trim());\r\n  if (hasEmptyOrderDesc) {\r\n    ElNotification({\r\n      type: 'error',\r\n      message: '描述不能为空',\r\n    });\r\n    return;\r\n  }\r\n\r\n  // 构建请求参数\r\n  const param = tableData.value.map((item) => ({\r\n    planId: item.planId,\r\n    equipId: item.equipId,\r\n    workerId: selectedWorker.value,\r\n    orderDesc: item.orderDesc,\r\n    deliverTime: moment().format('YYYY/MM/DD HH:mm:ss'),\r\n  }));\r\n\r\n  if (param.length === 0) {\r\n    ElNotification({\r\n      type: 'error',\r\n      message: '未选择保养计划',\r\n    });\r\n    return;\r\n  }\r\n\r\n  // 触发派单事件\r\n  emits('dispatchOrder', param);\r\n  closeDialog();\r\n};\r\n\r\n// 删除行\r\nconst deleteRow = (index, planId) => {\r\n  emits('removeSelectedPlan', index, planId);\r\n};\r\n\r\nconst onAddItem = () => {\r\n  console.log('添加计划');\r\n};\r\n</script>\r\n\r\n<style scoped>\r\n.el-dialog__header {\r\n  background-color: #f5f7fa;\r\n  border-bottom: 1px solid #ebeef5;\r\n  text-align: center;\r\n  font-weight: bold;\r\n  padding: 15px 0;\r\n}\r\n\r\n.el-form {\r\n  padding: 10px 20px;\r\n}\r\n\r\n.el-table {\r\n  margin-top: 20px;\r\n  border-radius: 8px;\r\n  overflow: hidden;\r\n  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.el-input {\r\n  width: 100%;\r\n}\r\n\r\n.dialog-footer {\r\n  text-align: right;\r\n  padding: 10px 20px;\r\n  border-top: 1px solid #ebeef5;\r\n}\r\n\r\n.dialog-footer .el-button {\r\n  margin-right: 10px;\r\n}\r\n</style>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dmp_vue/src/components/maintenancePlan/dispatchOrder.vue b/dmp_vue/src/components/maintenancePlan/dispatchOrder.vue
+--- a/dmp_vue/src/components/maintenancePlan/dispatchOrder.vue	(revision c1f3979da216fcec7124d654156e8b6f34085ca2)
++++ b/dmp_vue/src/components/maintenancePlan/dispatchOrder.vue	(date 1728832323628)
+@@ -25,8 +25,8 @@
+     </el-form>
+ 
+     <el-table :data="tableData" border style="width: 100%; margin-bottom: 20px">
+-      <el-table-column prop="planName" label="计划名" align="center" />
+-      <el-table-column prop="equipName" label="设备" align="center" />
++      <el-table-column prop="planName" label="计划名" align="center"/>
++      <el-table-column prop="equipName" label="设备" align="center"/>
+       <el-table-column label="工单描述" align="center">
+         <template #default="scope">
+           <el-input
+@@ -53,7 +53,7 @@
+ 
+     <el-button class="mt-4" style="width: 100%" @click="onAddItem">
+       <el-icon>
+-        <CirclePlus />
++        <CirclePlus/>
+       </el-icon>
+       添加计划
+     </el-button>
+@@ -63,13 +63,19 @@
+       <el-button type="primary" @click="confirm">确定</el-button>
+     </div>
+   </el-dialog>
++  <add-dispatch-order
++      :addDispatchOrder="addDispatchOrder"
++      @close-dialog="closeAddDispatchOrder"
++  >
++  </add-dispatch-order>
+ </template>
+ 
+ <script setup>
+-import { ref, computed, watch } from 'vue';
+-import { useEquipmentInfoStore } from '@/store/module/equipmentInfo.js';
+-import { ElNotification } from 'element-plus';
++import {ref, computed, watch} from 'vue';
++import {useEquipmentInfoStore} from '@/store/module/equipmentInfo.js';
++import {ElNotification} from 'element-plus';
+ import moment from "moment";
++import AddDispatchOrder from "@/components/maintenancePlan/addDispatchOrder.vue";
+ 
+ const props = defineProps({
+   visible: {
+@@ -158,9 +164,17 @@
+   emits('removeSelectedPlan', index, planId);
+ };
+ 
++
++const addDispatchOrder = ref(false)
++
+ const onAddItem = () => {
++  addDispatchOrder.value = true
+   console.log('添加计划');
+ };
++
++const closeAddDispatchOrder = () => {
++  addDispatchOrder.value = false
++}
+ </script>
+ 
+ <style scoped>

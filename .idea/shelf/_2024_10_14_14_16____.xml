@@ -1,0 +1,54 @@
+<changelist name="在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]" date="1728886577520" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/shelved.patch" />
+  <option name="DESCRIPTION" value="在进行合并之前于 2024/10/14 14:16 取消提交了更改 [更改]" />
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/utils/ResultMap.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/ResultMap.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="springboot/target/classes/com/example/springboot/controller/VisualizeController.class" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/controller/VisualizeController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/VisualizeController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="springboot/target/classes/com/example/springboot/entity/VisualInfo.class" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/entity/VisualInfo.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/VisualInfo.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="springboot/target/classes/com/example/springboot/service/VisualizeService.class" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/service/VisualizeService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/VisualizeService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="springboot/target/classes/com/example/springboot/service/Impl/VisualizeServiceImpl.class" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/service/Impl/VisualizeServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/VisualizeServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="springboot/target/classes/com/example/springboot/mapper/VisualizeMapper.class" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/mapper/VisualizeMapper.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/VisualizeMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/service/Impl/OrderServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/OrderServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/service/OrderService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/OrderService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/mapper/OrderMapper.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/OrderMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="springboot/target/classes/com/example/springboot/controller/OrderController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/在进行合并之前于_2024_10_14_14_16_取消提交了更改_[更改]/OrderController.class" />
+  </binary>
+</changelist>
