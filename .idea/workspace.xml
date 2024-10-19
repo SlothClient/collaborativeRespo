@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f7568d64-6e32-4f89-a81b-9150ea26409e" name="更改" comment="order">
+      <change beforePath="$PROJECT_DIR$/springboot/src/main/java/com/example/springboot/controller/equipInfoController.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="JavaScript File" />
+        <option value="Vue Composition API Component" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="finally" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="yes" />
+                    <option name="lastUsedInstant" value="1729180833" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="finally" />
+                    <option name="lastUsedInstant" value="1729180804" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.txt" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="customMavenHome" value="D:\maven\apache-maven-3.9.6" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2mT2zZinthrKXBLENh6Au4rssXZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Branch Context group&quot;: &quot;分支上下文已切换&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Database detector&quot;: &quot;数据库检测器&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Vcs Important Messages&quot;: &quot;VCS 重要消息&quot;,
+    &quot;Notification.DoNotAsk-Branch Context group&quot;: &quot;true&quot;,
+    &quot;Notification.DoNotAsk-Database detector&quot;: &quot;true&quot;,
+    &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.SaTokenDemoApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.SpringbootApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;yes&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21 (2)&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/科研实践/code/dmp_vue&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\JetBrains\\IntelliJIDEA\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora_aws&quot;
+    ],
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL 方言&quot;: [
+      &quot;GenericSQL&quot;
+    ],
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.example.springboot.response" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\科研实践\code\dmp_vue\src\views" />
+      <recent name="E:\科研实践\code\dmp_vue\src\layout" />
+      <recent name="E:\科研实践\code\dmp_vue\src\components\layout" />
+      <recent name="E:\科研实践\code\dmp_vue\src\store\module" />
+      <recent name="E:\科研实践\code\dmp_vue\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\科研实践\code" />
+      <recent name="E:\科研实践\code\dmp_vue\src\views" />
+      <recent name="E:\科研实践\code\dmp_vue\src\layout" />
+      <recent name="E:\科研实践\code\dmp_vue\src" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.springboot.config" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="springboot" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="springboot" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringbootApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="springboot" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.springboot.SpringbootApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/dmp_vue/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="f7568d64-6e32-4f89-a81b-9150ea26409e" name="更改" comment="" />
+      <created>1727086510427</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727086510427</updated>
+      <workItem from="1727086513625" duration="124000" />
+      <workItem from="1727086642443" duration="4673000" />
+      <workItem from="1727091696852" duration="7936000" />
+      <workItem from="1727143741781" duration="5694000" />
+      <workItem from="1727166472328" duration="2274000" />
+      <workItem from="1727168796493" duration="63000" />
+      <workItem from="1727170731805" duration="6133000" />
+      <workItem from="1727177343356" duration="8207000" />
+      <workItem from="1727243876896" duration="9344000" />
+      <workItem from="1727255913598" duration="16738000" />
+      <workItem from="1727273661223" duration="5175000" />
+      <workItem from="1727316841505" duration="5744000" />
+      <workItem from="1727329189930" duration="11248000" />
+      <workItem from="1727349420335" duration="5498000" />
+      <workItem from="1727395949311" duration="6318000" />
+      <workItem from="1727425672796" duration="3442000" />
+      <workItem from="1727431627581" duration="7109000" />
+      <workItem from="1727438785236" duration="5917000" />
+      <workItem from="1727483710181" duration="5018000" />
+      <workItem from="1727500217655" duration="15073000" />
+      <workItem from="1727515808777" duration="1790000" />
+      <workItem from="1727519956978" duration="253000" />
+      <workItem from="1727520307009" duration="7857000" />
+      <workItem from="1727529110809" duration="2518000" />
+      <workItem from="1727532645660" duration="4639000" />
+      <workItem from="1727569558155" duration="5406000" />
+      <workItem from="1727575127588" duration="40000" />
+      <workItem from="1727583557760" duration="3135000" />
+      <workItem from="1727586844876" duration="67000" />
+      <workItem from="1727589124457" duration="12242000" />
+      <workItem from="1727605594098" duration="16610000" />
+      <workItem from="1727662662860" duration="2871000" />
+      <workItem from="1727700072141" duration="6840000" />
+      <workItem from="1727789883006" duration="3061000" />
+      <workItem from="1727855545085" duration="6321000" />
+      <workItem from="1728190284696" duration="952000" />
+      <workItem from="1728201714616" duration="20911000" />
+      <workItem from="1728268018594" duration="17679000" />
+      <workItem from="1728299957734" duration="8252000" />
+      <workItem from="1728308997107" duration="2704000" />
+      <workItem from="1728377161808" duration="2354000" />
+      <workItem from="1728383295867" duration="1047000" />
+      <workItem from="1728389658400" duration="501000" />
+      <workItem from="1728390943378" duration="356000" />
+      <workItem from="1728391633047" duration="141000" />
+      <workItem from="1728391895355" duration="358000" />
+      <workItem from="1728394835935" duration="625000" />
+      <workItem from="1728454886598" duration="1519000" />
+      <workItem from="1728456541962" duration="63000" />
+      <workItem from="1728628089713" duration="415000" />
+      <workItem from="1728628885973" duration="3244000" />
+      <workItem from="1728633856587" duration="777000" />
+      <workItem from="1728634679712" duration="305000" />
+      <workItem from="1728635002413" duration="85000" />
+      <workItem from="1728635103547" duration="84000" />
+      <workItem from="1728635208697" duration="123000" />
+      <workItem from="1728635428317" duration="108000" />
+      <workItem from="1728713189405" duration="1604000" />
+      <workItem from="1728715800570" duration="1239000" />
+      <workItem from="1728821833639" duration="131000" />
+      <workItem from="1728831936813" duration="560000" />
+      <workItem from="1728832508101" duration="33000" />
+      <workItem from="1728833124692" duration="135000" />
+      <workItem from="1728833268540" duration="980000" />
+      <workItem from="1728834308700" duration="242000" />
+      <workItem from="1728885711413" duration="2266000" />
+      <workItem from="1728888112910" duration="106000" />
+      <workItem from="1728888240428" duration="123000" />
+      <workItem from="1728889225078" duration="447000" />
+      <workItem from="1728890028022" duration="64000" />
+      <workItem from="1728893057124" duration="1145000" />
+      <workItem from="1729172875278" duration="3392000" />
+      <workItem from="1729176680235" duration="3790000" />
+      <workItem from="1729180500108" duration="32000" />
+      <workItem from="1729180545304" duration="188000" />
+      <workItem from="1729180742877" duration="100000" />
+      <workItem from="1729180978332" duration="2099000" />
+    </task>
+    <task id="LOCAL-00001" summary="数据库">
+      <option name="closed" value="true" />
+      <created>1727087579907</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727087579907</updated>
+    </task>
+    <task id="LOCAL-00002" summary="部分权限认证相关及登入页面">
+      <option name="closed" value="true" />
+      <created>1727099425415</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727099425415</updated>
+    </task>
+    <task id="LOCAL-00003" summary="后端接口">
+      <option name="closed" value="true" />
+      <created>1727168831475</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727168831475</updated>
+    </task>
+    <task id="LOCAL-00004" summary="查询保养计划">
+      <option name="closed" value="true" />
+      <created>1727179394005</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727179394005</updated>
+    </task>
+    <task id="LOCAL-00005" summary="查询保养计划">
+      <option name="closed" value="true" />
+      <created>1727185456667</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727185456667</updated>
+    </task>
+    <task id="LOCAL-00006" summary="添加保养计划">
+      <option name="closed" value="true" />
+      <created>1727279389784</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727279389784</updated>
+    </task>
+    <task id="LOCAL-00007" summary="保养计划增删改查">
+      <option name="closed" value="true" />
+      <created>1727340405892</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727340405892</updated>
+    </task>
+    <task id="LOCAL-00008" summary="动态路由，菜单栏，审批页面">
+      <option name="closed" value="true" />
+      <created>1727574698875</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727574698875</updated>
+    </task>
+    <task id="LOCAL-00009" summary="审批">
+      <option name="closed" value="true" />
+      <created>1728201786367</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1728201786367</updated>
+    </task>
+    <task id="LOCAL-00010" summary="审批，保养计划动态生成">
+      <option name="closed" value="true" />
+      <created>1728311615540</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1728311615540</updated>
+    </task>
+    <task id="LOCAL-00011" summary="审批，保养计划动态生成">
+      <option name="closed" value="true" />
+      <created>1728311703754</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1728311703754</updated>
+    </task>
+    <task id="LOCAL-00012" summary="order">
+      <option name="closed" value="true" />
+      <created>1728391202242</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1728391202242</updated>
+    </task>
+    <task id="LOCAL-00013" summary="order">
+      <option name="closed" value="true" />
+      <created>1728713469515</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1728713469515</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="yes" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="数据库" />
+    <MESSAGE value="部分权限认证相关及登入页面" />
+    <MESSAGE value="后端接口" />
+    <MESSAGE value="查询保养计划" />
+    <MESSAGE value="添加保养计划" />
+    <MESSAGE value="保养计划增删改查" />
+    <MESSAGE value="动态路由，菜单栏，审批页面" />
+    <MESSAGE value="审批" />
+    <MESSAGE value="审批，保养计划动态生成" />
+    <MESSAGE value="order" />
+    <option name="LAST_COMMIT_MESSAGE" value="order" />
+  </component>
+</project>

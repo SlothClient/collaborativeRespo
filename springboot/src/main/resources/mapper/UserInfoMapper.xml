@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.UserInfo">
+        <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="userpwd" column="userpwd" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,username,userpwd
+    </sql>
+    <select id="getUserMenu" resultType="com.example.springboot.response.MenuResp">
+        SELECT DISTINCT m.*
+        FROM user_info u
+                 JOIN user_role ur ON u.user_id = ur.user_id
+                 JOIN role_menu rm ON ur.role_id = rm.role_id
+                 JOIN menu_info m ON rm.menu_id = m.menu_id
+        WHERE u.user_id = #{userId}
+        ORDER BY m.menu_order;
+    </select>
+</mapper>
