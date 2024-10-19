@@ -6,11 +6,11 @@ export const getMaintenancePlan = (maintenancePlanReq) => {
 
 
 export const getEquipmentInfo = () => {
-    return request.post("/equipment/getEquipmentInfo")
+    return request.post("/maintenance/getEquipmentInfo")
 }
 
 export const getEquipmentMaintenanceType = () => {
-    return request.post("/equipment/getEquipmentMaintenanceType")
+    return request.post("/maintenance/getEquipmentMaintenanceType")
 }
 
 

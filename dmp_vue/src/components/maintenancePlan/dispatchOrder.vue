@@ -3,7 +3,7 @@
       v-model="dialogVisible"
       :before-close="closeDialog"
       title="计划派单"
-      width="800px"
+      width="600px"
       center
   >
     <el-form label-width="120px">
@@ -86,6 +86,7 @@ const emits = defineEmits(['closeDialog', 'dispatchOrder', 'removeSelectedPlan']
 
 const dialogVisible = ref(props.visible);
 
+// 监听外部传入的 `visible`，控制 dialog 的显示状态
 watch(() => props.visible, (newVal) => {
   dialogVisible.value = newVal;
 });

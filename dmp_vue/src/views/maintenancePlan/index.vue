@@ -24,7 +24,6 @@
               size="small"
               format="YYYY/MM/DD HH:mm:ss"
               value-format="YYYY/MM/DD HH:mm:ss"
-              class="date-picker"
               style="width: 200px"
           ></el-date-picker>
           <div class="button-group">
@@ -206,7 +205,6 @@ const selectable = (row, index) => {
 //派单
 const dispatchVisible = ref(false)
 const closeDispatchDialog = () => {
-  selectedPlan.value.forEach(item => item.orderDesc = '')
   dispatchVisible.value = false
 }
 const openDispatchOrderDialog = () => {
@@ -328,7 +326,7 @@ const currentRowDetail = ref(null)
 //删除
 const handleDelete = (plan) => {
   ElMessageBox.confirm(
-      '你确定要撤销' + plan.planName,
+      '你确定要撤销——' + plan.planName,
       '删除计划',
       {
         confirmButtonText: '确定',
@@ -441,7 +439,6 @@ const editMaintenancePlan = async (val) => {
       message: res.data.data,
       type: "success"
     })
-    clear()
     await getMaintenance(maintenancePlanReq.value)
   }
 
@@ -525,6 +522,7 @@ const resetFilters = () => {
  */
 const getMaintenance = async (maintenancePlanReq) => {
   const res = await getMaintenancePlan(maintenancePlanReq);
+  console.log(res)
   if (res.data.flag) {
     data.value = res.data.data.records;
     total.value = res.data.data.total

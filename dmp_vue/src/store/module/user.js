@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import {login, logout} from "@/api/login/index.js";
 import {removeToken, setToken} from "@/utils/token.js";
 import {ElMessageBox, ElNotification} from "element-plus";
-import {getUserInfo} from "@/api/user/index.js";
+import {getRole, getUserInfo} from "@/api/user/index.js";
 import {router} from "@/router/index.js";
 
 export const useUserStore = defineStore('userStore', () => {
@@ -86,10 +86,20 @@ export const useUserStore = defineStore('userStore', () => {
         }
     }
 
+    const role = ref([]);
+    const getRoleList = async ()=> {
+        if (role.value.length === 0) {
+            const res = await getRole();
+            role.value = res.data.data;
+        }
+    };
+
     return {
         Login,
         Logout,
         GetUserInfo,
-        user
+        user,
+        role,
+        getRoleList
     }
 })
