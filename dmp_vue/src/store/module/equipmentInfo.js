@@ -1,11 +1,16 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {getEquipmentInfo, getEquipmentMaintenanceType, getWorkerList} from "@/api/maintenancePlan/index.js";
+import {getDepartment, getEquipStatusName, getSite, getType} from "@/api/equip/index.js";
 
 
 export const useEquipmentInfoStore = defineStore("equipmentInfo", () => {
     const equipmentInfo = ref([]);
     const equipmentMaintenanceType = ref([]);
+    const equipStatusName=ref([]);
+    const department = ref([]);
+    const type = ref([]);
+    const site = ref([]);
     const workerInfo = ref([])
 
     const getEquipmentInfoList = async () => {
@@ -22,6 +27,32 @@ export const useEquipmentInfoStore = defineStore("equipmentInfo", () => {
         }
     };
 
+    const getEquipStatusNameList = async() =>{
+        if(equipStatusName.value.length === 0){
+            const res = await getEquipStatusName();
+            console.log(res)
+            equipStatusName.value=res.data.data;
+        }
+    }
+    const getDepartmentList = async ()=>{
+        if(department.value.length === 0){
+            const res = await getDepartment();
+            department.value=res.data.data;
+        }
+    }
+
+    const getTypeList = async ()=>{
+        if(type.value.length === 0){
+            const res = await  getType();
+            type.value=res.data.data;
+        }
+    }
+
+    const getSiteList = async ()=>{
+        const res = await getSite();
+        site.value=res.data.data;
+    }
+
     const getWorkerInfo = async () => {
         if (workerInfo.value.length === 0) {
             const res = await getWorkerList()
@@ -33,10 +64,18 @@ export const useEquipmentInfoStore = defineStore("equipmentInfo", () => {
         equipmentInfo,
         workerInfo,
         equipmentMaintenanceType,
+        equipStatusName,
+        department,
+        type,
+        site,
         getEquipmentInfoList,
         getEquipmentMaintenanceTypeList,
-        getWorkerInfo
+        getWorkerInfo,
+        getEquipStatusNameList,
+        getDepartmentList,
+        getTypeList,
+        getSiteList
     };
 }, {
-    persist: true // 开启持久化
+    persist: true
 });

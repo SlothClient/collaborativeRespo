@@ -1,7 +1,7 @@
 <template>
   <el-dialog
       v-model="dialogVisible"
-      :title="dialogTitle"
+      :title="dialogTitle+'——'+props.title"
       width="40%"
       :before-close="handleClose"
       class="custom-dialog"
@@ -28,7 +28,7 @@
 
 <script setup>
 import {computed, ref, watch} from 'vue';
-import {ElMessage, ElNotification} from 'element-plus';
+import {ElNotification} from 'element-plus';
 
 const props = defineProps({
   visible: {
@@ -39,9 +39,9 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  currentRow:{
-    type:Object,
-    default:()=>null
+  title:{
+    type:String,
+    default:""
   }
 });
 const emit = defineEmits(['closeDialog', 'onSubmit']);
@@ -58,7 +58,7 @@ const rules = {
   ],
 };
 
-const dialogTitle = computed(() => props.currentCommand !== 'reject' ? '同意该审批' : '拒绝该审批');
+const dialogTitle = computed(() => props.currentCommand !== 'reject' ? '同意审批' : '拒绝审批');
 const placeholderText = computed(() => props.currentCommand === 'reject' ? '请输入驳回理由' : '请输入同意理由');
 
 // 关闭对话框

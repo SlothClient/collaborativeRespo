@@ -7,7 +7,7 @@
       :show-close="true"
       size="40%"
       direction="ltr"
-      :title="'计划'+title+''"
+      :title="'计划'+title+'——审批流程'"
   >
     <el-timeline hide-timestamp class="timeline" style="max-width: 600px;">
       <el-timeline-item

@@ -79,7 +79,7 @@
             <div style="display: flex;" v-if="userStore.user.roles.indexOf('R001') !==-1">
               <el-link
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
-                  @click.prevent="handleCommand('approve', scope.row.planId)"
+                  @click.prevent="handleCommand('approve', scope.row)"
                   type="success"
                   class="action-link"
               >
@@ -90,7 +90,7 @@
               </el-link>
               <el-link
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
-                  @click.prevent="handleCommand('reject', scope.row.planId)"
+                  @click.prevent="handleCommand('reject', scope.row)"
                   type="danger"
                   class="action-link"
               >
@@ -126,22 +126,11 @@
                 已处理
               </el-link>
 
-
-              <!--              <el-link-->
-              <!--                  v-if="scope.row.myStatus !== 0 && scope.row.planStatus === 2"-->
-              <!--                  class="action-link"-->
-              <!--                  type="info"-->
-              <!--              >-->
-              <!--                <el-icon style="margin-right: 5px;">-->
-              <!--                  <Finished/>-->
-              <!--                </el-icon>-->
-              <!--                已通过-->
-              <!--              </el-link>-->
             </div>
             <div style="display: flex;" v-else>
               <el-link
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 0"
-                  @click.prevent="handleCommand('approve', scope.row.planId)"
+                  @click.prevent="handleCommand('approve', scope.row)"
                   type="success"
                   class="action-link"
               >
@@ -152,7 +141,7 @@
               </el-link>
               <el-link
                   v-if="scope.row.myStatus === 0 &&scope.row.planStatus === 0"
-                  @click.prevent="handleCommand('reject', scope.row.planId)"
+                  @click.prevent="handleCommand('reject', scope.row)"
                   type="danger"
                   class="action-link"
               >
@@ -229,7 +218,7 @@
         @closeDialog="handleCloseDialog"
         @onSubmit="handleApproval"
         :currentCommand="currentCommand"
-        :currentRow="currentRow"
+        :title="title"
     >
     </ApprovalPassDialog>
 
@@ -309,11 +298,10 @@ const selectedPlanId = ref(null);
 //true表示
 const currentCommand = ref('')
 // 显示对话框
-// 控制对话框显示并传递不同的审批类型
-const handleCommand = (command, planId) => {
-  console.log(currentRow.value)
+const handleCommand = (command, row) => {
+  title.value = row.maintenanceName
   currentCommand.value = command;
-  selectedPlanId.value = planId;
+  selectedPlanId.value = row.planId;
   approvalOrRejectDialogVisible.value = true;
 };
 
@@ -335,7 +323,6 @@ const handleApproval = (comment) => {
 
 // 审批通过
 const approve = async (planId, approvalRemark) => {
-  console.log(planId)
   const res = await approvalPass(planId, approvalRemark)
   if (res.data.flag) {
     ElNotification({

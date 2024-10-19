@@ -35,6 +35,7 @@
             size="small"
             format="YYYY/MM/DD HH:mm:ss"
             value-format="YYYY/MM/DD HH:mm:ss"
+            style="width: 200px"
         ></el-date-picker>
       </el-form-item>
 
