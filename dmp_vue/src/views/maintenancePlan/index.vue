@@ -47,7 +47,7 @@
     </el-row>
 
     <!-- 数据展示-->
-    <el-table :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
+    <el-table  :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
       <el-table-column type="selection" width="28" :selectable="selectable"></el-table-column>
 
       <el-table-column label="保养计划信息">
@@ -196,6 +196,7 @@ import DispatchOrder from "@/components/maintenancePlan/dispatchOrder.vue";
 
 const tableRef = ref(null)
 
+
 //禁用多选框
 const selectable = (row, index) => {
   return row.status === 2;
@@ -218,13 +219,11 @@ const handleItemChange = (selection) => {
 //移除相关计划
 const removeSelectedPlan = (index, planId) => {
   const removedPlan = data.value.find(item => item.planId === planId);  // 找到要删除的计划
-
   // 找到 selectedPlan 中对应的项并删除
   const planIndex = selectedPlan.value.findIndex(plan => plan.planId === removedPlan.planId);
   if (planIndex !== -1) {
     selectedPlan.value.splice(planIndex, 1);  // 同步移除
   }
-
   // 取消表格中该行的选中状态
   if (tableRef.value) {
     const row = data.value.find(item => item.planId === removedPlan.planId);
@@ -490,7 +489,6 @@ const searchPlans = () => {
     maintenancePlanReq.value.status = checkboxGroup1.value;
   }
   getMaintenance(maintenancePlanReq.value);
-  currentPage.value = 1
 };
 
 //重置
@@ -522,10 +520,11 @@ const resetFilters = () => {
  */
 const getMaintenance = async (maintenancePlanReq) => {
   const res = await getMaintenancePlan(maintenancePlanReq);
-  console.log(res)
   if (res.data.flag) {
     data.value = res.data.data.records;
     total.value = res.data.data.total
+    currentPage.value = res.data.data.current
+    pageSize.value = res.data.data.size
   }
 
 };

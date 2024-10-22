@@ -83,10 +83,10 @@ watch(
             
             orderRecord.value = newVal.orderRecord;
 
-            // const { tableData, getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
-            // await getSelectedEquipInfo();
-            // console.log(tableData.value);
-            // equipData.value = tableData.value[0];
+            const { tableData, getSelectedEquipInfo } = useEquipInfo(props.selectedOrder);
+            await getSelectedEquipInfo();
+            console.log(tableData.value);
+            equipData.value = tableData.value[0];
             //设备信息通过对话框之间的通信获取
         }
     }

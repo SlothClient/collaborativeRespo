@@ -1,7 +1,9 @@
 import axios from "axios";
 import {ElMessage, ElNotification} from "element-plus";
 import {getToken} from "@/utils/token.js";
+import {useLoadingStore} from "@/store/module/loadingStore.js";
 
+// 创建 axios 实例
 export const request = axios.create({
     baseURL: "/api",
     timeout: 10000,
@@ -9,45 +11,38 @@ export const request = axios.create({
         "Content-Type": "application/json;charset=UTF-8",
     },
 });
-// 添加请求拦截器
-axios.interceptors.request.use(
-    function (config) {
-        //请求头携带token
-        if(getToken()){
-            config.headers["Authorization"] = getToken();
 
-        }
+
+// 请求拦截器
+request.interceptors.request.use(
+    function (config) {
+        const loadingStore = useLoadingStore();
+        loadingStore.startLoading(); // 开始加载动画
         return config;
     },
     function (error) {
-        // 对请求错误做些什么
+        const loadingStore = useLoadingStore();
+        loadingStore.stopLoading(); // 请求失败时隐藏加载动画
         return Promise.reject(error);
     }
 );
 
-// 配置响应拦截器
 request.interceptors.response.use(
     (response) => {
-        switch (response.data.code) {
-            case 400:
-                ElNotification({
-                    title: "失败",
-                    message: response.data.msg,
-                    type: "error",
-                });
-                break;
-            case 500:
-                ElNotification({
-                    title: "失败",
-                    message: response.data.msg,
-                    type: "error",
-                });
-                break;
-        }
+        const loadingStore = useLoadingStore();
+
+
+        loadingStore.stopLoading(); // 结束加载动画
+
         return response;
     },
     (error) => {
-        let { message } = error;
+        const loadingStore = useLoadingStore();
+
+
+        loadingStore.stopLoading()
+        // 处理错误
+        let {message} = error;
         if (message === "Network Error") {
             message = "后端接口连接异常";
         } else if (message.includes("timeout")) {

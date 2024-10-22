@@ -1,5 +1,6 @@
 package com.example.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -32,6 +33,10 @@ public class UserRole implements Serializable {
     private String userId;
 
     private String roleId;
+
+
+    @TableLogic(value = "0",delval = "1")
+    private Integer isDeleted;
 
 
 }

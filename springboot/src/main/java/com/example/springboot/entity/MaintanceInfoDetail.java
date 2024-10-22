@@ -2,6 +2,7 @@ package com.example.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
@@ -70,7 +71,7 @@ public class MaintanceInfoDetail implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
+    @TableLogic(value = "0",delval = "1")
     private Integer isDeleted;
     @Override
     public boolean equals(Object that) {

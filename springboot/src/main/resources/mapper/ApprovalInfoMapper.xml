@@ -125,31 +125,31 @@
         ORDER BY approval_info.step_order
     </select>
 
-<!--    <select id="getApprovalDetail" resultType="com.example.springboot.response.ApprovalDetailResp">-->
-<!--        SELECT user_info.username            AS username,-->
-<!--               approval_info.manip_time      AS actionTime,-->
-<!--               approval_info.approval_remark AS remark,-->
-<!--               approval_info.step_order      AS stepOrder,-->
-<!--               approval_info.approval_status AS nodeStatus,-->
-<!--               maintance_info.maintance_desc AS maintenanceDesc,-->
-<!--               maintance_info.start_time     AS startTime,-->
-<!--               maintance_info.end_time       AS endTime,-->
-<!--               maintance_info.`status`       AS planStatus,-->
-<!--               equip_info.equip_name         AS equipName-->
-<!--        FROM approval_info-->
-<!--                 INNER JOIN-->
-<!--             maintance_info-->
-<!--             ON-->
-<!--                 approval_info.plan_id = maintance_info.plan_id-->
-<!--                 LEFT JOIN-->
-<!--             user_info-->
-<!--             ON-->
-<!--                 approval_info.applicant_id = user_info.user_id-->
-<!--                 INNER JOIN-->
-<!--             equip_info-->
-<!--             ON-->
-<!--                 maintance_info.equip_id = equip_info.equip_id-->
-<!--        WHERE maintance_info.plan_id = #{planId}-->
-<!--        ORDER BY approval_info.step_order-->
-<!--    </select>-->
+    <!--    <select id="getApprovalDetail" resultType="com.example.springboot.response.ApprovalDetailResp">-->
+    <!--        SELECT user_info.username            AS username,-->
+    <!--               approval_info.manip_time      AS actionTime,-->
+    <!--               approval_info.approval_remark AS remark,-->
+    <!--               approval_info.step_order      AS stepOrder,-->
+    <!--               approval_info.approval_status AS nodeStatus,-->
+    <!--               maintance_info.maintance_desc AS maintenanceDesc,-->
+    <!--               maintance_info.start_time     AS startTime,-->
+    <!--               maintance_info.end_time       AS endTime,-->
+    <!--               maintance_info.`status`       AS planStatus,-->
+    <!--               equip_info.equip_name         AS equipName-->
+    <!--        FROM approval_info-->
+    <!--                 INNER JOIN-->
+    <!--             maintance_info-->
+    <!--             ON-->
+    <!--                 approval_info.plan_id = maintance_info.plan_id-->
+    <!--                 LEFT JOIN-->
+    <!--             user_info-->
+    <!--             ON-->
+    <!--                 approval_info.applicant_id = user_info.user_id-->
+    <!--                 INNER JOIN-->
+    <!--             equip_info-->
+    <!--             ON-->
+    <!--                 maintance_info.equip_id = equip_info.equip_id-->
+    <!--        WHERE maintance_info.plan_id = #{planId}-->
+    <!--        ORDER BY approval_info.step_order-->
+    <!--    </select>-->
 </mapper>

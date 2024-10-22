@@ -8,11 +8,14 @@
         <id property="userId" column="user_id" jdbcType="VARCHAR"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="userpwd" column="userpwd" jdbcType="VARCHAR"/>
+        <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         user_id,username,userpwd
     </sql>
+
     <select id="getUserMenu" resultType="com.example.springboot.response.MenuResp">
         SELECT DISTINCT m.*
         FROM user_info u
@@ -22,4 +25,24 @@
         WHERE u.user_id = #{userId}
         ORDER BY m.menu_order;
     </select>
+    <select id="getUserInfoList" resultType="com.example.springboot.response.UserInfoResp">
+        SELECT
+        u.user_id AS Id,
+        u.username AS username,
+        u.userpwd AS userPwd,
+        r.role_name AS roleName
+        FROM user_info u
+        JOIN user_role ur ON u.user_id = ur.user_id
+        JOIN role_info r ON ur.role_id = r.role_id
+        WHERE u.is_deleted != 1
+        <if test="userReq != null">
+            <if test="userReq.username != null and userReq.username != ''">
+                AND u.username LIKE concat('%', #{userReq.username}, '%')
+            </if>
+            <if test="userReq.roleName != null and userReq.roleName != ''">
+                AND r.role_name LIKE concat('%', #{userReq.roleName}, '%')
+            </if>
+        </if>
+    </select>
+
 </mapper>

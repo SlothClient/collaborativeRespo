@@ -6,6 +6,9 @@ import {ElMessageBox, ElNotification} from "element-plus";
 import {getRole, getUserInfo} from "@/api/user/index.js";
 import {router} from "@/router/index.js";
 
+
+
+
 export const useUserStore = defineStore('userStore', () => {
     // 状态
     const user = ref({
@@ -14,6 +17,7 @@ export const useUserStore = defineStore('userStore', () => {
         roles: [],
         permissions: [], // 存储用户的权限
         token: '',
+        avatar:null,
     })
     const clearUser = () => {
         user.value = {
@@ -26,10 +30,10 @@ export const useUserStore = defineStore('userStore', () => {
     const Login = async (loginForm) => {
         try {
             const {data} = await login(loginForm)
-            console.log(data)
             if (data.flag) {
                 setToken(data.data)
-                console.log(data)
+
+
                 return true
             }
             return false
@@ -60,6 +64,7 @@ export const useUserStore = defineStore('userStore', () => {
         } catch (e) {
             throw e
         }
+        clearUser();
         location.reload();
     }
 
@@ -72,6 +77,7 @@ export const useUserStore = defineStore('userStore', () => {
                     username:res.data.data.username,
                     roles: res.data.data.roles,
                     permissions: res.data.data.permissions,
+                    avatar: `http://localhost:8080`+res.data.data.avatar // 添加头像字段
                 }
                 console.log(user.value)
             } else {

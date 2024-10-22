@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.ChatRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.ChatRecord">
+            <id property="chatId" column="chat_id" jdbcType="VARCHAR"/>
+            <result property="sender" column="sender" jdbcType="VARCHAR"/>
+            <result property="receiver" column="receiver" jdbcType="VARCHAR"/>
+            <result property="text" column="text" jdbcType="VARCHAR"/>
+            <result property="time" column="time" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        chat_id,sender,receiver,
+        text,time
+    </sql>
+</mapper>

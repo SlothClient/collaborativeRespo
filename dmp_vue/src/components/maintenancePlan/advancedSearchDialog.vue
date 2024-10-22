@@ -131,15 +131,17 @@ const statusOptions = [
 
 // 查询操作
 const handleSearch = () => {
+  console.log(searchForm.value.dateRange)
   const advancedSearchParam = {
     maintenanceTypeId: searchForm.value.maintenanceTypeId,
     creator: searchForm.value.creator,
-    startTime: searchForm.value.dateRange[0] ? null :searchForm.value.dateRange[0],
-    endTime: searchForm.value.dateRange[1] ? null :searchForm.value.dateRange[1],
+    startTime: searchForm.value.dateRange[0] == null ? null :searchForm.value.dateRange[0],
+    endTime: searchForm.value.dateRange[1] == null? null :searchForm.value.dateRange[1],
     equipId: searchForm.value.equipId,
     status: searchForm.value.status,
     planName: searchForm.value.planName
   }
+  console.log(advancedSearchParam)
   emits('advancedSearchPlan', advancedSearchParam)
   visible.value = false
   closeDialog()

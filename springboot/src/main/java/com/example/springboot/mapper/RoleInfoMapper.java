@@ -9,19 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
-* @author Lenovo
-* @description 针对表【role_info】的数据库操作Mapper
-* @createDate 2024-09-23 20:21:56
-* @Entity com.example.springboot.entity.RoleInfo
-*/
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author author
+ * @since 2024-10-17
+ */
 
-@Repository
 @Mapper
+@Repository
 public interface RoleInfoMapper extends BaseMapper<RoleInfo> {
-
     List<String> selectRoleListByUserId(@Param("userId") Object loginId);
 }
-
-
-
-

@@ -19,6 +19,8 @@ public class WorkOrderReq {
 
     private String planId;
 
+    private String checkId;
+
     private String equipId;
 
     private String workerId;

@@ -34,3 +34,13 @@ export const getRole = () => {
 export const getUserInfoList = (useRsq) => {
     return request.post("/getUserInfoList", useRsq)
 }
+
+
+export const updateAvatar = (file) =>{
+    return request.post("/updateAvatar", file, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
+
