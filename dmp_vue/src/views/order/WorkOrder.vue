@@ -86,8 +86,8 @@
                             </span>
                             <template #dropdown>
                                 <el-dropdown-menu>
-                                    <el-dropdown-item
-                                        @click="handleWorkRecord(scope.$index, scope.row)">工作记录</el-dropdown-item>
+                                    <el-dropdown-item @click="handleWorkRecord(scope.$index, scope.row)">工作记录</el-dropdown-item>
+                                    <el-dropdown-item @click="handleWorkLog(scope.$index, scope.row)">工作日志</el-dropdown-item>
                                     <el-dropdown-item @click="handleSubmit(scope.row)">提交工单</el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
@@ -110,6 +110,9 @@
         <!-- 工作记录框组件 -->
         <recordDialog :recordDialogVisible="recordDialogVisible" :selectedOrder="selectedOrder"
             @update:recordDialogVisible="recordDialogVisible = $event" />
+        <!-- 工作日志框组件 -->
+        <LogDialog :recordDialogVisible="logDialogVisible" :selectedOrder="selectedOrder"
+            @update:recordDialogVisible="logDialogVisible = $event" />
     </div>
 </template>
 <script setup lang="ts">
@@ -119,6 +122,7 @@ import axios from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
 import recordDialog from '@/components/workOrder/recordDialog.vue'; // 导入工作记录对话框组件
+import LogDialog from '@/components/workOrder/LogDialog.vue'; // 导入工作日志对话框组件
 
 
 const orderId = ref('');
@@ -274,6 +278,22 @@ const handleWorkRecord = (index, row) => {
     // 发送选中数据到详情框组件
     selectedOrder.value = row;
 };
+// -----------------------------------------工作日志框-------------------------------------------
+const logDialogVisible = ref(false);
+/**
+ * 处理工作日志事件
+ * 
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ * */
+const handleWorkLog = (index, row) => {
+    // 打印查看
+    // console.log(index, row);
+    // 打开详情框
+    logDialogVisible.value = true;
+    // 发送选中数据到详情框组件
+    selectedOrder.value = row;
+}
 // -----------------------------------------临时提交工单框-----------------------------------------
 const handleSubmit = (row) => {
     ElMessageBox.confirm('请确认提交', '提示')

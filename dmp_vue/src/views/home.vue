@@ -1,29 +1,30 @@
 <template>
   <div id="dynamicOrder">
-    <el-row>
-      <div style="width: 500px;height: 350px;">
-        <div style="display: flex;">
-          <div class="focus-effect" style="margin-top: 10px;">
-             工单总数 &emsp;{{ bigNums.totalOrder }}
+      <div id="upper">
+          <div id="numBlocks">
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.totalOrder }}</div>
+                  <div class="titleDown">工单总数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.toSendOrder }}</div>
+                  <div class="titleDown">待派单计划数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.toFinishOrder }}</div>
+                  <div class="titleDown">待完成工单数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.finishOrder }}</div>
+                  <div class="titleDown">已完成工单数</div>
+              </div>
           </div>
-          <div class="focus-effect" style="margin-top: 10px;margin-right: 10px;">
-            {{ bigNums.toSendOrder }} &emsp;待派单计划数
+          <div ref="radarContainer" id="raderBlock">
+              <div class="midiumChart">
+                  <v-chart ref="equipType" id="equipType" :option="typeOption"></v-chart>
+              </div>
           </div>
-        </div>
-        <div style="display: flex">
-          <div class="focus-effect" style="margin-top: 10px;">
-            {{ bigNums.toFinishOrder }} &emsp;待完成工单数
-          </div>
-          <div class="focus-effect" style="margin-top: 10px;margin-right: 10px;">
-            {{ bigNums.finishOrder }} &emsp;已完成工单数
-          </div>
-        </div>
-
-
       </div>
-      <div ref="target" class="focus-effect" style="width: 800px;height: 340px;background-color:#d9ecff;margin-left: 10px;border-radius: 15px;">
-      </div>
-    </el-row>
       <div ref="chartsContainer" id="midiumCharts">
           <div class="midiumChart">
               <v-chart ref="equipPlan" id="equipPlan" :option="equipOption"></v-chart>
@@ -41,7 +42,6 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import { reactive, ref, onMounted, onBeforeUnmount } from "vue";
-import * as echarts from 'echarts'
 
 const bigNums = reactive({
   totalOrder: 23,
@@ -146,6 +146,39 @@ const getWorkerRank = async () => {
   }
 }
 
+const equipTypeData = ref([]);
+const getEquipType = async () => {
+  const res = await axios.post('/api/getEquipType');
+  console.log(res);
+
+  try {
+      if (res.data.status && Array.isArray(res.data.list)) {
+          equipTypeData.value = res.data.list.map(item => {
+              if (item.typeCount !== undefined && item.equipType !== undefined) {
+                  return {
+                      value: item.typeCount,
+                      name: item.equipType
+                  };
+              } else {
+                  console.warn('Invalid item in list:', item);
+                  return null;
+              }
+          }).filter(item => item !== null); // 过滤掉无效的项
+          const maxVal = Math.max(...equipTypeData.value.map(item => item.value))+1;
+          typeOption.value.radar.indicator = equipTypeData.value.map((item) => ({
+              name: item.name,
+              max: maxVal,
+              color: '#666'
+          }));
+          typeOption.value.series[0].data[0] = equipTypeData.value.map((item) => item.value);
+      } else {
+          ElMessage.error(res.data.msg || 'Invalid response data');
+      }
+  } catch (err) {
+      ElMessage.error("请求失败！" + err);
+  }
+};
+
 const planOption = ref({
   title: {
       text: '计划类型',
@@ -166,7 +199,7 @@ const planOption = ref({
       {
           name: 'Access From',
           type: 'pie',
-          radius: '50%',
+          radius: '40%',
           data: [
               { value: 1048, name: '大修' },
               { value: 735, name: '中修' },
@@ -179,7 +212,7 @@ const planOption = ref({
                   shadowColor: 'rgba(0, 0, 0, 0.5)'
               }
           },
-          bottom: -200
+          bottom: -190
       }
   ]
 })
@@ -263,8 +296,8 @@ const workerOption = ref({
       }
   ],
   grid: {
-      top: "15%",
-      bottom: "10%"
+      top: "18%",
+      bottom: "8%"
   }
 })
 
@@ -293,9 +326,69 @@ const equipOption = ref({
       }
   ],
   grid: {
-      top: "15%",
-      bottom: "10%"
+      top: "18%",
+      bottom: "8%"
   }
+})
+
+const typeOption = ref({
+  title: {
+      text: '设备类型',
+      left: 'right',
+      padding: [20, 10, 0, 0]
+  },
+  tooltip: {
+      trigger: 'item'
+  },
+  radar: {
+      // shape: 'circle',
+      indicator: [
+          { name: '木', max: 6500 },
+          { name: '火', max: 16000 },
+          { name: '土', max: 30000 },
+          { name: '金', max: 38000 },
+          { name: '水', max: 52000 },
+          { name: '天', max: 25000 }
+      ],
+      darkMode: true,
+      center: ['50%', '55%'],
+  },
+  series: [
+      {
+          name: '设备类型',
+          type: 'radar',
+          symbol: 'circle',
+          symbolSize: 8,
+          itemStyle: {
+              color: '#55b566'
+          },
+          areaStyle: {
+              color: '#55b566',
+              opacity: 0.3
+          },
+          lineStyle: {
+              width: 2,
+              color: '#55b566'
+          },
+          label: {
+              show: true,
+              position: 'top',
+              distance: 3,
+              color: '#55b566',
+              fontWeight: '900',
+              fontSize: 14,
+              fontFamily: '苹方'
+
+
+          },
+          data: [
+              {
+                  value: [4200, 3000, 20000, 35000, 50000, 18000],
+                  name: '设备类型'
+              }
+          ]
+      }
+  ]
 })
 
 const equipPlan = ref(null);
@@ -303,133 +396,17 @@ const planType = ref(null);
 const workerRank = ref(null);
 const chartsContainer = ref(null);
 
+const equipType = ref(null);
+const radarContainer = ref(null);
+
 const resizeCharts = () => {
   equipPlan.value?.resize();
   planType.value?.resize();
   workerRank.value?.resize();
+  equipType.value?.resize();
 };
-const equipTypeData = ref([]);
 
-const getEquipType = async () => {
-  const res = await axios.post('/api/getEquipType');
-  console.log(res);
-
-  try {
-    if (res.data.status && Array.isArray(res.data.list)) {
-      equipTypeData.value = res.data.list.map(item => {
-        if (item.typeCount !== undefined && item.equipType !== undefined) {
-          return {
-            value: item.typeCount,
-            name: item.equipType
-          };
-        } else {
-          console.warn('Invalid item in list:', item);
-          return null;
-        }
-      }).filter(item => item !== null); // 过滤掉无效的项
-    } else {
-      ElMessage.error(res.data.msg || 'Invalid response data');
-    }
-  } catch (err) {
-    ElMessage.error("请求失败！" + err);
-  }
-};
-const renderChart = () => {
-  if (equipTypeData.value.length === 0) {
-    console.warn('equipTypeData is empty');
-    return;
-  }
-
-  const equipTypeOption = {
-    title: {
-      text: '设备类型',
-
-    },
-    radar: {
-      name: {
-        textStyle: {
-          color: '#05D5FF',
-          fontSize: 14
-        }
-      },
-      shape: 'polygon',
-      center: ['50%', '50%'],
-      radius: '80%',
-      startAngle: 120,
-      axisLine: {
-        lineStyle: {
-          color: 'rgba(5,213,255, .8)'
-        }
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          width: 1,
-          color: 'rgba(5,213,255, .8)'
-        }
-      },
-      indicator: equipTypeData.value.map((item) => ({
-        name: item.name,
-        max: 5
-      })),
-      splitArea: {
-        show: false
-      }
-    },
-    polar: {
-      center: ['50%', '50%'],
-      radius: '0%'
-    },
-    angleAxis: {
-      min: 0,
-      interval: 5,
-      clockwise: false
-    },
-    radiusAxis: {
-      min: 0,
-      interval: 20,
-      splitLine: {
-        show: true
-      }
-    },
-    series: {
-      type: 'radar',
-      symbol: 'circle',
-      symbolSize: 10,
-      itemStyle: {
-        normal: {
-          color: '#05D5FF'
-        }
-      },
-      areaStyle: {
-        normal: {
-          color: '#05D5FF',
-          opacity: 0.5
-        }
-      },
-      lineStyle: {
-        width: 2,
-        color: '#05D5FF'
-      },
-      label: {
-        normal: {
-          show: true,
-          color: '#05D5FF'
-        }
-      },
-      data: [{
-        value: equipTypeData.value.map((item) => item.value)
-      }]
-    }
-  };
-
-  if (mChart) {
-    mChart.setOption(equipTypeOption);
-  }
-};
-let mChart = null;
-const target = ref(null)
-onMounted(async() => {
+onMounted(async () => {
   const observer = new ResizeObserver(() => {
       resizeCharts();
   });
@@ -437,6 +414,10 @@ onMounted(async() => {
   if (chartsContainer.value) {
       observer.observe(chartsContainer.value);
   }
+
+  if (radarContainer.value) {
+      observer.observe(radarContainer.value)
+  };
 
   resizeCharts(); // 初始化时调用一次 resize
   window.addEventListener('resize', resizeCharts);
@@ -448,9 +429,6 @@ onMounted(async() => {
   await getWorkerRank();
   await getEquipType();
   // resizeCharts(); // 获取到数据后时调用一次 resize
-  mChart=echarts.init(target.value)
-
-renderChart()
 });
 
 onBeforeUnmount(() => {
@@ -458,45 +436,42 @@ onBeforeUnmount(() => {
 });
 </script>
 <style scoped>
-.focus-effect {
-  border-radius: 15px;
-  width: 230px;
-  height: 160px;
-  margin-left: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* 垂直居中 */
-  background-color: #c6e2ff;
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.3s ease; /* 平滑过渡效果 */
-}
-
-.focus-effect:hover {
-  background-color: #eef; /* 鼠标移入时变亮 */
-  transform: scale(1.05); /* 鼠标移入时稍微放大 */
-}
-
 #dynamicOrder * {
   box-sizing: border-box;
 }
 
+#upper {
+  display: flex;
+}
+
 #numBlocks {
+  flex: 1;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* 允许换行 */
-  width: 100%; /* 确保宽度占满父容器 */
-  height: auto; /* 高度自适应内容 */
+  width: 50%;
+  flex-wrap: wrap;
 }
 
 .numBlock {
   background-color: rgb(85, 181, 102);
   border-radius: 10px;
   box-shadow: 2px 3px 3px 3px #ccc;
-  flex: 1 1 calc(50% - 20px); /* 每个块占据50%宽度，减去间距 */
+  /* flex: 1; */
+  flex: 1 1 calc(50% - 20px);
+  /* 设置为每行两个，考虑间距 */
+  box-sizing: border-box;
   margin: 10px;
   color: ivory;
   padding: 20px;
   transition: all 0.3s;
+}
+
+/* 媒体查询用于小屏幕上的响应式设计 */
+@media (max-width: 768px) {
+  .numBlock {
+      flex: 1 1 100%;
+      /* 小屏幕时每个 numBlock 占满一行 */
+  }
 }
 
 .numBlock .bigNum {
@@ -514,20 +489,27 @@ onBeforeUnmount(() => {
 #midiumCharts {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* 允许换行 */
-  width: 100%; /* 确保宽度占满父容器 */
-  height: auto; /* 高度自适应内容 */
 }
 
 .midiumChart {
-  flex: 1 1 calc(33.33% - 10px); /* 每个图表占据33.33%宽度，减去间距 */
+  flex: 1;
   background-color: rgba(64, 158, 255, .1);
   margin: 5px;
   box-shadow: 1px 5px 6px 2px #eee;
 }
 
 #planType {
-  height: 500px;
+  height: 425px;
 }
 
+/* 新增雷达图 */
+#raderBlock {
+  flex: 1;
+  display: flex;
+  padding: 5px 0;
+}
+
+#radarBlock .midiumChart {
+  flex: 1;
+}
 </style>
