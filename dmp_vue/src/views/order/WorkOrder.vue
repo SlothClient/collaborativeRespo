@@ -86,7 +86,7 @@
                             </span>
                             <template #dropdown>
                                 <el-dropdown-menu>
-                                    <el-dropdown-item @click="handleWorkRecord(scope.$index, scope.row)">工作记录</el-dropdown-item>
+                                    <el-dropdown-item @click="pullDrawer(scope.$index, scope.row)">工作记录</el-dropdown-item>
                                     <el-dropdown-item @click="handleWorkLog(scope.$index, scope.row)">工作日志</el-dropdown-item>
                                     <el-dropdown-item @click="handleSubmit(scope.row)">提交工单</el-dropdown-item>
                                 </el-dropdown-menu>
@@ -113,6 +113,11 @@
         <!-- 工作日志框组件 -->
         <LogDialog :recordDialogVisible="logDialogVisible" :selectedOrder="selectedOrder"
             @update:recordDialogVisible="logDialogVisible = $event" />
+        <!-- 工作记录抽屉组件-deprecated -->
+        <LogsDialog :logsDrawerVisible="logsDrawerVisible" :selectedOrder="selectedOrder"
+            @update:logsDrawerVisible="logsDrawerVisible = $event" />
+        <diyLogsDialog :drawerVisible="drawerVisible" :selectedOrder="selectedOrder"
+            @update:drawerVisible="drawerVisible = $event" />
     </div>
 </template>
 <script setup lang="ts">
@@ -123,6 +128,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
 import recordDialog from '@/components/workOrder/recordDialog.vue'; // 导入工作记录对话框组件
 import LogDialog from '@/components/workOrder/LogDialog.vue'; // 导入工作日志对话框组件
+import LogsDialog from '@/components/workOrder/LogsDialog.vue'; // 导入工作日志对话框组件
+import diyLogsDialog from '@/components/workOrder/diyLogsDialog.vue'; // 导入工作日志对话框组件
 
 
 const orderId = ref('');
@@ -346,6 +353,26 @@ const getOrderStatus = (row) => {
             class: "finishBtn"
         };
     }
+}
+// -----------------------------------------工作记录抽屉组件-----------------------------------------
+const logsDrawerVisible = ref(false);
+/**
+ * 处理工作记录抽屉事件
+ * 
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ */
+const handleLogsDrawer = (index, row) => {
+    // 打印查看
+    // console.log(index, row);
+    logsDrawerVisible.value = true;
+    selectedOrder.value = row;
+};
+
+const drawerVisible = ref(false);
+const pullDrawer = (index, row) => {
+    drawerVisible.value = true;
+    selectedOrder.value = row;
 }
 </script>
 <style scoped>
