@@ -21,17 +21,29 @@
                     </div>
                     <div class="fileLog">
                         <span class="marked">文件记录</span>
-                        <div class="fileArea logArea">
-                            {{ log.logAttachment }}
+                        <div class="fileArea logArea" v-if="log.logAttachment">
+                            <!-- 文件展示部分 -->
+                            <a :href="log.logAttachment" target="_blank" style="display: flex; align-items: center;">
+                                <img :src="getFileIcon(log.logAttachment)" alt="file icon"
+                                    style="width: 40px; height: 40px;" />
+                                <span style="margin-left: 10px; font-size: 16px;">
+                                    {{ getFileName(log.logAttachment) }}
+                                </span>
+                            </a>
+                        </div>
+                        <div v-else>
+                            无文件记录
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import emitter from '@/utils/emitter';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -56,10 +68,10 @@ const drawerVisible = computed({
     }
 });
 const orderInfo = computed({
-    get:() => props.selectedOrder,
+    get: () => props.selectedOrder,
     set: (value) => {
         // emit('update:selectedOrder', value);
-        console.log("orderInfo被修改了："+value);
+        console.log("orderInfo被修改了：" + value);
     }
 })
 
@@ -87,16 +99,42 @@ const fetchLogs = async () => {
         const orderId = orderInfo.value.orderId; // 确保 orderId 是 String 类型
         const response = await axios.get(`/api/work-log/${orderId}`);
         logs.value = response.data; // 假设后端返回的数据格式为数组
-        console.log('请求日志数据成功:', response.data);
-        
+        ElMessage.success("请求工作日志成功!")
+
     } catch (error) {
-        console.error('请求日志数据失败:', error);
+        ElMessage.error("请求工作日志失败!");
     }
 };
-
+// 收数据，绑定事件
+emitter.on('updateWorkLogs', fetchLogs);
 watch(orderInfo, () => {
     fetchLogs();
 });
+
+// ------------------------------------------------收到文件处理名称并按类型显示图标------------------------------------------------
+import imgIcon from '@/assets/image.jpg'; // 图片类型的图标
+import pdfIcon from '@/assets/pdf.jpg';   // PDF类型的图标
+import txtIcon from '@/assets/text.jpg';  // 文本类型的图标
+import filesIcon from '@/assets/file.jpg'; // 其他文件类型的图标
+
+// 文件类型图标获取函数
+const getFileIcon = (filePath) => {
+  const fileExtension = filePath.split('.').pop().toLowerCase(); // 获取文件扩展名
+  if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExtension)) {
+    return imgIcon;
+  } else if (fileExtension === 'pdf') {
+    return pdfIcon;
+  } else if (fileExtension === 'txt') {
+    return txtIcon;
+  } else {
+    return filesIcon;
+  }
+};
+
+// 获取文件名的函数
+const getFileName = (filePath) => {
+  return filePath.split('/').pop(); // 返回文件名
+};
 </script>
 
 <style scoped>
@@ -121,25 +159,32 @@ watch(orderInfo, () => {
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
     animation: pull .8s ease forwards;
-    overflow-y: auto; /* 允许垂直滚动 */
-    overflow-x: hidden; /* 隐藏横向滚动条 */
+    overflow-y: auto;
+    /* 允许垂直滚动 */
+    overflow-x: hidden;
+    /* 隐藏横向滚动条 */
 }
 
 #drawerIn::-webkit-scrollbar {
-    width: 8px; /* 自定义滚动条宽度 */
+    width: 8px;
+    /* 自定义滚动条宽度 */
 }
 
 #drawerIn::-webkit-scrollbar-thumb {
-    background-color: rgba(64, 148, 238, 0.6); /* 滚动条颜色 */
-    border-radius: 10px; /* 滚动条圆角 */
+    background-color: rgba(64, 148, 238, 0.6);
+    /* 滚动条颜色 */
+    border-radius: 10px;
+    /* 滚动条圆角 */
 }
 
 #drawerIn::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(64, 148, 238, 0.8); /* 滚动条悬停颜色 */
+    background-color: rgba(64, 148, 238, 0.8);
+    /* 滚动条悬停颜色 */
 }
 
 #drawerIn::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1); /* 滚动条轨道颜色 */
+    background-color: rgba(0, 0, 0, 0.1);
+    /* 滚动条轨道颜色 */
     border-radius: 10px;
 }
 
@@ -151,6 +196,7 @@ watch(orderInfo, () => {
     from {
         width: 0;
     }
+
     to {
         width: 36%;
     }
@@ -160,6 +206,7 @@ watch(orderInfo, () => {
     from {
         width: 36%;
     }
+
     to {
         width: 0;
     }
@@ -218,12 +265,13 @@ watch(orderInfo, () => {
     display: flex;
 }
 
-.logs div {
-    flex: 1;
+.logs>div {
+    width: 50%;
+    /* flex: 1; */
     /* height: 300px; */
 }
 
-.logs div:first-child {
+.logs>div:first-child {
     margin-right: 10px;
 }
 
@@ -234,8 +282,13 @@ watch(orderInfo, () => {
 }
 
 .logArea {
+    box-sizing: border-box;
     width: 100%;
     height: 200px;
     background-color: rgb(240, 240, 240);
+    white-space: normal;
+    display: flex;
+    align-items: center;
+    padding: 5px;
 }
 </style>

@@ -145,8 +145,11 @@ const submitLog = async () => {
 // 提交确认
 const handleSubmit = (done: () => void) => {
     ElMessageBox.confirm('请确认提交', '提示')
-        .then(() => {
-            submitLog();
+        .then(async () => {
+            await submitLog();
+            // 提交后重新拉取工作日志
+            // 发数据，触发事件
+            emitter.emit("updateWorkLogs");
         })
 }
 
