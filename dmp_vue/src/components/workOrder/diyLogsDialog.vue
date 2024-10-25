@@ -1,5 +1,5 @@
 <template>
-    <div id="drawerCtn" v-if="drawerVisible">
+    <div id="drawerCtn" v-if="drawerVisible" @click.self="closeDrawer">
         <div id="drawerIn" @animationend="handleAnimationEnd" :class="{ closing: isClosing }">
             <div id="drawerHead">
                 <div id="closeDrawer" @click="closeDrawer">
@@ -11,19 +11,19 @@
             </div>
             <div id="space"></div>
             <div class="logItem" v-for="(log, index) in logs" :key="index">
-                <span class="marked">记录日期：{{ log.logDate }}</span>
+                <span class="logDate marked">记录日期：{{ log.logDate }}</span>
                 <div class="logs">
                     <div class="wordLog">
-                        <span class="marked">文字记录</span>
+                        <span class="logTitle marked">文字记录</span>
                         <div class="wordArea logArea">
                             {{ log.logContent }}
                         </div>
                     </div>
                     <div class="fileLog">
-                        <span class="marked">文件记录</span>
+                        <span class="logTitle marked">文件记录</span>
                         <div class="fileArea logArea" v-if="log.logAttachment">
                             <!-- 文件展示部分 -->
-                            <a :href="log.logAttachment" target="_blank" style="display: flex; align-items: center;">
+                            <a :href="log.logAttachment" target="_blank" style="display: flex; align-items: center;text-decoration: none;color: #000;">
                                 <img :src="getFileIcon(log.logAttachment)" alt="file icon"
                                     style="width: 40px; height: 40px;" />
                                 <span style="margin-left: 10px; font-size: 16px;">
@@ -158,7 +158,7 @@ const getFileName = (filePath) => {
     background-color: rgb(255, 255, 255);
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
-    animation: pull .8s ease forwards;
+    animation: pull .5s ease forwards;
     overflow-y: auto;
     /* 允许垂直滚动 */
     overflow-x: hidden;
@@ -189,7 +189,7 @@ const getFileName = (filePath) => {
 }
 
 #drawerIn.closing {
-    animation: push .8s ease forwards;
+    animation: push .5s ease forwards;
 }
 
 @keyframes pull {
@@ -263,32 +263,75 @@ const getFileName = (filePath) => {
 
 .logs {
     display: flex;
+    flex-direction: column;
 }
 
 .logs>div {
-    width: 50%;
+    position: relative;
+    width: 80%;
     /* flex: 1; */
     /* height: 300px; */
 }
 
 .logs>div:first-child {
-    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .marked {
     display: block;
-    text-decoration: underline 3px wavy rgb(64, 148, 238);
+    /* text-decoration: underline 3px wavy rgb(64, 148, 238); */
     margin: 10px 0;
 }
 
 .logArea {
     box-sizing: border-box;
     width: 100%;
-    height: 200px;
-    background-color: rgb(240, 240, 240);
+    height: fit-content;
+    min-height: 66px;
+    max-height: 200px;
+    background-color: rgba(221, 247, 199, .5);
+    border-radius: 10px;
     white-space: normal;
     display: flex;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
+    overflow: auto
+}
+.logArea::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    /* 自定义滚动条宽度 */
+}
+
+.logArea::-webkit-scrollbar-thumb {
+    background-color: rgba(64, 148, 238, 0.6);
+    /* 滚动条颜色 */
+    border-radius: 10px;
+    /* 滚动条圆角 */
+}
+
+.logArea::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(64, 148, 238, 0.8);
+    /* 滚动条悬停颜色 */
+}
+
+.logArea::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    /* 滚动条轨道颜色 */
+    border-radius: 10px;
+}
+.logDate {
+    padding-bottom: 10px;
+    border-bottom: 3px dotted #ddd;
+}
+.logTitle {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    color: rgba(64, 148, 238, 0.3);
+    font-weight: 900;
+    font-family: "宋体","幼圆";
+    font-size: x-large;
+    user-select: none;
 }
 </style>

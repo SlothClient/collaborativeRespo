@@ -71,6 +71,8 @@ const receivedData = ref(props.selectedOrder);
 const emit = defineEmits(['update:recordDialogVisible']);
 const closeDialog = () => {
     centerDialogVisible.value = false;
+    word_log.value = '';
+    file.value = null;
     // 更新状态到父组件
     emit('update:recordDialogVisible', false);
 
@@ -136,6 +138,8 @@ const submitLog = async () => {
 
         // 请求成功，显示成功消息
         ElMessage.success(response.data); // 显示成功提示
+        // 关闭对话框
+        closeDialog();
     } catch (error) {
         // 请求失败，显示错误消息
         ElMessage.error('工作日志提交失败: ' + (error.response?.data || error.message));
