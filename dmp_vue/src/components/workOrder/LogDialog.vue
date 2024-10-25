@@ -34,7 +34,7 @@
                     </div>
 
                     <!-- 删除按钮，点击删除文件 -->
-                    <el-button type="danger" circle size="small" icon="Delete" @click="removeFile"
+                    <el-button type="danger" circle size="small" icon="Close" @click="removeFile"
                         style="margin-left: 10px;"></el-button>
                 </div>
             </el-descriptions-item>

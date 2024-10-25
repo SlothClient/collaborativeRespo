@@ -15,26 +15,30 @@
                 <div class="logs">
                     <div class="wordLog">
                         <span class="logTitle marked">文字记录</span>
-                        <div class="wordArea logArea">
-                            {{ log.logContent }}
-                        </div>
+                        <textarea class="wordArea logArea" v-model="log.logContent" :readonly="!ifCancel"></textarea>
                     </div>
                     <div class="fileLog">
                         <span class="logTitle marked">文件记录</span>
-                        <div class="fileArea logArea" v-if="log.logAttachment">
+                        <div class="fileArea logArea">
                             <!-- 文件展示部分 -->
-                            <a :href="log.logAttachment" target="_blank" style="display: flex; align-items: center;text-decoration: none;color: #000;">
+                            <a :href="log.logAttachment" target="_blank" class="attachmentLot" v-if="log.logAttachment">
                                 <img :src="getFileIcon(log.logAttachment)" alt="file icon"
                                     style="width: 40px; height: 40px;" />
                                 <span style="margin-left: 10px; font-size: 16px;">
                                     {{ getFileName(log.logAttachment) }}
                                 </span>
                             </a>
-                        </div>
-                        <div v-else>
-                            无文件记录
+                            <span class="noFile" v-else>暂无文件</span>
+                            <el-button type="danger" circle size="small" icon="Close" style="margin-left: 10px;" v-if="ifEdit" @click="cleanFile(log)"></el-button>
+                            <!-- label包input实现点击选择文件，for配id更好不过这里的input执行v-for后不止一个，退而求其次 -->
+                            <label class="selectFile" v-if="ifSelect">+
+                                <input type="file" @change="handleFileChange($event,log)">
+                            </label>
+                            
                         </div>
                     </div>
+                    <button class="LogBtn cancelEditBtn" v-if="ifCancel" @click="cancelEdit(log,index)">取消</button>
+                    <button class="LogBtn editLogBtn" @click="editLog(log)" v-text="funcBtnVal"></button>
                 </div>
             </div>
 
@@ -42,7 +46,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import emitter from '@/utils/emitter';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
@@ -77,9 +81,9 @@ const orderInfo = computed({
 
 const isClosing = ref(false);
 const logs = ref([
-    { date: '1999年9月9日', wordLog: '文字记录', fileLog: '文件记录', marked: false },
-    { date: '1999年9月9日', wordLog: '文字记录', fileLog: '文件记录', marked: true },
-    { date: '1999年9月9日', wordLog: '文字记录', fileLog: '文件记录', marked: false },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: true },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false },
 ]);
 
 const closeDrawer = () => {
@@ -134,6 +138,51 @@ const getFileIcon = (filePath) => {
 // 获取文件名的函数
 const getFileName = (filePath) => {
   return filePath.split('/').pop(); // 返回文件名
+};
+// 编辑
+const funcBtnVal = ref('编辑');
+const ifEdit = ref(false);
+const ifSelect = ref(false);
+const ifCancel = ref(false);
+// originalLog 用于保存原始日志数据，不用动态绑定
+const originalLog = ref({});
+const editLog = (log) => {
+    originalLog.value = JSON.parse(JSON.stringify(log));
+    funcBtnVal.value = '提交';
+    ifEdit.value = true;
+    ifCancel.value = true;
+};
+const cancelEdit = (log,index) => {
+    logs[index] = originalLog.value;
+    funcBtnVal.value = '编辑';
+    ifEdit.value = false;
+    ifCancel.value = false;
+    
+};
+const cleanFile = (log) => {
+    log.logAttachment = '';
+    ifEdit.value = false;
+    ifSelect.value = true;
+};
+const file = ref(null);
+const handleFileChange = (event,log) => {
+    const selectedFile = event.target.files[0];
+    const maxFileSize = 20 * 1024 * 1024; // 设置最大文件限制为20MB
+
+    if (selectedFile) {
+        file.value = selectedFile;
+
+        // 检查文件大小
+        if (selectedFile.size > maxFileSize) {
+            ElMessage.error(`选择的文件大小超过最大限制（${maxFileSize / (1024 * 1024)}MB）。`);
+            // 清空文件输入等待重新选择
+            removeFile();
+            return; // 退出
+        }
+        // logAttachment为文件名
+        log.logAttachment = selectedFile.name;
+        ifSelect.value = false;
+    }
 };
 </script>
 
@@ -264,6 +313,7 @@ const getFileName = (filePath) => {
 .logs {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .logs>div {
@@ -284,18 +334,17 @@ const getFileName = (filePath) => {
 }
 
 .logArea {
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     width: 100%;
     height: fit-content;
     min-height: 66px;
     max-height: 200px;
     background-color: rgba(221, 247, 199, .5);
-    border-radius: 10px;
-    white-space: normal;
+    border-radius: 6px;
+    padding: 6px;
     display: flex;
     align-items: center;
-    padding: 10px;
-    overflow: auto
+    overflow: auto/* 溢出显示滚动条 */
 }
 .logArea::-webkit-scrollbar {
     width: 6px;
@@ -320,6 +369,26 @@ const getFileName = (filePath) => {
     /* 滚动条轨道颜色 */
     border-radius: 10px;
 }
+.wordArea {
+    overflow-wrap: break-word; /* 溢出换行 */
+    resize: none; /* 禁止调整容器尺寸 */
+    border: none;
+    outline: none;
+}
+/* 只读样式 */
+.wordArea[readonly] {
+    cursor: not-allowed;
+}
+.attachmentLot {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+}
+.attachmentLot:hover {
+    text-decoration: underline;
+    color: rgb(65, 148, 203);
+}
 .logDate {
     padding-bottom: 10px;
     border-bottom: 3px dotted #ddd;
@@ -327,11 +396,44 @@ const getFileName = (filePath) => {
 .logTitle {
     position: absolute;
     bottom: 0;
-    right: 10px;
+    right: 0;
     color: rgba(64, 148, 238, 0.3);
     font-weight: 900;
     font-family: "宋体","幼圆";
     font-size: x-large;
     user-select: none;
+}
+.LogBtn {
+    position: absolute;
+    right: 10px;
+    padding: 2px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.editLogBtn {
+    bottom: 5px;
+    color: #52c41a;
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+}
+.cancelEditBtn {
+    bottom: 40px;
+    color: #fa8c16;
+    background: #fff7e6;
+    border: 1px solid #ffd591;
+}
+.selectFile {
+    cursor: pointer;
+    width: 100px;
+    height: 66px;
+    border: 2px dotted #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: xx-large;
+}
+.selectFile input {
+    display: none;
 }
 </style>
