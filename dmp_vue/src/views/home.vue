@@ -56,7 +56,7 @@ const getBigNums = async () => {
       if (response.data.status) {
           Object.assign(bigNums, response.data.list[0]);
           // console.log("bigNums", bigNums);
-          ElMessage.info("草率的可视化...");
+        //   ElMessage.info("草率的可视化...");
       }
       else {
           ElMessage.error(response.data.msg);

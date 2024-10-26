@@ -15,33 +15,43 @@
                 <div class="logs">
                     <div class="wordLog">
                         <span class="logTitle marked">文字记录</span>
-                        <textarea class="wordArea logArea" v-model="log.logContent" :readonly="!ifCancel"></textarea>
+                        <!-- 根据 isEditing 控制是否为可编辑的 textarea -->
+                        <textarea class="wordArea logArea" v-model="log.logContent" :readonly="!log.isEditing">
+            </textarea>
                     </div>
                     <div class="fileLog">
                         <span class="logTitle marked">文件记录</span>
                         <div class="fileArea logArea">
-                            <!-- 文件展示部分 -->
-                            <a :href="log.logAttachment" target="_blank" class="attachmentLot" v-if="log.logAttachment">
+                            <!-- 编辑模式下原文件保留，清除后才显示选择框 -->
+                            <a v-if="log.logAttachment && !log.ifSelect" :href="log.logAttachment" target="_blank"
+                                class="attachmentLot">
                                 <img :src="getFileIcon(log.logAttachment)" alt="file icon"
                                     style="width: 40px; height: 40px;" />
                                 <span style="margin-left: 10px; font-size: 16px;">
                                     {{ getFileName(log.logAttachment) }}
                                 </span>
                             </a>
-                            <span class="noFile" v-else>暂无文件</span>
-                            <el-button type="danger" circle size="small" icon="Close" style="margin-left: 10px;" v-if="ifEdit" @click="cleanFile(log)"></el-button>
-                            <!-- label包input实现点击选择文件，for配id更好不过这里的input执行v-for后不止一个，退而求其次 -->
-                            <label class="selectFile" v-if="ifSelect">+
-                                <input type="file" @change="handleFileChange($event,log)">
+                            <span v-else-if="!log.logAttachment && !log.isEditing">暂无文件</span>
+
+                            <!-- 文件清除按钮和选择框 -->
+                            <el-button v-if="log.isEditing && log.logAttachment" type="danger" circle size="small"
+                                icon="Close" style="margin-left: 10px;" @click="cleanFile(log)">
+                            </el-button>
+                            <label v-if="log.isEditing && log.ifSelect" class="selectFile">+
+                                <input type="file" @change="handleFileChange($event, log)">
                             </label>
-                            
                         </div>
                     </div>
-                    <button class="LogBtn cancelEditBtn" v-if="ifCancel" @click="cancelEdit(log,index)">取消</button>
-                    <button class="LogBtn editLogBtn" @click="editLog(log)" v-text="funcBtnVal"></button>
+
+                    <!-- 取消编辑和提交编辑按钮 -->
+                    <button class="LogBtn cancelEditBtn" v-if="log.isEditing" @click="cancelEdit(log)">
+                        阅读模式
+                    </button>
+                    <button class="LogBtn editLogBtn" @click="handleEditSubmit(log)">
+                        {{ log.funcBtnVal }}
+                    </button>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -81,9 +91,9 @@ const orderInfo = computed({
 
 const isClosing = ref(false);
 const logs = ref([
-    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false },
-    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: true },
-    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false, isEditing: false, ifSelect: false, funcBtnVal: '编辑模式' },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false, isEditing: false, ifSelect: false, funcBtnVal: '编辑模式' },
+    { logDate: '1999年9月9日', logContent: '文字记录', logAttachment: '文件记录', marked: false, isEditing: false, ifSelect: false, funcBtnVal: '编辑模式' },
 ]);
 
 const closeDrawer = () => {
@@ -97,13 +107,20 @@ const handleAnimationEnd = () => {
     }
 };
 
-// 向后端请求日志数据的函数
+// 向后端请求日志数据
 const fetchLogs = async () => {
     try {
-        const orderId = orderInfo.value.orderId; // 确保 orderId 是 String 类型
+        const orderId = orderInfo.value.orderId;
         const response = await axios.get(`/api/work-log/${orderId}`);
-        logs.value = response.data; // 假设后端返回的数据格式为数组
-        ElMessage.success("请求工作日志成功!")
+
+        logs.value = response.data.map(log => ({
+            ...log,
+            isEditing: false,
+            ifSelect: false,
+            funcBtnVal: '编辑模式',
+        }));
+
+        // ElMessage.success("请求工作日志成功!");
 
     } catch (error) {
         ElMessage.error("请求工作日志失败!");
@@ -123,65 +140,98 @@ import filesIcon from '@/assets/file.jpg'; // 其他文件类型的图标
 
 // 文件类型图标获取函数
 const getFileIcon = (filePath) => {
-  const fileExtension = filePath.split('.').pop().toLowerCase(); // 获取文件扩展名
-  if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExtension)) {
-    return imgIcon;
-  } else if (fileExtension === 'pdf') {
-    return pdfIcon;
-  } else if (fileExtension === 'txt') {
-    return txtIcon;
-  } else {
-    return filesIcon;
-  }
+    const fileExtension = filePath.split('.').pop().toLowerCase(); // 获取文件扩展名
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExtension)) {
+        return imgIcon;
+    } else if (fileExtension === 'pdf') {
+        return pdfIcon;
+    } else if (fileExtension === 'txt') {
+        return txtIcon;
+    } else {
+        return filesIcon;
+    }
 };
 
 // 获取文件名的函数
 const getFileName = (filePath) => {
-  return filePath.split('/').pop(); // 返回文件名
+    return filePath.split('/').pop(); // 返回文件名
 };
-// 编辑
-const funcBtnVal = ref('编辑');
-const ifEdit = ref(false);
-const ifSelect = ref(false);
-const ifCancel = ref(false);
+// ------------------------------------------------编辑-------------------------------------------------
 // originalLog 用于保存原始日志数据，不用动态绑定
-const originalLog = ref({});
+const originalLog = ref(null);
+
+// 进入编辑模式
 const editLog = (log) => {
-    originalLog.value = JSON.parse(JSON.stringify(log));
-    funcBtnVal.value = '提交';
-    ifEdit.value = true;
-    ifCancel.value = true;
+    originalLog.value = { ...log }; // 备份原始日志内容
+    log.isEditing = true;
+    log.ifSelect = false;  // 初始不显示选择框
+    log.funcBtnVal = '提交';
 };
-const cancelEdit = (log,index) => {
-    logs[index] = originalLog.value;
-    funcBtnVal.value = '编辑';
-    ifEdit.value = false;
-    ifCancel.value = false;
-    
+
+// 取消编辑并恢复原始数据
+const cancelEdit = (log) => {
+    if (originalLog.value) {
+        Object.assign(log, originalLog.value); // 恢复日志内容
+    }
+    log.isEditing = false;
+    log.ifSelect = false;
+    log.funcBtnVal = '编辑模式';
 };
+
+// 清除文件显示选择框
 const cleanFile = (log) => {
-    log.logAttachment = '';
-    ifEdit.value = false;
-    ifSelect.value = true;
+    log.logAttachment = ''; // 清空文件
+    log.ifSelect = true;    // 显示选择框
 };
 const file = ref(null);
-const handleFileChange = (event,log) => {
+// 提交更新到后端
+const submitEdit = async (log) => {
+    try {
+        const { logId, logContent, logAttachment } = log;
+        const formData = new FormData();
+        formData.append('logId', logId);
+        formData.append('wordLog', logContent);
+        if (file.value) formData.append('fileLog', file.value);
+
+        await axios.post(`/api/update-log`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        ElMessage.success("日志更新成功！");
+        fetchLogs(); // 重新加载日志数据
+        cancelEdit(log); // 重置编辑状态
+
+    } catch (error) {
+        ElMessage.error(error+"/n日志更新失败，请重试！");
+    }
+};
+
+// 文件选择后更新文件名和图标
+const handleFileChange = (event, log) => {
     const selectedFile = event.target.files[0];
-    const maxFileSize = 20 * 1024 * 1024; // 设置最大文件限制为20MB
+    const maxFileSize = 20 * 1024 * 1024;
 
     if (selectedFile) {
-        file.value = selectedFile;
-
-        // 检查文件大小
         if (selectedFile.size > maxFileSize) {
             ElMessage.error(`选择的文件大小超过最大限制（${maxFileSize / (1024 * 1024)}MB）。`);
-            // 清空文件输入等待重新选择
-            removeFile();
-            return; // 退出
+            event.target.value = ''; // 清空文件输入
+            return;
         }
-        // logAttachment为文件名
-        log.logAttachment = selectedFile.name;
-        ifSelect.value = false;
+
+        file.value = selectedFile;
+        // 更新日志的文件信息
+        log.logAttachment = URL.createObjectURL(selectedFile); // 创建文件路径
+        log.fileName = selectedFile.name; // 更新文件名
+        log.ifSelect = false;  // 隐藏选择框
+    }
+};
+
+// 控制编辑和提交的按钮逻辑
+const handleEditSubmit = (log) => {
+    if (log.funcBtnVal === '提交') {
+        submitEdit(log);
+    } else {
+        editLog(log);
     }
 };
 </script>
@@ -334,7 +384,7 @@ const handleFileChange = (event,log) => {
 }
 
 .logArea {
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
     width: 100%;
     height: fit-content;
     min-height: 66px;
@@ -344,8 +394,10 @@ const handleFileChange = (event,log) => {
     padding: 6px;
     display: flex;
     align-items: center;
-    overflow: auto/* 溢出显示滚动条 */
+    overflow: auto
+        /* 溢出显示滚动条 */
 }
+
 .logArea::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -369,40 +421,49 @@ const handleFileChange = (event,log) => {
     /* 滚动条轨道颜色 */
     border-radius: 10px;
 }
+
 .wordArea {
-    overflow-wrap: break-word; /* 溢出换行 */
-    resize: none; /* 禁止调整容器尺寸 */
+    overflow-wrap: break-word;
+    /* 溢出换行 */
+    resize: none;
+    /* 禁止调整容器尺寸 */
     border: none;
     outline: none;
 }
+
 /* 只读样式 */
 .wordArea[readonly] {
     cursor: not-allowed;
 }
+
 .attachmentLot {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: #000;
 }
+
 .attachmentLot:hover {
     text-decoration: underline;
     color: rgb(65, 148, 203);
 }
+
 .logDate {
     padding-bottom: 10px;
     border-bottom: 3px dotted #ddd;
 }
+
 .logTitle {
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 10px;
     color: rgba(64, 148, 238, 0.3);
     font-weight: 900;
-    font-family: "宋体","幼圆";
+    font-family: "宋体", "幼圆";
     font-size: x-large;
     user-select: none;
 }
+
 .LogBtn {
     position: absolute;
     right: 10px;
@@ -410,18 +471,21 @@ const handleFileChange = (event,log) => {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .editLogBtn {
     bottom: 5px;
     color: #52c41a;
     background: #f6ffed;
     border: 1px solid #b7eb8f;
 }
+
 .cancelEditBtn {
     bottom: 40px;
     color: #fa8c16;
     background: #fff7e6;
     border: 1px solid #ffd591;
 }
+
 .selectFile {
     cursor: pointer;
     width: 100px;
@@ -433,6 +497,7 @@ const handleFileChange = (event,log) => {
     font-weight: 900;
     font-size: xx-large;
 }
+
 .selectFile input {
     display: none;
 }
