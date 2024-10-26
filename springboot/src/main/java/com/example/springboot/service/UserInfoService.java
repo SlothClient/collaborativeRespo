@@ -2,8 +2,11 @@ package com.example.springboot.service;
 
 import com.example.springboot.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.springboot.request.UserReq;
 import com.example.springboot.response.MenuResp;
 import com.example.springboot.response.UserInfoResp;
+import com.example.springboot.utils.Result;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -21,4 +24,12 @@ public interface UserInfoService extends IService<UserInfo> {
     List<MenuResp> getUserMenu();
 
     UserInfoResp getUserInfo();
+
+    Result<IPage<UserInfoResp>> getUserInfoList(UserReq userReq);
+
+    Result updateUserInfoList(UserReq userInfoResp);
+
+    Result addUserInfoList(UserReq userReq);
+
+    Result deleteUserInfo(UserReq userReq);
 }

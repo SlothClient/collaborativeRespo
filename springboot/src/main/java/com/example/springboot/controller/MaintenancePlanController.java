@@ -3,10 +3,13 @@ package com.example.springboot.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.springboot.entity.MaintanceInfoDetail;
+import com.example.springboot.entity.MaintanceType;
 import com.example.springboot.entity.WorkerInfo;
 import com.example.springboot.request.MaintenancePlanReq;
 import com.example.springboot.request.WorkOrderReq;
+import com.example.springboot.response.EquipmentResp;
 import com.example.springboot.response.MaintenanceInfo;
+import com.example.springboot.service.EquipInfoService;
 import com.example.springboot.service.MaintanceInfoService;
 import com.example.springboot.service.WorkerInfoService;
 import com.example.springboot.utils.Result;
@@ -30,6 +33,9 @@ public class MaintenancePlanController {
     @Autowired
     WorkerInfoService workerInfoService;
 
+    @Autowired
+    EquipInfoService equipInfoService;
+
     /**
      * 查询所有保养计划列表
      *
@@ -40,7 +46,6 @@ public class MaintenancePlanController {
     @ResponseBody
     @PostMapping("/getMaintenancePlan")
     public Result<IPage<MaintenanceInfo>> getMaintenancePlan(@RequestBody(required = false) MaintenancePlanReq maintenancePlanReq) {
-        System.out.println(maintenancePlanReq);
         return maintanceInfoService.getMaintenancePlan(maintenancePlanReq);
     }
 
@@ -53,7 +58,6 @@ public class MaintenancePlanController {
     @ResponseBody
     @PostMapping("/addMaintenancePlan")
     public Result addMaintenancePlan(@RequestBody MaintenanceInfo maintenanceInfo) {
-        System.out.println(maintenanceInfo);
          return maintanceInfoService.addMaintenancePlan(maintenanceInfo);
     }
 
@@ -66,7 +70,6 @@ public class MaintenancePlanController {
     @ResponseBody
     @GetMapping("/undoMaintenancePlan")
     public Result undoMaintenancePlan(@RequestParam("planId") String planId){
-        System.out.println(planId);
         return maintanceInfoService.undoMaintenancePlan(planId);
     }
 
@@ -74,7 +77,6 @@ public class MaintenancePlanController {
     @ResponseBody
     @PostMapping("/getMaintenancePlanDetail")
     public Result getMaintenancePlanDetail(@RequestParam("planId") String planId){
-        System.out.println(planId);
         return maintanceInfoService.getMaintenancePlanDetail(planId);
     }
 
@@ -99,4 +101,17 @@ public class MaintenancePlanController {
     public Result<String> addWorkOrder(@RequestBody List<WorkOrderReq> workOrderReqList){
         return workerInfoService.addWorkOrder(workOrderReqList);
     }
+    @ResponseBody
+    @PostMapping("/getEquipmentInfo")
+    public Result<List<EquipmentResp>> getEquipmentInfo(){
+        return equipInfoService.getEquipmentInfo();
+    }
+
+    @SaCheckLogin
+    @ResponseBody
+    @PostMapping("/getEquipmentMaintenanceType")
+    public Result<List<MaintanceType>> getEquipmentMaintenanceType(){
+        return equipInfoService.getEquipmentMaintenanceType();
+    }
+
 }

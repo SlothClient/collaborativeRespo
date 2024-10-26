@@ -1,33 +1,36 @@
 package com.example.springboot.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 
 /**
+ * <p>
  * 
- * @TableName role_info
+ * </p>
+ *
+ * @author author
+ * @since 2024-10-17
  */
-@TableName(value ="role_info")
 @Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@TableName("role_info")
 public class RoleInfo implements Serializable {
-    /**
-     * 
-     */
-    @TableId
+
+
+    @TableId(type = ASSIGN_ID)
     private String roleId;
 
-    /**
-     * 
-     */
     private String roleName;
 
-    /**
-     * 
-     */
     private String roleDesc;
 
     @TableField(exist = false)
@@ -46,8 +49,8 @@ public class RoleInfo implements Serializable {
         }
         RoleInfo other = (RoleInfo) that;
         return (this.getRoleId() == null ? other.getRoleId() == null : this.getRoleId().equals(other.getRoleId()))
-            && (this.getRoleName() == null ? other.getRoleName() == null : this.getRoleName().equals(other.getRoleName()))
-            && (this.getRoleDesc() == null ? other.getRoleDesc() == null : this.getRoleDesc().equals(other.getRoleDesc()));
+                && (this.getRoleName() == null ? other.getRoleName() == null : this.getRoleName().equals(other.getRoleName()))
+                && (this.getRoleDesc() == null ? other.getRoleDesc() == null : this.getRoleDesc().equals(other.getRoleDesc()));
     }
 
     @Override
@@ -73,4 +76,5 @@ public class RoleInfo implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
 }

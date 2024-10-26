@@ -33,6 +33,10 @@ public class UserInfoResp {
 
     private List<String> roles;
 
+    private String roleName;
+
+    private String userpwd;
+
     /**
      * 权限
      */

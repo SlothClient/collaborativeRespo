@@ -35,10 +35,15 @@
         GROUP BY
             maintance_type;      -- 按计划类型分组
     </select>
+    <!-- 各类型设备数 -->
     <select id="getEquipType" resultType="com.example.springboot.entity.VisualInfo">
-        SELECT type_name equipType, COUNT(*) AS typeCount
-        FROM equip_info
-        GROUP BY type_name
+        SELECT
+            type_name equipType,
+            COUNT(*) AS typeCount
+        FROM
+            equip_info
+        GROUP BY
+            type_name
     </select>
     <!-- 各工人工单数和工时数 -->
     <select id="getWorkerRank" resultType="com.example.springboot.entity.VisualInfo">

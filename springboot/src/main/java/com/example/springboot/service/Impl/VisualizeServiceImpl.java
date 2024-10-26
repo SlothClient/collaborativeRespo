@@ -1,4 +1,4 @@
-package com.example.springboot.service.impl;
+package com.example.springboot.service.Impl;
 
 import com.example.springboot.entity.VisualInfo;
 import com.example.springboot.mapper.VisualizeMapper;

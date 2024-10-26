@@ -15,8 +15,12 @@ import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import com.example.springboot.entity.EquipInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -126,19 +130,26 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     }
 
     @Override
+    @Transactional
     public Result undoMaintenancePlan(String planId) {
-        int approvalRows = approvalInfoMapper.delete(
-                new LambdaQueryWrapper<ApprovalInfo>()
-                        .eq(ApprovalInfo::getPlanId, planId)
-        );
-
-        int maintenancePlanRows = maintenanceMapper.deleteById(planId);
-        if (maintenancePlanRows <= 0 || approvalRows <= 0) {
+        try {
+            System.out.println("planId:" + planId);
+            int approvalRows = approvalInfoMapper.delete(
+                    new LambdaQueryWrapper<ApprovalInfo>()
+                            .eq(ApprovalInfo::getPlanId, planId)
+            );
+            System.out.println("approvalRows:" + approvalRows);
+            int maintenancePlanRows = maintenanceMapper.deleteById(planId);
+            if (maintenancePlanRows <= 0 || approvalRows <= 0) {
+                return Result.fail("撤销失败，请联系管理员处理");
+            }
+            return Result.success("该保养计划已成功撤销");
+        } catch (Exception e) {
+            System.err.println("Error undoing maintenance plan: " + e.getMessage());
+            e.printStackTrace();
             return Result.fail("撤销失败，请联系管理员处理");
         }
-        return Result.success("该保养计划已成功撤销");
     }
-
     @Override
     public Result getMaintenancePlanDetail(String planId) {
 
@@ -192,6 +203,7 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
         EquipInfo equipInfo = equipInfoMapper.selectById(maintanceInfoDetail.getEquipId());
         detailResp.setEquipName(equipInfo.getEquipName());
+        detailResp.setEquipPic(equipInfo.getEquipPic());
         detailResp.setEquipId(equipInfo.getEquipId());
         detailResp.setPlanId(maintanceInfoDetail.getPlanId());
         detailResp.setPlanName(maintanceInfoDetail.getPlanName());
@@ -316,9 +328,12 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
     }
 
     // 计算设备购买至今的天数
-    private int getDaysSincePurchase(Date purchaseDate) {
-        long diffInMillis = Math.abs(new Date().getTime() - purchaseDate.getTime());
-        return (int) (diffInMillis / (1000 * 60 * 60 * 24));
+    private int getDaysSincePurchase(LocalDateTime purchaseDate) {
+        // 获取当前时间的 LocalDateTime 对象
+        LocalDateTime now = LocalDateTime.now();
+        // 计算两个日期之间的天数差
+        long diffInDays = ChronoUnit.DAYS.between(purchaseDate, now);
+        return (int) diffInDays;
     }
 
     // 获取当前日期的n天后日期

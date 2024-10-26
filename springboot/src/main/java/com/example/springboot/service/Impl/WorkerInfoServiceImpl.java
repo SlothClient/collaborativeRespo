@@ -2,9 +2,11 @@ package com.example.springboot.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springboot.entity.CheckInfoDetail;
 import com.example.springboot.entity.MaintanceInfoDetail;
 import com.example.springboot.entity.OrderInfo;
 import com.example.springboot.entity.WorkerInfo;
+import com.example.springboot.mapper.CheckInfoMapper;
 import com.example.springboot.mapper.MaintanceInfoMapper;
 import com.example.springboot.mapper.OrderInfoMapper;
 import com.example.springboot.request.WorkOrderReq;
@@ -15,10 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.springboot.enums.maintenanceCodeEnum.PLAN_DISPATCHED;
-import static com.example.springboot.enums.maintenanceCodeEnum.PLAN_PENDING;
 
 /**
  * @author Lenovo
@@ -38,6 +38,8 @@ public class WorkerInfoServiceImpl extends ServiceImpl<WorkerInfoMapper, WorkerI
 
     @Autowired
     MaintanceInfoMapper maintanceInfoMapper;
+    @Autowired
+    CheckInfoMapper checkInfoMapper;
 
     @Override
     public Result<List<WorkerInfo>> getWorkerInfo() {
@@ -51,15 +53,6 @@ public class WorkerInfoServiceImpl extends ServiceImpl<WorkerInfoMapper, WorkerI
     @Override
     public Result<String> addWorkOrder(List<WorkOrderReq> workOrderReqList) {
         for (WorkOrderReq workOrderReq : workOrderReqList) {
-
-            MaintanceInfoDetail infoDetail = maintanceInfoMapper.selectById(workOrderReq.getPlanId());
-
-            if (infoDetail != null) {
-                boolean b = !Objects.equals(infoDetail.getStatus(), PLAN_PENDING.getCode());
-
-                return Result.fail("存在状态不为待开始的计划");
-            }
-
             OrderInfo orderInfo = OrderInfo.
                     builder()
                     .workerId(workOrderReq.getWorkerId())
@@ -67,11 +60,19 @@ public class WorkerInfoServiceImpl extends ServiceImpl<WorkerInfoMapper, WorkerI
                     .orderDesc(workOrderReq.getOrderDesc())
                     .startTime(workOrderReq.getDeliverTime())
                     .planId(workOrderReq.getPlanId())
+//                    .checkId(workOrderReq.getCheckId())
                     .build();
             orderInfoMapper.insert(orderInfo);
-            MaintanceInfoDetail maintanceInfoDetail = maintanceInfoMapper.selectById(workOrderReq.getPlanId());
-            maintanceInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
-            maintanceInfoMapper.updateById(maintanceInfoDetail);
+            if(workOrderReq.getCheckId()!=null){
+                CheckInfoDetail checkInfoDetail = checkInfoMapper.selectById(workOrderReq.getCheckId());
+                checkInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
+                checkInfoMapper.updateById(checkInfoDetail);
+            }
+            if(workOrderReq.getPlanId()!=null){
+                MaintanceInfoDetail maintanceInfoDetail = maintanceInfoMapper.selectById(workOrderReq.getPlanId());
+                maintanceInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
+                maintanceInfoMapper.updateById(maintanceInfoDetail);
+            }
         }
         return Result.success("派单成功，等待工人开始保养");
     }

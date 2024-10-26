@@ -2,12 +2,20 @@ package com.example.springboot.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springboot.entity.RoleInfo;
 import com.example.springboot.entity.UserInfo;
+import com.example.springboot.entity.UserRole;
+import com.example.springboot.mapper.RoleInfoMapper;
+import com.example.springboot.mapper.UserRoleMapper;
+import com.example.springboot.request.UserReq;
 import com.example.springboot.response.MenuResp;
 import com.example.springboot.response.UserInfoResp;
 import com.example.springboot.service.UserInfoService;
 import com.example.springboot.mapper.UserInfoMapper;
+import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +33,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+
+    @Autowired
+    private RoleInfoMapper roleInfoMapper;
 
     @Override
     public String login(UserInfo user) {
@@ -68,6 +82,74 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         System.out.println(userInfoResp);
         return  userInfoResp;
     }
+
+    @Override
+    public Result<IPage<UserInfoResp>> getUserInfoList(UserReq userReq) {
+        System.out.println(userReq);
+        IPage<UserInfoResp> page = new Page<>(userReq.getCurrentPage(), userReq.getPageSize());
+
+        IPage<UserInfoResp> userInfoList = userInfoMapper.getUserInfoList(page, userReq);
+        return Result.success(userInfoList);
+    }
+
+    @Override
+    public Result updateUserInfoList(UserReq user) {
+        UserInfo userInfo = userInfoMapper.selectById(user.getUserId());
+        System.out.println("userId="+userInfo.getUserId());
+        System.out.println("user="+user);
+        UserRole userRole = userRoleMapper.selectOne(
+                new LambdaQueryWrapper<UserRole>()
+                        .eq(UserRole::getUserId, user.getUserId())
+        );
+        System.out.println("userRole = ");
+        userInfo.setUsername(user.getUsername());
+        userInfo.setUserpwd(user.getUserpwd());
+        userRole.setRoleId(user.getRoleId());
+        int userRows = userInfoMapper.updateById(userInfo);
+        int userRoleRows = userRoleMapper.updateById(userRole);
+
+        if(userRows < 0 || userRoleRows < 0){
+            return Result.fail("修改失败");
+        }
+        return Result.success("修改成功");
+    }
+
+    @Override
+    public Result addUserInfoList(UserReq user) {
+        // 创建并设置UserInfo对象
+        System.out.println("add user = "+user);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(user.getUsername());
+        userInfo.setUserpwd(user.getUserpwd());
+        int userInfoRows = userInfoMapper.insert(userInfo);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userInfo.getUserId());
+        userRole.setRoleId(user.getRoleId());
+
+        int userRoleRows = userRoleMapper.insert(userRole);
+
+        if(userInfoRows < 0 || userRoleRows < 0){
+            return Result.fail("添加失败");
+        }
+        return Result.success("添加成功");
+    }
+
+    @Override
+    public Result deleteUserInfo(UserReq user) {
+        System.out.println("delete user = "+user);
+        int userInfoRows = userInfoMapper.deleteById(user.getUserId());
+        UserRole userRole = userRoleMapper.selectOne(new LambdaQueryWrapper<UserRole>()
+                .eq(UserRole::getUserId, user.getUserId())
+                .eq(UserRole::getRoleId, user.toString()));
+        int userRoleRows = userRoleMapper.deleteById(userRole);
+
+        if(userInfoRows < 0 || userRoleRows < 0){
+            return Result.fail("删除失败");
+        }
+        return Result.success("删除成功");
+    }
+
+
 
 
     //构建菜单树

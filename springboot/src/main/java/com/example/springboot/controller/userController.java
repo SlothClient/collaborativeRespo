@@ -2,7 +2,9 @@ package com.example.springboot.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.springboot.entity.UserInfo;
+import com.example.springboot.request.UserReq;
 import com.example.springboot.response.MenuResp;
 import com.example.springboot.response.UserInfoResp;
 import com.example.springboot.service.UserInfoService;
@@ -66,5 +68,29 @@ public class userController {
         return Result.success(userInfoService.logout());
     }
 
+    @ResponseBody
+    @PostMapping("/getUserInfoList")
+    public Result<IPage<UserInfoResp>> getUserInfoList(@RequestBody(required = false)UserReq userReq) {
+        return userInfoService.getUserInfoList(userReq);
+    }
+    @ResponseBody
+    @PostMapping("/updateUserInfo")
+    public Result updateUserInfoList(@RequestBody UserReq user) {
+        System.out.println(user);
+        return userInfoService.updateUserInfoList(user);
+    }
+    @ResponseBody
+    @PostMapping("/addUserInfoList")
+    public Result<String> addUserInfoList(@RequestBody UserReq user) {
+        System.out.println(user);
+        return userInfoService.addUserInfoList(user);
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteUserInfo")
+    public Result<String> deleteUserInfo(@RequestBody UserReq user) {
+        System.out.println(user);
+        return userInfoService.deleteUserInfo(user);
+    }
 
 }

@@ -73,5 +73,15 @@ public class WorkLog implements Serializable {
         this.logAttachment = logAttachment;
     }
 
+    public WorkLog(String logId, String orderId, String workerId, String logContent, String logAttachment) {
+        this.logId = logId;
+        this.orderId = orderId;
+        this.workerId = workerId;
+        this.logContent = logContent;
+        this.logAttachment = logAttachment;
+    }
+
+    public WorkLog() {
+    }
 }
 

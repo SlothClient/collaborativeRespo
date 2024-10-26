@@ -1,4 +1,4 @@
-package com.example.springboot.service.impl;
+package com.example.springboot.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

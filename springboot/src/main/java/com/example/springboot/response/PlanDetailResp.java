@@ -19,6 +19,11 @@ public class PlanDetailResp {
     private String planId;
 
     /**
+     * 图片
+     */
+    private String equipPic;
+
+    /**
      * 设备编号
      */
     private String equipId;

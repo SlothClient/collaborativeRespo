@@ -21,4 +21,9 @@ public class EquipmentResp {
      *设备名
      */
     private String equipName;
+
+    /**
+     * 设备图片
+     */
+    private String equipPic;
 }
