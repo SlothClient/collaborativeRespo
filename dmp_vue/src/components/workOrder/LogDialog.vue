@@ -122,6 +122,10 @@ watch(
 const word_log = ref(props.selectedOrder.word_log);
 
 const submitLog = async () => {
+    if(receivedData.value.orderStatus === "已完成"){
+        ElMessage.error('该工单已完成，无法提交日志');
+        return;
+    }
     const formData = new FormData();
     formData.append('orderId', receivedData.value.orderId);
     formData.append('workerId', receivedData.value.workerId);
@@ -136,12 +140,9 @@ const submitLog = async () => {
             },
         });
 
-        // 请求成功，显示成功消息
-        ElMessage.success(response.data); // 显示成功提示
-        // 关闭对话框
+        ElMessage.success(response.data);
         closeDialog();
     } catch (error) {
-        // 请求失败，显示错误消息
         ElMessage.error('工作日志提交失败: ' + (error.response?.data || error.message));
     }
 };
