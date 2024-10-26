@@ -20,7 +20,7 @@
       >
         <el-card class="timeline-card">
           <el-row :gutter="10">
-            <el-col :span="20">
+            <el-col :span="16">
               <el-descriptions :column="1" size="small" class="description-box">
                 <div v-if="item.stepOrder === 0">
                   <el-descriptions-item label="发起人">{{ item.username }}</el-descriptions-item>
@@ -56,6 +56,16 @@
                   </el-descriptions-item>
                 </div>
               </el-descriptions>
+            </el-col>
+            <!-- 调整图片位置，将其放到卡片内容右边 -->
+            <el-col v-if="index === 0" :span="8">
+              <el-image
+                  :src="props.currentRow.equipmentPic"
+                  :alt="props.currentRow.equipName"
+                  class="equip-image"
+                  fit="cover"
+                  :preview-src-list="[props.currentRow.equipmentPic]"
+              />
             </el-col>
           </el-row>
         </el-card>
@@ -125,16 +135,20 @@ const getTagText = (status) => {
 </script>
 
 <style scoped>
-
-/* 添加过渡效果 */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
+/* 图片调整样式 */
+.equip-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #dcdfe6;
+  transition: box-shadow 0.3s ease;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-{
-  opacity: 0;
+.equip-image:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+
 .drawer-content {
   padding: 20px;
   background-color: #ffffff;

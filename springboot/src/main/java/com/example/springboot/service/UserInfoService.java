@@ -20,7 +20,7 @@ import java.util.List;
 */
 public interface UserInfoService extends IService<UserInfo> {
 
-    String login(UserInfo user);
+    Result<String>  login(UserInfo user);
 
     String logout();
 

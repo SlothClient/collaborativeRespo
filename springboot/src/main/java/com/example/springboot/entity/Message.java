@@ -16,9 +16,10 @@ public class Message {
 
     private String receiver; // 接收者名称
 
-
     private String text; // 消息内容
 
     private Date time; // 消息发送时间
+
+    private Integer isRead;//消息是否已读
 
 }

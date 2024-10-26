@@ -15,11 +15,13 @@ import com.example.springboot.request.FiltersReq;
 import com.example.springboot.response.ApprovalDetailResp;
 import com.example.springboot.response.ApprovalResp;
 import com.example.springboot.service.ApprovalInfoService;
+import com.example.springboot.service.MessageService;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +46,9 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
     @Autowired
     private UserInfoMapper userInfoMapper;
 
+    @Autowired
+    private MessageService messageService;
+
 
     @Override
     public Result<IPage<ApprovalResp>> getApprovalList(FiltersReq filtersReq) {
@@ -59,7 +64,7 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
                 page, filtersReq, responsibleStepOrder);
 
         if (approvalRespPage.getRecords().isEmpty()) {
-            return Result.fail("查询失败，稍后重试");
+            return Result.fail("很遗憾，没有找到该数据😭😭。");
         }
 
         return Result.success(approvalRespPage);
@@ -69,26 +74,27 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
     public Result<ApprovalDetailResp> getApprovalDetail(String planID) {
         ApprovalDetailResp approvalDetailResp = approvalInfoMapper.getApprovalDetail(planID);
 
-        if(approvalDetailResp == null)
-        {
-            return Result.fail("查询失败，联系后台管理员处理");
+        if (approvalDetailResp == null) {
+            return Result.fail("查询失败，联系后台管理员处理＞﹏＜。");
         }
         return Result.success(approvalDetailResp);
     }
 
     @Override
-    public Result approve(String planId,String approvalRemark) {
+    public Result approve(String planId, String approvalRemark) {
 
         //当前登录用户
         String userId = (String) StpUtil.getLoginId();
-        System.out.println(userId);
+
+        UserInfo userInfo = userInfoMapper.selectById(userId);
+
         List<String> userRoles = StpUtil.getRoleList(userId);
 
         int responsibleStepOrder = getStepOrdersForRoles(userRoles);
         System.out.println(responsibleStepOrder);
 
         if (responsibleStepOrder < 1 || responsibleStepOrder > 2) {
-            return Result.fail("您无权审批此保养计划");
+            return Result.fail("您无权审批此保养计划┗|｀O′|┛");
         }
 
         // 当前保养计划
@@ -97,21 +103,21 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
                         .eq(MaintanceInfoDetail::getPlanId, planId)
         );
         if (maintanceInfoDetail == null) {
-            return Result.fail("保养计划未找到，请联系管理员");
+            return Result.fail("保养计划未找到，请联系管理员＞﹏＜。");
         }
-        if (!maintanceInfoDetail.getStatus().equals(APPROVING.getCode())){
-            Result.fail("该保养计划已经处理完成，无需后续处理");
+        if (!maintanceInfoDetail.getStatus().equals(APPROVING.getCode())) {
+            Result.fail("该保养计划已经处理完成，无需后续处理＞﹏＜。");
         }
         // 获取一级审批信息
         ApprovalInfo firstStepApproval = getApprovalInfoByStepOrder(planId, 1);
         if (firstStepApproval == null) {
-            return Result.fail("一级审批信息未找到，请联系管理员");
+            return Result.fail("一级审批信息未找到，请联系管理员＞﹏＜。");
         }
 
         // 一级审批
         if (responsibleStepOrder == 1) {
-            if(!Objects.equals(firstStepApproval.getApprovalStatus(), PENDING_APPROVAL.getCode())){
-                return Result.fail("您已处理无需重复处理");
+            if (!Objects.equals(firstStepApproval.getApprovalStatus(), PENDING_APPROVAL.getCode())) {
+                return Result.fail("您已处理无需重复处理＞﹏＜。");
             }
 
             firstStepApproval.setApprovalStatus(APPROVAL_PASS.getCode());
@@ -121,6 +127,19 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             approvalInfoMapper.updateById(firstStepApproval);
             maintanceInfoDetail.setStatus(APPROVING.getCode());
             maintenanceMapper.updateById(maintanceInfoDetail);
+            //通知用户第一级已经通过
+            try {
+                //通知用户第一级已经通过
+                messageService.
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已经通过一级审核，请耐心等待。", "User");
+                //通知第二级审核
+                messageService.
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "需要您的审核，请及时处理。", "Admin");
+
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
             return Result.success("您已审核成功");
         }
 
@@ -133,7 +152,7 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             if (secondStepApproval == null) {
                 return Result.fail("二级审批信息未找到，请联系管理员");
             }
-            if(!Objects.equals(secondStepApproval.getApprovalStatus(), PENDING_APPROVAL.getCode())){
+            if (!Objects.equals(secondStepApproval.getApprovalStatus(), PENDING_APPROVAL.getCode())) {
                 return Result.fail("您已处理无需重复处理");
             }
 
@@ -145,6 +164,14 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
 
             maintanceInfoDetail.setStatus(APPROVAL_PASS.getCode());
             maintenanceMapper.updateById(maintanceInfoDetail);
+
+            //通知用户派单
+            try {
+                messageService.
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已经通过审核，请及时派单。", "User");
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             return Result.success("您已审核成功，该保养计划已通过，请等待后续派单。");
         }
 
@@ -155,6 +182,10 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
     public Result<String> reject(String planId, String approvalRemark) {
         // 获取当前登录用户
         String userId = (String) StpUtil.getLoginId();
+
+        UserInfo user = userInfoMapper.selectById(userId);
+
+
         List<String> userRoles = StpUtil.getRoleList(userId);
         int responsibleStepOrder = getStepOrdersForRoles(userRoles);
 
@@ -173,7 +204,7 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             return Result.fail("保养计划未找到，请联系管理员");
         }
 
-        if (!Objects.equals(maintanceInfoDetail.getStatus(), APPROVING.getCode())){
+        if (!Objects.equals(maintanceInfoDetail.getStatus(), APPROVING.getCode())) {
             Result.fail("该保养计划已经处理完成，无需后续处理");
         }
 
@@ -183,7 +214,7 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             return Result.fail("一级审批信息未找到，请联系管理员");
         }
 
-        // 一级审批驳回逻辑
+        // 一级审批驳回
         if (responsibleStepOrder == 1) {
             if (!Objects.equals(firstStepApproval.getApprovalStatus(), PENDING_APPROVAL.getCode())) {
                 return Result.fail("该保养计划已处理，无法重复处理");
@@ -198,6 +229,14 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             // 更新保养计划状态为驳回
             maintanceInfoDetail.setStatus(APPROVAL_REJECT.getCode());
             maintenanceMapper.updateById(maintanceInfoDetail);
+
+            //通知用户驳回
+            try {
+                messageService.
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已被(一级)" + user.getUsername() + "驳回。具体原因如下:\n" + approvalRemark, "User");
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
 
             return Result.success("您已驳回该保养计划");
         }
@@ -225,6 +264,13 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             maintanceInfoDetail.setStatus(APPROVAL_REJECT.getCode());
             maintenanceMapper.updateById(maintanceInfoDetail);
 
+            //通知用户驳回
+            try {
+                messageService.
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已被(二级)" + user.getUsername() + "驳回。具体原因如下:\n" + approvalRemark, "User");
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             return Result.success("您已驳回该保养计划");
         }
 
@@ -235,9 +281,9 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
     public Result<String> delete(String planId) {
         int rows = approvalInfoMapper.delete(
                 new LambdaQueryWrapper<ApprovalInfo>()
-                        .eq(ApprovalInfo::getPlanId,planId)
+                        .eq(ApprovalInfo::getPlanId, planId)
         );
-        if (rows < 0){
+        if (rows < 0) {
             return Result.fail("删除失败");
         }
         return Result.success("删除成功");

@@ -1,6 +1,6 @@
 import { router } from "@/router/index.js";
-import { useUserStore } from "@/store/module/user.js";
-import { usePermissionStore } from "@/store/module/permission.js";
+import { useUserStore } from "@/store/module/userStore.js";
+import { usePermissionStore } from "@/store/module/permissionStore.js";
 import { getToken, removeToken } from "@/utils/token.js";
 import { useLoadingStore } from "@/store/module/loadingStore.js";
 
@@ -16,7 +16,7 @@ router.beforeEach(async (to, from, next) => {
 
     if (hasToken) {
         if (to.path === '/login') {
-            next({ path: '/home' });
+            next({ path: '/dashboard/home' });
         } else {
             if (userStore.user.roles.length === 0) {
                 try {

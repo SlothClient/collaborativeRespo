@@ -19,7 +19,7 @@
               size="small"
           />
           <div class="message-content">
-            <div class="message-text">{{ message.text }}</div>
+            <div class="message-text" :class= "['message-text', { 'self': isSelf(message) }]" >{{ message.text }}</div>
             <div class="message-time">{{ message.time }}</div>
           </div>
         </div>
@@ -39,15 +39,16 @@
       </el-input>
     </div>
   </div>
-  <div v-else><p>请选择一个聊天对象</p></div>
+  <div class="chat-detail" v-else><el-empty><p>请选择一个聊天对象</p></el-empty></div>
 </template>
 
 
 <script setup>
-import {ref, computed, nextTick, onMounted, onBeforeUnmount} from 'vue';
-import {useMessageStore} from "@/store/module/message.js";
-import {useUserStore} from "@/store/module/user.js";
+import {ref, computed, nextTick, onMounted, onBeforeUnmount, watch} from 'vue';
+import {useMessageStore} from "@/store/module/messageStore.js";
+import {useUserStore} from "@/store/module/userStore.js";
 import moment from "moment";
+import {initializeWebSocket, webSocketSendMessage} from "@/utils/webSocket.js";
 
 const messageStore = useMessageStore();
 const userStore = useUserStore();
@@ -60,11 +61,8 @@ const chatMessages = ref(null);
 const userId = userStore.user.id;
 
 const isSelf =(message) =>{
-  console.log(currentChat.value.chatUserWithAvatar)
   return message.sender === userId || message.from === userId;
 }
-
-let socket;
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -83,62 +81,27 @@ const sendMessage = () => {
       time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     }
     console.log(message)
+    webSocketSendMessage(message);
 
-    // Send message through WebSocket
-    socket.send(JSON.stringify(message));
-
-    const param = {
-      sender: userStore.user.name,
-      text: newMessage.value,
-      time: message.time
-    }
-    console.log(param)
-    console.log(currentChat.value)
     messageStore.addMessage(message);
-
     newMessage.value = '';
     scrollToBottom();
   }
 };
 
-const initializeWebSocket = () => {
-  socket = new WebSocket(`ws://localhost:8080/chat/${userId}`);
-
-  socket.onopen = () => {
-    console.log('WebSocket connection established');
-  };
-
-  socket.onmessage = (event) => {
-    const receivedMessage = JSON.parse(event.data);
-
-    console.log(`接收到的消息：`)
-    console.log(receivedMessage)
-
-    // 通过 addMessage 添加到正确的聊天记录
-    messageStore.addMessage(receivedMessage);
-      scrollToBottom();
-
-  };
-
-  socket.onclose = () => {
-    console.log('WebSocket connection closed');
-  };
-
-  socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-  };
+// 监听 WebSocket 发出的滚动事件
+const emit = (event) => {
+  if (event === 'scrollToBottom') {
+    scrollToBottom();
+  }
 };
 
-onMounted(async () => {
-  initializeWebSocket();
-  await messageStore.getChatHistory()
+// 当组件挂载后，监听 WebSocket 的消息
+onMounted(() => {
+  // 这里初始化 WebSocket，并传递 emit 函数
+  initializeWebSocket(userId, emit);
 });
 
-onBeforeUnmount(() => {
-  if (socket) {
-    socket.close();
-  }
-});
 </script>
 
 <style scoped>
@@ -192,7 +155,12 @@ onBeforeUnmount(() => {
   padding: 10px 15px;
   border-radius: 18px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: inline-block;
 }
+.message-text.self{
+  margin-left: 60px;
+}
+
 
 .message-container.self .message-text {
   background-color: #dcf8c6;
@@ -202,7 +170,7 @@ onBeforeUnmount(() => {
   font-size: 0.8em;
   color: #888;
   margin-top: 5px;
-  text-align: right;
+  text-align: left;
 }
 
 .chat-input {

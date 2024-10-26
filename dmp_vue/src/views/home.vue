@@ -343,7 +343,7 @@ const typeOption = ref({
   radar: {
     // shape: 'circle',
     indicator: [
-      { name: '木', max: 6500 },
+      { name: '木', max: 7000  },
       { name: '火', max: 16000 },
       { name: '土', max: 30000 },
       { name: '金', max: 38000 },
@@ -360,21 +360,21 @@ const typeOption = ref({
       symbol: 'circle',
       symbolSize: 8,
       itemStyle: {
-        color: '#55b566'
+        color: '#4999e8'
       },
       areaStyle: {
-        color: '#55b566',
+        color: '#4999e8',
         opacity: 0.3
       },
       lineStyle: {
         width: 2,
-        color: '#55b566'
+        color: '#4999e8'
       },
       label: {
         show: true,
         position: 'top',
         distance: 3,
-        color: '#55b566',
+        color: '#4999e8',
         fontWeight: '900',
         fontSize: 14,
         fontFamily: '苹方'
@@ -453,7 +453,7 @@ onBeforeUnmount(() => {
 }
 
 .numBlock {
-  background-color: rgb(85, 181, 102);
+  background-color: rgb(73, 153, 232);
   border-radius: 10px;
   box-shadow: 2px 3px 3px 3px #ccc;
   /* flex: 1; */

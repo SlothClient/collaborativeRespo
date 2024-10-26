@@ -30,16 +30,11 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     (response) => {
         const loadingStore = useLoadingStore();
-
-
         loadingStore.stopLoading(); // 结束加载动画
-
         return response;
     },
     (error) => {
         const loadingStore = useLoadingStore();
-
-
         loadingStore.stopLoading()
         // 处理错误
         let {message} = error;

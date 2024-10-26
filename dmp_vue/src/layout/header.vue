@@ -3,19 +3,41 @@
     <div class="header-left">
       <h1>中药制剂运维系统</h1>
     </div>
+    <div class="notification" @click="messageDialogVisible = !messageDialogVisible">
+      <el-badge :hidden="messageCount===0" :value="messageCount" class="notification">
+        <el-icon size="25">
+          <Bell/>
+        </el-icon>
+      </el-badge>
+    </div>
     <div class="header-right">
       <el-dropdown @command="handleCommand" class="user-menu">
         <div class="avatar-section">
-          <el-avatar size="large" :key="userStore.user.avatar+new Date().getTime()" :src="userStore.user.avatar"/>
+          <el-avatar size="large" :key="avatarUrl+new Date().getTime()" :src="avatarUrl"/>
           <el-icon class="dropdown-icon">
             <arrow-down/>
           </el-icon>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item  command="logout"><el-icon><SwitchButton /></el-icon>注销</el-dropdown-item>
-            <el-dropdown-item command="personalCenter"><el-icon><User /></el-icon>个人中心</el-dropdown-item>
-            <el-dropdown-item command="message"><el-icon><Message /></el-icon>通知</el-dropdown-item>
+            <el-dropdown-item command="logout">
+              <el-icon>
+                <SwitchButton/>
+              </el-icon>
+              注销
+            </el-dropdown-item>
+            <el-dropdown-item command="personalCenter">
+              <el-icon>
+                <User/>
+              </el-icon>
+              个人中心
+            </el-dropdown-item>
+            <el-dropdown-item command="message">
+              <el-icon>
+                <Message/>
+              </el-icon>
+              通知
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -36,16 +58,23 @@
 </template>
 
 <script setup>
-import {useUserStore} from "@/store/module/user.js";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {ref} from "vue";
+import {useUserStore} from "@/store/module/userStore.js";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
+import {computed, onMounted, ref} from "vue";
 import PersonalInformation from "@/components/personalCenter/index.vue";
-import MessageDialog from  '@/components/message/index.vue'
-import {useMessageStore} from "@/store/module/message.js";
+import MessageDialog from '@/components/message/index.vue'
+import {useMessageStore} from "@/store/module/messageStore.js";
+import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
+import {router} from "@/router/index.js";
+
 const userStore = useUserStore();
 const personalCenterVisible = ref(false)
 const messageDialogVisible = ref(false)
 const messageStore = useMessageStore();
+const equipmentStore = useEquipmentInfoStore();
+
+const avatarUrl = computed(() =>
+    userStore.user.avatar)
 const handleCommand = (command) => {
   switch (command) {
     case "logout": {
@@ -57,13 +86,26 @@ const handleCommand = (command) => {
             type: 'warning',
           }
       )
-          .then(() => {
-            ElMessage({
-              type: 'success',
-              message: '退出成功',
-            })
-            userStore.Logout();
-            messageStore.clearMessage();
+          .then(async () => {
+            const res = await userStore.Logout();
+            if (res) {
+              // 清空相关信息
+              messageStore.clearMessage();
+              equipmentStore.clearEquipmentInfo();
+              //跳转到登陆页面
+              await router.push('/login')
+              await ElNotification({
+                type: 'success',
+                message: "退出成功",
+              })
+              //刷新一下
+              location.reload();
+            } else {
+              await ElMessageBox({
+                type: 'error',
+                message: "退出失败"
+              })
+            }
           })
           .catch(() => {
             ElMessage({
@@ -79,20 +121,40 @@ const handleCommand = (command) => {
       break
     case "message":
       messageDialogVisible.value = true
-          break
+      break
   }
 }
-const closeMessageDialog = () =>{
+const closeMessageDialog = () => {
   messageDialogVisible.value = false
+  messageStore.currentChatSetNull();
 }
 
-const closeDialog = () =>{
+const closeDialog = () => {
   personalCenterVisible.value = false
 }
+
+const messageCount = computed(() => messageStore.unreadCountTotal)
+
+
+onMounted(async () => {
+  await messageStore.getChatHistory()
+});
+
 
 </script>
 
 <style scoped>
+.notification {
+  position: absolute;
+  right: 65px;
+}
+
+.el-badge__content {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+}
+
 .header-content {
   display: flex;
   height: 10%;

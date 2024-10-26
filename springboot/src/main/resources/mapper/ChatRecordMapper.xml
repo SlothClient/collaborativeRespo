@@ -10,6 +10,7 @@
             <result property="receiver" column="receiver" jdbcType="VARCHAR"/>
             <result property="text" column="text" jdbcType="VARCHAR"/>
             <result property="time" column="time" jdbcType="DATE"/>
+        <result property="isRead" column="is_read" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Base_Column_List">

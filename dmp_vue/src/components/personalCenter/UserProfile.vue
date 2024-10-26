@@ -41,7 +41,7 @@
 <script setup>
 import {inject, reactive, ref} from 'vue';
 import {ElMessage, ElNotification} from 'element-plus';
-import { useUserStore } from '@/store/module/user.js';
+import { useUserStore } from '@/store/module/userStore.js';
 import {getUserInfo, updateAvatar} from "@/api/user/index.js";
 
 const userStore = useUserStore();
@@ -148,12 +148,14 @@ const uploadAvatar = async () => {
   const res = await updateAvatar(avatar)
   if(res.data.flag){
     ElNotification({
+      title:"系统提示",
       message:res.data.data,
       type:"success"
     })
   }
   else {
     ElNotification({
+      title:"系统提示",
       message:res.data.data,
       type:"error"
     })

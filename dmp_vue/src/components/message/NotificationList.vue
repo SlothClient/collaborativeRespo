@@ -2,19 +2,24 @@
   <div class="chat-list">
     <el-scrollbar>
       <el-card
-          v-for="(chat, index) in chatHistory"
+          v-for="(chat, index) in chatList"
           :key="index"
           class="chat-card"
           @click="selectChat(chat)"
       >
         <div class="chat-content">
-          <div class="avatar"><el-avatar :src="`http://localhost:8080`+chat.chatUserWithAvatar " /></div>
+          <div class="avatar">
+            <el-avatar :src="`http://localhost:8080`+chat.chatUserWithAvatar" />
+          </div>
           <div class="chat-info">
-            <p class="chat-title">{{ chat.chatUserWith }}</p>
+            <div class="chat-header">
+              <span class="chat-title">{{ chat.chatUserWith }}</span>
+              <el-badge :value="currentUserUnreadMessageCounts[chat.chatUserWithId]" :hidden="currentUserUnreadMessageCounts[chat.chatUserWithId] === 0" class="notification"/>
+            </div>
             <p class="chat-preview">{{
                 chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].text
               }}</p>
-            <small>{{ chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].time }}</small>
+            <span class="chat-time">{{ chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].time }}</span>
           </div>
         </div>
       </el-card>
@@ -23,58 +28,100 @@
 </template>
 
 <script setup>
-import {useMessageStore} from "@/store/module/message.js";
-import {computed} from "vue";
+import {useMessageStore} from "@/store/module/messageStore.js";
+import {computed, ref, watch} from "vue";
 
 const messageStore = useMessageStore();
-const chatHistory = computed(() => {
-  return messageStore.chatHistory
+const chatList = computed(() => {
+  return messageStore.filteredChats
 });
 
 const selectChat = (chat) => {
   messageStore.setCurrentChat(chat);
+
 };
+
+const currentUserUnreadMessageCounts = ref(messageStore.unreadMessages)
+
+watch(()=>messageStore.unreadMessages,(newVal) =>currentUserUnreadMessageCounts.value = newVal)
 </script>
 
 <style scoped>
 .chat-list {
-  width: 30%;
+  width: 40%;
   height: 100%;
   background-color: #f8f8f8;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 .chat-card {
-  margin-bottom: 10px;
-  padding: 0;
+  margin: 8px;
+  padding: 12px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  width: 230px;
 }
 
 .chat-card:hover {
-  transform: scale(1.02);
+  transform: translateY(-2px);
+  background-color: #f0f2f5;
 }
 
 .chat-content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.avatar {
+  flex-shrink: 0;
 }
 
 .chat-info {
-  margin-left: 20px;
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
 .chat-title {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
 }
 
 .chat-preview {
   color: #666;
-  font-size: 0.9em;
-  margin-bottom: 5px;
+  font-size: 14px;
+  margin: 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.avatar{
-  height: 50px;
-  width: 50px;
+
+.chat-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.notification {
+  margin-left: auto;
+}
+
+.el-badge__content {
+  background-color: #ff4d4f;
+  color: white;
+  font-size: 12px;
+  border: none;
+  padding: 0 6px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 9px;
 }
 </style>

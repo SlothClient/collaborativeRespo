@@ -64,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void submitOrder(String conditionJson) throws JsonProcessingException {
         Condition condition = new ObjectMapper().readValue(conditionJson,Condition.class);
+        System.out.println(condition);
         int count = orderMapper.submitOrder(condition);
         int count1 = orderMapper.autoAddHours(condition);
         if(count == 0){

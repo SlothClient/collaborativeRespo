@@ -1,15 +1,62 @@
 import {defineStore} from "pinia";
 import {ref, computed} from "vue";
-import {fetchChatHistory} from "@/api/websocket/index.js";
+import {fetchChatHistory, markMessageAsRead} from "@/api/websocket/index.js";
 import {ElNotification} from "element-plus";
+
 
 export const useMessageStore = defineStore('message', () => {
     const chatHistory = ref([]);
 
-    const activeCategory = ref('system');
+    const activeCategory = ref('System');
     const currentChat = ref(null);
 
-    // Actions and methods
+    const unreadCountTotal = ref(0);  // 未读消息数
+
+    const unreadMessages = ref({})
+
+    const currentChatSetNull = () =>{
+        currentChat.value = null
+    }
+
+    const initiative = () => {
+        chatHistory.value.forEach((chat) => {
+            unreadMessages.value[chat.chatUserWithId] = chat.unreadCountTotal
+            unreadCountTotal.value += chat.unreadCountTotal
+        })
+        console.log(unreadCountTotal.value )
+    }
+
+    // 设置当前用户总未读消息数量
+    const setUnreadCount = (count) => {
+        unreadCountTotal.value = count;
+    }
+
+    // 设置当前登入用户与其他用户之间的消息未读数量
+    const setUnreadMessages = (otherUserId, count) => {
+        unreadMessages.value = {
+            ...unreadMessages.value,
+            [otherUserId]: count
+        };
+    }
+
+    // 清除当前与登入用户的未读消息
+    const clearUnreadMessages = async (otherUserId) => {
+        if (unreadMessages.value[otherUserId]) {
+            await markMessageAsRead(otherUserId);
+            unreadCountTotal.value -= unreadMessages.value[otherUserId];
+            unreadMessages.value[otherUserId] = 0;
+        }
+    };
+
+    // 新消息到达，更新未读数量
+    const incrementUnreadMessages = (otherUserId) => {
+        if (!unreadMessages[otherUserId]) {
+            unreadMessages[otherUserId] = 0;
+        }
+        unreadMessages.value[otherUserId]++;
+        unreadCountTotal.value++;
+    }
+
     const setActiveCategory = (category) => {
         activeCategory.value = category;
     };
@@ -20,27 +67,29 @@ export const useMessageStore = defineStore('message', () => {
                 const res = await fetchChatHistory();
                 if (res.data.flag) {
                     chatHistory.value = res.data.data;
+                    initiative();
+
                 } else {
                     throw new Error(res.data.data);
                 }
             } catch (error) {
                 ElNotification({
                     type: "error",
-                    message: error.message || "Failed to fetch chat history"
+                    message: error.message || "获取历史聊天记录失败"
                 });
             }
             console.log(chatHistory.value)
         }
     };
 
-    const setCurrentChat = (selectChat) => {
+    const setCurrentChat = async (selectChat) => {
         const chat = chatHistory.value.find(chat => chat.chatUserId === selectChat.chatUserId && chat.chatUserWithId === selectChat.chatUserWithId);
         console.log(chat)
         if (chat) {
             currentChat.value = chat;
-            console.log(currentChat.value)
+            await clearUnreadMessages(selectChat.chatUserWithId)
         } else {
-            console.error("Chat not found");
+            console.error("没找到对应聊天");
         }
     };
 
@@ -64,8 +113,8 @@ export const useMessageStore = defineStore('message', () => {
         return chatHistory.value.filter(chat => chat.category === activeCategory.value);
     });
 
-    const clearMessage = ()=>{
-       chatHistory.value = []
+    const clearMessage = () => {
+        chatHistory.value = []
         activeCategory.value = 'system';
         currentChat.value = null
     }
@@ -78,7 +127,14 @@ export const useMessageStore = defineStore('message', () => {
         addMessage,
         getChatHistory,
         filteredChats,
-        clearMessage
+        clearMessage,
+        unreadCountTotal,
+        setUnreadCount,
+        setUnreadMessages,
+        clearUnreadMessages,
+        incrementUnreadMessages,
+        unreadMessages,
+        currentChatSetNull
     };
 }, {
     // persist: true

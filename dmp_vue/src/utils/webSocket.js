@@ -1,89 +1,83 @@
-// src/utils/websocket.js
 
-let ws = null;
-let reconnectTimer = null;
-let isReconnecting = false;
-const url = 'ws://localhost:8080/chat/';
+import { useMessageStore } from "@/store/module/messageStore.js";
+import {h, nextTick} from "vue";
+import {ElNotification} from "element-plus";
 
-const websocket = {
-    // WebSocket 初始化
-    Init(username) {
-        if (!('WebSocket' in window)) {
-            console.log('浏览器不支持 WebSocket');
-            return;
+import '@/assets/message.css'
+let socket;
+
+export const initializeWebSocket = (userId,emit) => {
+    const messageStore = useMessageStore();
+
+    socket = new WebSocket(`ws://localhost:8080/chat/${userId}`);
+
+    socket.onopen = () => {
+        console.log('WebSocket连接建立');
+    };
+
+    socket.onmessage = async (event) => {
+        const receivedMessage = JSON.parse(event.data);
+
+        ElNotification({
+            title: '消息提醒',
+            message: h('div', {
+                class: 'notification-content',
+                style: 'display: flex; align-items: center; padding: 4px 0;'
+            }, [
+                h('span', {
+                    style: 'color: #606266; font-size: 14px; font-weight: 500;'
+                }, '您有一条新消息，请及时查看')
+            ]),
+            icon:'Message',
+            position: 'top-right',
+            duration: 3000,
+            showClose: true,
+            customClass: 'custom-notification',
+            offset: 30
+        })
+
+
+        console.log(`接收到的消息：`, receivedMessage);
+
+        const senderId = receivedMessage.from
+
+        // 获取当前聊天对象的 ID
+        const currentChatId = messageStore.currentChat?.chatUserWithId;
+
+        // 当前未打开此用户的聊天，更新该用户的未读消息数量
+        if (currentChatId !== senderId ) {
+            messageStore.incrementUnreadMessages(senderId);
         }
 
-        ws = new WebSocket(url + username);
+        // 将接收到的消息添加到对应的聊天记录中
+        messageStore.addMessage(receivedMessage);
 
-        ws.onopen = () => {
-            console.log('WebSocket 连接成功');
-        };
+        // 确保在消息渲染完成后执行滚动
+        await nextTick();
+        // 使用 emit 触发滚动事件，交由组件控制
+        emit('scrollToBottom');
+    };
 
-        ws.onerror = (e) => {
-            console.log('WebSocket 连接错误', e);
-            if (!isReconnecting) {
-                reconnect();
-            }
-        };
+    socket.onclose = () => {
+        console.log('WebSocket 连接关闭');
+    };
 
-        ws.onmessage = (e) => {
-            console.log('接收到的 WebSocket 消息:', e.data);
-            if (e.data === 'ok') return;
 
-            if (websocket.onMessageCallback) {
-                websocket.onMessageCallback(e.data);
-            }
-        };
-
-        ws.onclose = () => {
-            console.log('WebSocket 连接关闭');
-            if (!isReconnecting) {
-                reconnect();
-            }
-        };
-    },
-
-    // 手动关闭 WebSocket 连接
-    Close() {
-        isReconnecting = true;
-        if (ws) {
-            ws.close();
-        }
-    },
-
-    // 发送消息
-    Send(data) {
-        const msg = JSON.stringify(data);
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(msg);
-        } else {
-            console.error('WebSocket 尚未连接或连接已关闭');
-        }
-    },
-
-    // 设置消息回调
-    setMessageCallback(callback) {
-        this.onMessageCallback = callback;
-    },
-
-    onMessageCallback: null
+    socket.onerror = (error) => {
+        console.error('WebSocket 错误:', error);
+    };
 };
 
-// 自动重连机制
-function reconnect() {
-    if (isReconnecting) return;
-
-    clearTimeout(reconnectTimer);
-    reconnectTimer = setTimeout(() => {
-        console.log('尝试重新连接 WebSocket...');
-        websocket.Init('');
-        isReconnecting = false;
-    }, 4000); // 4 秒后重新连接
-}
-
-// 页面关闭事件，关闭 WebSocket 连接
-window.onbeforeunload = () => {
-    websocket.Close();
+export const webSocketSendMessage = (message) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(message));
+    } else {
+        console.error("WebSocket is not open.");
+    }
 };
 
-export default websocket;
+export const closeWebSocket = () => {
+    if (socket) {
+        socket.close();
+    }
+};

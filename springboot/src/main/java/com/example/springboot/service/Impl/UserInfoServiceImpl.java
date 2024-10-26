@@ -53,16 +53,16 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
 
     @Override
-    public String login(UserInfo user) {
+    public Result<String>  login(UserInfo user) {
         UserInfo userInfo = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
                 .select(UserInfo::getUserId)
                 .eq(UserInfo::getUsername, user.getUsername())
                 .eq(UserInfo::getUserpwd, user.getUserpwd()));
         if (userInfo != null) {
             StpUtil.login(userInfo.getUserId());
-            return StpUtil.getTokenValue();
+            return Result.success(StpUtil.getTokenValue());
         } else {
-            throw new RuntimeException();
+            return Result.fail("账号或密码错误");
         }
     }
 
@@ -163,7 +163,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         String format = sdf.format(new Date());
         // 获取上传的文件名称
         String fileName = file.getOriginalFilename();
-
         // 进行文件类型校验（如限制只能上传图片）
         String fileExtension = null;
         if (fileName != null) {

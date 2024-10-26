@@ -294,6 +294,7 @@ const handleSubmit = (row) => {
 
 const submitOrder = async (row) => {
   const condition = {
+    planId:row.planId,
     orderId: row.orderId,
     workerId: row.workerId,
     startTime: new Date(row.startTime).toISOString(),

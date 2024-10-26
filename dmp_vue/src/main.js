@@ -13,18 +13,16 @@ import ECharts from 'vue-echarts'
 import "echarts";
 
 
+
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-
-app.use(router)
 app.use(ElementPlus, {
     locale: zhCn,
 })
-
-
 app.use(pinia)
+app.use(router)
 app.component('v-chart', ECharts)
 
 app.mount('#app')

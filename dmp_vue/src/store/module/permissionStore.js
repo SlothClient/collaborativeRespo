@@ -6,7 +6,7 @@ import {ref} from 'vue'
 
 const modules = import.meta.glob('@/views/**/*.vue');  // 递归加载 views 目录下的所有 Vue 文件
 
-export  const filterAsyncRoutes = (routes) => {
+export const filterAsyncRoutes = (routes) => {
     console.log(modules)
     return routes.map(route => {
         const routeObj = {
@@ -45,8 +45,9 @@ export  const filterAsyncRoutes = (routes) => {
 
 export const usePermissionStore = defineStore("permission", () => {
     const routes = ref([...constantRoutes])
+
+    const userMenu = ref([])
     const setRoutes = (newRoutes) => {
-        console.log("setRoutes")
         const homeRoute = routes.value.find(route => route.name === 'dashboard')
         if (homeRoute && homeRoute.children) {
             // 过滤掉已存在的路由
@@ -68,9 +69,9 @@ export const usePermissionStore = defineStore("permission", () => {
             const res = await getUserMenu()
             if (res.data.flag) {
                 const asyncRoutes = res.data.data
-                localStorage.setItem('userMenu',asyncRoutes)
                 const accessedRoutes = filterAsyncRoutes(asyncRoutes)
                 setRoutes(accessedRoutes)
+                userMenu.value = res.data.data
                 return accessedRoutes
             } else {
                 ElNotification({
@@ -80,6 +81,7 @@ export const usePermissionStore = defineStore("permission", () => {
                 });
                 return []
             }
+
         } catch (e) {
             console.error(e)
             ElNotification({

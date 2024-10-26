@@ -31,4 +31,6 @@ public class ChatHistory {
     private List<Message> messages; // 消息列表
 
     private String chatUserWithAvatar;//用户头像
+
+    private Integer unreadCountTotal;//未读数量
 }

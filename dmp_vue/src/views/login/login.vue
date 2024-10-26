@@ -39,9 +39,9 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button :disabled="loading.value" type="primary" @click="submitForm(loginFormRef)" class="login-button">
+              <el-button :disabled="loading" type="primary" @click="submitForm(loginFormRef)" class="login-button">
                 <span v-if="!loading">登 录</span>
-                <span v-else>登 录中...</span>
+                <span v-else>登录中...</span>
               </el-button>
             </el-form-item>
             <el-form-item>
@@ -57,8 +57,8 @@
 import {reactive, ref} from 'vue'
 import {User, Lock} from '@element-plus/icons';
 import {router} from '@/router/index.js';
-import {ElMessage} from "element-plus";
-import {useUserStore} from "@/store/module/user.js";
+import {ElMessage, ElNotification} from "element-plus";
+import {useUserStore} from "@/store/module/userStore.js";
 
 const loading = ref(false);
 
@@ -67,7 +67,7 @@ const userStore = useUserStore()
 const loginFormRef = ref()
 
 const loginForm = reactive({
-  username: 'user' ,
+  username: 'user',
   userpwd: 'password123',
 })
 
@@ -97,19 +97,31 @@ const rules = reactive({
 })
 
 const submitForm = async (formEl) => {
+  loading.value = true
   console.log(formEl)
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      loading.value = true
       const res = await userStore.Login(loginForm)
       if (!res) {
-        ElMessage.error('登入失败')
+        ElNotification(
+            {
+              title: "系统提示",
+              type: "error",
+              message: "账号或密码错误"
+            }
+        )
         loading.value = false
       } else {
-        ElMessage.success('登录成功')
-        loading.value = false
+        ElNotification(
+            {
+              title: "系统提示",
+              type: "success",
+              message: "登陆成功"
+            }
+        )
         await router.push('/dashboard/home')
+        loading.value = false
       }
     } else {
       console.log('error submit!', fields)

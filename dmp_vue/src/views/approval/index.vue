@@ -4,7 +4,7 @@
     <div class="filters">
       <el-input
           v-model="searchQuery"
-          placeholder="搜索设备名称或计划名称(admin)"
+          placeholder="搜索设备名称或计划名称"
           clearable
           class="search-input"
       />
@@ -69,146 +69,94 @@
       </el-table-column>
 
       <!-- 操作列 -->
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="280">
         <template #default="scope">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <!-- 审批和驳回操作
-            当前页面为admin所拥有
-            1.当前计划的状态处于审批中
-            2.该登陆用户的对于该审批状态为待审批或审批中 -->
-            <div style="display: flex;" v-if="userStore.user.roles.indexOf('R001') !==-1">
-              <el-link
+          <div class="action-column">
+            <!-- 审批和驳回操作 -->
+            <div class="action-buttons" v-if="userStore.user.roles.indexOf('R001') !==-1 || userStore.user.roles.indexOf('R004')!==-1">
+              <el-button
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
                   @click.prevent="handleCommand('approve', scope.row)"
                   type="success"
-                  class="action-link"
+                  size="small"
               >
-                <el-icon>
-                  <CircleCheck/>
-                </el-icon>
+                <el-icon><CircleCheck /></el-icon>
                 通过
-              </el-link>
-              <el-link
+              </el-button>
+              <el-button
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 1 "
                   @click.prevent="handleCommand('reject', scope.row)"
                   type="danger"
-                  class="action-link"
+                  size="small"
               >
-                <el-icon>
-                  <CircleClose/>
-                </el-icon>
+                <el-icon><CircleClose /></el-icon>
                 驳回
-              </el-link>
-              <!--              下一级处理中-->
-              <el-link
+              </el-button>
+              <el-button
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 0 "
                   type="warning"
-                  class="action-link"
+                  size="small"
                   disabled
               >
-                <el-icon>
-                  <CircleCheck/>
-                </el-icon>
-                下一级处理中
-              </el-link>
-              <!-- 已处理，
-               当该登入用户的审核状态不为0即为已处理，同时当前用户已处理那么整个审核计划不可能在为待审核
-               -->
-              <el-link
+                <el-icon><Loading /></el-icon>
+                处理中
+              </el-button>
+              <el-button
                   v-if="scope.row.myStatus !== 0 || (scope.row.planStatus ===3)"
-                  class="action-link"
                   type="info"
+                  size="small"
                   disabled
               >
-                <el-icon style="margin-right: 5px;">
-                  <Finished/>
-                </el-icon>
+                <el-icon><Finished /></el-icon>
                 已处理
-              </el-link>
-
+              </el-button>
             </div>
-            <div style="display: flex;" v-else>
-              <el-link
+            <div class="action-buttons" v-else>
+              <el-button
                   v-if="scope.row.myStatus === 0 && scope.row.planStatus === 0"
                   @click.prevent="handleCommand('approve', scope.row)"
                   type="success"
-                  class="action-link"
+                  size="small"
               >
-                <el-icon>
-                  <CircleCheck/>
-                </el-icon>
+                <el-icon><CircleCheck /></el-icon>
                 通过
-              </el-link>
-              <el-link
+              </el-button>
+              <el-button
                   v-if="scope.row.myStatus === 0 &&scope.row.planStatus === 0"
                   @click.prevent="handleCommand('reject', scope.row)"
                   type="danger"
-                  class="action-link"
+                  size="small"
               >
-                <el-icon>
-                  <CircleClose/>
-                </el-icon>
+                <el-icon><CircleClose /></el-icon>
                 驳回
-              </el-link>
-              <!-- 已处理，
-               当前登陆用户已对该计划做出操作，
-               该用户对该计划的status不为0
-               -->
-              <el-link
+              </el-button>
+              <el-button
                   v-if="scope.row.myStatus !== 0"
-                  class="action-link"
                   type="info"
+                  size="small"
                   disabled
               >
-                <el-icon style="margin-right: 5px;">
-                  <Finished/>
-                </el-icon>
+                <el-icon><Finished /></el-icon>
                 已处理
-              </el-link>
-
+              </el-button>
             </div>
 
-            <el-popover
-                placement="bottom-start"
-                :width="160"
-                trigger="click"
-                popper-class="more-actions-popover"
-            >
-              <div class="more-actions-content">
-                <el-link
-                    @click.prevent="viewDetails(scope.row)"
-                    type="primary"
-                    class="more-action-link"
-                >
-                  <el-icon>
-                    <Document/>
-                  </el-icon>
-                  详情
-                </el-link>
-                <el-link
-                    type="danger"
-                    @click.prevent="confirmDelete(scope.row)"
-                    class="more-action-link"
-                >
-                  <el-icon>
-                    <Delete/>
-                  </el-icon>
-                  删除
-                </el-link>
-              </div>
-
-              <!-- 更多操作按钮 -->
-              <template #reference>
-                <el-link type="primary" class="more-link" style="display: flex; align-items: center;">
-                  <el-icon>
-                    <More/>
-                  </el-icon>
-                  更多
-                </el-link>
+            <el-dropdown>
+              <el-button type="primary" size="small">
+                更多<el-icon class="el-icon--right"><arrow-down /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="viewDetails(scope.row)">
+                    <el-icon><Document /></el-icon>详情
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="confirmDelete(scope.row)">
+                    <el-icon><Delete /></el-icon>删除
+                  </el-dropdown-item>
+                </el-dropdown-menu>
               </template>
-            </el-popover>
+            </el-dropdown>
           </div>
-
         </template>
       </el-table-column>
     </el-table>
@@ -222,7 +170,6 @@
     >
     </ApprovalPassDialog>
 
-    <!--    详情框-->
     <ApprovalDetailDrawer
         :approvalDetailVisible="approvalDetailVisible"
         @close-approval-detail="closeApprovalDetail()"
@@ -231,14 +178,12 @@
     ></ApprovalDetailDrawer>
 
     <!-- 分页控件 -->
-    <div style="margin: 10px 0">
+    <div class="pagination-container">
       <el-pagination
           :background="true"
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
           :page-sizes="[5, 10, 20, 100]"
-          large
-          :disabled="false"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           @size-change="handleSizeChange"
@@ -262,7 +207,7 @@ import {
 } from '@/api/approval/index.js';
 import {useEquipmentInfoStore} from '@/store/module/equipmentInfo.js';
 import ApprovalPassDialog from "@/components/approval/approvalPassDialog.vue";
-import {useUserStore} from "@/store/module/user.js";
+import {useUserStore} from "@/store/module/userStore.js";
 
 const userStore = useUserStore();
 const equipmentStore = useEquipmentInfoStore();
@@ -326,6 +271,7 @@ const approve = async (planId, approvalRemark) => {
   const res = await approvalPass(planId, approvalRemark)
   if (res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.data,
       type: 'success'
     })
@@ -335,10 +281,10 @@ const approve = async (planId, approvalRemark) => {
 
 // 审批驳回
 const reject = async (planId, approvalRemark) => {
-
   const res = await approvalReject(planId, approvalRemark)
   if (res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.data,
       type: 'success'
     })
@@ -438,6 +384,7 @@ const viewDetails = async (row) => {
   const res = await getApprovalDetail(row.planId)
   if (!res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.msg,
       type: 'error'
     })
@@ -465,6 +412,7 @@ const confirmDelete = (row) => {
         const res = await deleteApproval(row.planId)
         if(res.data.flag){
           ElNotification({
+            title:"系统提示",
             message:res.data.data,
             type:"success"
           })
@@ -511,6 +459,7 @@ const loadData = async () => {
 
   if (!res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.msg,
       type: 'error',
     });
@@ -524,6 +473,7 @@ const loadData = async () => {
 onMounted(async () => {
   await equipmentStore.getEquipmentInfoList();
   await equipmentStore.getEquipmentMaintenanceTypeList();
+  await  equipmentStore.getWorkerInfo();
 
   equipNameFilter.value = equipmentStore.equipmentInfo.map((equipment) => ({
     text: equipment.equipName,
@@ -540,25 +490,22 @@ onMounted(async () => {
   await loadData();
 });
 </script>
-
 <style scoped>
 .container {
-  padding: 40px 20px 20px 20px;
-  background-color: #ffffff;
+  padding: 20px;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 .filters {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.search-input {
-  width: 250px;
-}
-
+.search-input,
 .date-picker {
   width: 250px;
 }
@@ -567,26 +514,114 @@ onMounted(async () => {
   margin-bottom: 20px;
 }
 
-.action-link {
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.more-link {
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
+.action-column {
   display: flex;
-  justify-content: flex-end; /* 确保更多按钮在最右边 */
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
 }
 
-.action-link:hover {
-  background-color: #f0f0f0;
+.action-buttons {
+  display: flex;
+  gap: 10px;
 }
 
-.more-action-link {
-  margin: 5px 20px 5px 5px;
+:deep(.el-button--small) {
+  padding: 8px 18px;
+  font-size: 12px;
+  width: 65px; /* 固定按钮宽度，确保大小一致 */
+  border-radius: 20px;
+  margin-left: 5px;
+  transition: all 0.3s ease;
+}
 
+:deep(.el-button--small:hover) {
+  background-color: #e6f7ff;
+  color: #409eff;
+}
+
+:deep(.el-button--success) {
+  background-color: #52c41a;
+  color: #fff;
+}
+
+:deep(.el-button--danger) {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+:deep(.el-button--warning) {
+  background-color: #f5a913;
+  color: #fff;
+}
+
+:deep(.el-button--info) {
+  background-color: #8c8c8c;
+  color: #fff;
+}
+
+:deep(.el-dropdown-menu__item) {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 13px;
+  transition: background 0.3s;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+  background-color: #f5f5f5;
+}
+
+:deep(.el-dropdown-menu__item .el-icon) {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+:deep(.el-dropdown__caret) {
+  font-size: 10px;
+}
+
+.el-dropdown .el-button {
+  border-radius: 20px;
+  padding: 8px 12px;
+}
+
+:deep(.el-button[type="primary"]) {
+  background-color: #1890ff;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+:deep(.el-button[type="primary"]:hover) {
+  background-color: #40a9ff;
+}
+
+/*表格*/
+:deep(.el-table) {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:deep(.el-table th) {
+  background-color: #f5f7fa;
+}
+/*tag标签*/
+:deep(.el-tag) {
+  border-radius: 4px;
+}
+
+/*分页*/
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+:deep(.el-pagination) {
+  justify-content: flex-end;
 }
 </style>
+
+

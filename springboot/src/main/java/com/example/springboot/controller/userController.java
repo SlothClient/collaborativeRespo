@@ -41,8 +41,8 @@ public class userController {
     @ResponseBody
     @PostMapping("/user/login")
     public Result<String> login(@RequestBody UserInfo userInfo) {
-        String res = userInfoService.login(userInfo);
-        return Result.success(res);
+        return  userInfoService.login(userInfo);
+
     }
 
     /**

@@ -5,6 +5,7 @@
       v-model="messageDialogVisible"
       title="消息通知"
       width="900"
+      style="overflow: hidden"
       center>
     <div class="notification-container">
       <NotificationTabs/>
@@ -34,19 +35,13 @@ const closeDialog = () => {
   messageDialogVisible.value = false
   emits('closeDialog')
 }
-
 watch(() => props.messageDialogVisible, newVal => messageDialogVisible.value = newVal)
-
 const messageDialogVisible = ref(props.messageDialogVisible)
-
-
-
 
 </script>
 
 
 <style scoped>
-
 .notification-container {
   display: flex;
   height: 500px;

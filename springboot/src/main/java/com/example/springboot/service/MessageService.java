@@ -3,7 +3,9 @@ package com.example.springboot.service;
 import com.example.springboot.response.ChatHistory;
 import com.example.springboot.utils.Result;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ys
@@ -11,4 +13,8 @@ import java.util.List;
  */
 public interface MessageService {
     Result<List<ChatHistory>> getChatHistory();
+
+    Result<Void> markAsRead(String otherUserId);
+
+    Result<Void> notifySuperior(String message,String roleName) throws ParseException;
 }

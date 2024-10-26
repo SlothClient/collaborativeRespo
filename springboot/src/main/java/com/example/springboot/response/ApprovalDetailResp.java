@@ -37,4 +37,14 @@ public class ApprovalDetailResp {
      */
     private String equipName;
 
+    /**
+     * 设备id
+     */
+    private String equipmentId;
+
+    /**
+     * 设备图片
+     */
+    private String equipmentPic;
+
 }

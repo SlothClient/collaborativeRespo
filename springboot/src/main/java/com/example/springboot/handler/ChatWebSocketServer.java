@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @ServerEndpoint(value = "/chat/{userId}")
 @Component
-public class WebSocketServer {
+public class ChatWebSocketServer {
 
     public static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
 
@@ -30,10 +30,8 @@ public class WebSocketServer {
 
     @Autowired
     public void setChatRecordMapper(ChatRecordMapper chatRecordMapper) {
-        this.chatRecordMapper = chatRecordMapper;
+        ChatWebSocketServer.chatRecordMapper = chatRecordMapper;
     }
-
-
 
     // 当用户建立连接时触发
     @OnOpen
@@ -110,7 +108,7 @@ public class WebSocketServer {
         return sdf.parse(timeStr);
     }
 
-    // MySQL 存储聊天记录
+    // 存储聊天记录
     private void insertChatData(JSONObject chatData, String chatId) throws ParseException {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setChatId(chatId);
@@ -127,5 +125,41 @@ public class WebSocketServer {
         } else {
             log.error("存储聊天记录失败, chatId={}", chatId);
         }
+    }
+
+    public static void sendToUser(String toUserId, String message) throws ParseException {
+        Session toSession = sessionMap.get(toUserId); // 从 sessionMap 获取目标用户的 Session
+
+        // 检查用户是否在线
+        if (toSession != null && toSession.isOpen()) {
+            try {
+                // 封装发送的数据
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.set("from", "U005");
+                jsonObject.set("to", toUserId);
+                jsonObject.set("text", message);
+                // 设置日期格式
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                // 获取当前日期并格式化
+                String formattedDate = sdf.format(new Date());
+                jsonObject.set("time", formattedDate);
+                System.out.println(jsonObject.get("time"));
+                toSession.getBasicRemote().sendText(jsonObject.toString()); // 发送消息
+                log.info("消息发送成功：发送给用户【{}】的消息：{}", toUserId, message);
+            } catch (Exception e) {
+                log.error("消息发送失败，用户【{}】，消息：{}", toUserId, message, e);
+            }
+        } else {
+            log.warn("用户【{}】不在线，消息发送失败", toUserId);
+        }
+
+        ChatRecord chatRecord = new ChatRecord();
+//        chatRecord.setChatId(chatId);
+        chatRecord.setSender("U005");
+        chatRecord.setReceiver(toUserId);
+        chatRecord.setText(message);
+        chatRecord.setTime(new Date());
+
+        chatRecordMapper.insert(chatRecord);
     }
 }
