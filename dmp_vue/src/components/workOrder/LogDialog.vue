@@ -122,7 +122,7 @@ watch(
 const word_log = ref(props.selectedOrder.word_log);
 
 const submitLog = async () => {
-    if(receivedData.value.orderStatus === "已完成"){
+    if (receivedData.value.orderStatus === "已完成") {
         ElMessage.error('该工单已完成，无法提交日志');
         return;
     }
@@ -131,7 +131,7 @@ const submitLog = async () => {
     formData.append('workerId', receivedData.value.workerId);
     formData.append('wordLog', word_log.value);
     formData.append('fileLog', addFileBtn.value?.files[0]);
-    
+
 
     try {
         const response = await axios.post('/api/upload-log', formData, {
@@ -149,7 +149,19 @@ const submitLog = async () => {
 
 // 提交确认
 const handleSubmit = (done: () => void) => {
-    ElMessageBox.confirm('请确认提交', '提示')
+    // 显示确认信息的弹窗
+    const wordLog = word_log.value; // 获取文字记录
+    const fileName = addFileBtn.value?.files[0]?.name || '无文件记录'; // 获取文件名，若无文件则显示 '无文件记录'
+
+    // 生成确认信息
+    const message = `<h4 style="margin:0">请确认信息</h4><p>文字记录：<span style="color:skyblue">${wordLog}</span></p><p>文件记录：<span style="color:skyblue">${fileName}</span></p>`;
+
+    // 调用确认对话框
+    ElMessageBox.confirm(message,
+        '提交日志',
+        {
+            dangerouslyUseHTMLString: true // 允许使用 HTML 字符串
+        })
         .then(async () => {
             await submitLog();
             // 提交后重新拉取工作日志

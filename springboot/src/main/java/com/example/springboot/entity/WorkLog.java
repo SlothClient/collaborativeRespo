@@ -23,6 +23,7 @@ public class WorkLog implements Serializable {
     private Date logDate;
     
     private String logAttachment;
+    private String attachmentName;
 
 
     public String getLogId() {
@@ -73,12 +74,21 @@ public class WorkLog implements Serializable {
         this.logAttachment = logAttachment;
     }
 
-    public WorkLog(String logId, String orderId, String workerId, String logContent, String logAttachment) {
+    public String getAttachmentName() {
+        return attachmentName;
+    }
+
+    public void setAttachmentName(String attachmentName) {
+        this.attachmentName = attachmentName;
+    }
+
+    public WorkLog(String logId, String orderId, String workerId, String logContent, String logAttachment, String attachmentName) {
         this.logId = logId;
         this.orderId = orderId;
         this.workerId = workerId;
         this.logContent = logContent;
         this.logAttachment = logAttachment;
+        this.attachmentName = attachmentName;
     }
 
     public WorkLog() {

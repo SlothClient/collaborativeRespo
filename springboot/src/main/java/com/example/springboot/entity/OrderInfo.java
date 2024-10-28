@@ -62,6 +62,7 @@ public class OrderInfo implements Serializable {
     private String planName;
     private String planTime;
     private String workerName;
+    private String orderStatus;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -88,6 +89,7 @@ public class OrderInfo implements Serializable {
                 && (this.getPlanName() == null ? other.getPlanName() == null : this.getPlanName().equals(other.getPlanName()))
                 && (this.getPlanTime() == null ? other.getPlanTime() == null : this.getPlanTime().equals(other.getPlanTime()))
                 && (this.getWorkerName() == null ? other.getWorkerName() == null : this.getWorkerName().equals(other.getWorkerName()))
+                && (this.getOrderStatus() == null ? other.getOrderStatus() == null : this.getOrderStatus().equals(other.getOrderStatus()))
                 && (this.getOrderRecord() == null ? other.getOrderRecord() == null : this.getOrderRecord().equals(other.getOrderRecord()));
     }
 
@@ -105,6 +107,7 @@ public class OrderInfo implements Serializable {
         result = prime * result + ((getWorkerId() == null) ? 0 : getWorkerId().hashCode());
         result = prime * result + ((getWorkerName() == null) ? 0 : getWorkerName().hashCode());
         result = prime * result + ((getOrderDesc() == null) ? 0 : getOrderDesc().hashCode());
+        result = prime * result + ((getOrderStatus() == null) ? 0 : getOrderStatus().hashCode());
         result = prime * result + ((getOrderRecord() == null) ? 0 : getOrderRecord().hashCode());
         return result;
     }
@@ -126,6 +129,7 @@ public class OrderInfo implements Serializable {
         sb.append(", workerName=").append(workerName);
         sb.append(", orderDesc=").append(orderDesc);
         sb.append(", orderRecord=").append(orderRecord);
+        sb.append(", orderStatus=").append(orderStatus);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

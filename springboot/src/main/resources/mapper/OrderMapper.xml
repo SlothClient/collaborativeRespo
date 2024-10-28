@@ -51,10 +51,10 @@
         WHERE order_id = #{orderId}
     </update>
 
-    <!-- 结单：添加结束时间 -->
+    <!-- 结单：添加结束时间，更新工单状态 -->
     <update id="submitOrder" parameterType="com.example.springboot.utils.Condition">
         UPDATE order_info
-        SET end_time = #{endTime}
+        SET end_time = #{endTime},order_status = "已完成"
         WHERE order_id = #{orderId}
     </update>
 
