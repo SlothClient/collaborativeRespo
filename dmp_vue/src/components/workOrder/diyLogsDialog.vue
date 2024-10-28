@@ -25,10 +25,10 @@
                             <!-- 编辑模式下原文件保留，清除后才显示选择框 -->
                             <a v-if="log.logAttachment && !log.ifSelect" :href="log.logAttachment" target="_blank"
                                 class="attachmentLot">
-                                <img :src="getFileIcon(log.logAttachment)" alt="file icon"
+                                <img :src="getFileIcon(log.attachmentName)" alt="file icon"
                                     style="width: 40px; height: 40px;" />
                                 <span style="margin-left: 10px; font-size: 16px;">
-                                    {{ getFileName(log.logAttachment) }}
+                                    {{ getFileName(log.attachmentName) }}
                                 </span>
                             </a>
                             <span v-else-if="!log.logAttachment && !log.isEditing">暂无文件</span>
@@ -221,7 +221,7 @@ const handleFileChange = (event, log) => {
         file.value = selectedFile;
         // 更新日志的文件信息
         log.logAttachment = URL.createObjectURL(selectedFile); // 创建文件路径
-        log.fileName = selectedFile.name; // 更新文件名
+        log.attachmentName = selectedFile.name; // 更新文件名
         log.ifSelect = false;  // 隐藏选择框
     }
 };
