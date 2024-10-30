@@ -185,6 +185,7 @@ const closeDialog = () => {
 const confirmEdit = () => {
   if (!Array.isArray(planDate.value) || planDate.value.length < 2 || !planDate.value[0] || !planDate.value[1]) {
     ElNotification({
+      title:"系统提示",
       message: '开始或结束日期不能为空',
       type: 'error',
     });
@@ -199,6 +200,7 @@ const confirmEdit = () => {
 
   if (hasEmptyField) {
     ElNotification({
+      title:"系统提示",
       message: '不能存在空值，请重试',
       type: 'error',
     });

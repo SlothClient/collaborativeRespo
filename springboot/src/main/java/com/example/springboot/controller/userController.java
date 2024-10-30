@@ -10,12 +10,21 @@ import com.example.springboot.response.UserInfoResp;
 import com.example.springboot.service.UserInfoService;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,10 +41,8 @@ public class userController {
     @ResponseBody
     @PostMapping("/user/login")
     public Result<String> login(@RequestBody UserInfo userInfo) {
-        System.out.println(userInfo);
-        String res = userInfoService.login(userInfo);
-        System.out.println(StpUtil.getRoleList());
-        return Result.success(res);
+        return  userInfoService.login(userInfo);
+
     }
 
     /**
@@ -45,7 +52,6 @@ public class userController {
     @GetMapping("/user/getUserInfo")
     @ResponseBody
     public Result<UserInfoResp> getUserInfo() {
-        System.out.println("获取用户信息");
         return Result.success(userInfoService.getUserInfo());
     }
 
@@ -70,15 +76,17 @@ public class userController {
 
     @ResponseBody
     @PostMapping("/getUserInfoList")
-    public Result<IPage<UserInfoResp>> getUserInfoList(@RequestBody(required = false)UserReq userReq) {
+    public Result<IPage<UserInfoResp>> getUserInfoList(@RequestBody(required = false) UserReq userReq) {
         return userInfoService.getUserInfoList(userReq);
     }
+
     @ResponseBody
     @PostMapping("/updateUserInfo")
-    public Result updateUserInfoList(@RequestBody UserReq user) {
+    public Result<String> updateUserInfoList(@RequestBody UserReq user) {
         System.out.println(user);
         return userInfoService.updateUserInfoList(user);
     }
+
     @ResponseBody
     @PostMapping("/addUserInfoList")
     public Result<String> addUserInfoList(@RequestBody UserReq user) {
@@ -93,4 +101,10 @@ public class userController {
         return userInfoService.deleteUserInfo(user);
     }
 
+
+    @ResponseBody
+    @PostMapping("/updateAvatar")
+    public Result<String> updateAvatar(@RequestParam("avatar") MultipartFile file) {
+        return userInfoService.updateAvatar(file);
+    }
 }

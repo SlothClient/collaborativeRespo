@@ -89,7 +89,23 @@ public class Condition {
         return limit;
     }
 
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "offset=" + offset +
+                ", limit=" + limit +
+                ", orderId='" + orderId + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", equipId='" + equipId + '\'' +
+                ", planId='" + planId + '\'' +
+                ", orderRecord='" + orderRecord + '\'' +
+                ", workerId='" + workerId + '\'' +
+                '}';
+    }
+
     public void setLimit(int limit) {
+
         this.limit = limit;
     }
 }

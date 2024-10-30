@@ -6,18 +6,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.entity.*;
+import com.example.springboot.handler.ChatWebSocketServer;
 import com.example.springboot.mapper.*;
 import com.example.springboot.request.MaintenancePlanReq;
 import com.example.springboot.response.MaintenanceInfo;
 import com.example.springboot.response.PlanDetailResp;
 import com.example.springboot.service.MaintanceInfoService;
+import com.example.springboot.service.MessageService;
 import com.example.springboot.utils.Result;
+import org.apache.ibatis.javassist.tools.web.Webserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.example.springboot.entity.EquipInfo;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -47,6 +51,9 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
     @Autowired
     private EquipInfoMapper equipInfoMapper;
+
+    @Autowired
+    private MessageService messageService;
 
 
     @Override
@@ -117,6 +124,14 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
                 .build();
         approvalInfoMapper.insert(approvalInfoFirst);
 
+        //发起成功,通知第一级
+        try {
+            messageService.notifySuperior("用户"+userInfo.getUsername()+"发起了保养计划申请："+maintenanceInfo.getPlanName()+",请您及时处理","Manager");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+
         ApprovalInfo approvalInfoSecond = ApprovalInfo
                 .builder()
                 .planId(maintanceInfoDetail.getPlanId())
@@ -146,7 +161,6 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
             return Result.success("该保养计划已成功撤销");
         } catch (Exception e) {
             System.err.println("Error undoing maintenance plan: " + e.getMessage());
-            e.printStackTrace();
             return Result.fail("撤销失败，请联系管理员处理");
         }
     }
@@ -160,8 +174,6 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
         if (maintanceInfoDetail == null) {
             return Result.fail("该计划详情为空，请联系管理员检查");
         }
-
-
         List<ApprovalInfo> approvalInfoList = approvalInfoMapper.selectList(
                 new LambdaQueryWrapper<ApprovalInfo>()
                         .eq(ApprovalInfo::getPlanId, planId)

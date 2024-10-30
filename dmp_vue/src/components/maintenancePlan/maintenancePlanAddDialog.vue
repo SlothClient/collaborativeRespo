@@ -79,7 +79,7 @@
               <el-date-picker
                   v-model="planDate[0]"
                   type="datetime"
-                  start-placeholder="开始时间"
+                  placeholder="开始时间"
                   class="form-date-picker"
                   format="YYYY/MM/DD HH:mm:ss"
                   value-format="YYYY/MM/DD HH:mm:ss"
@@ -92,7 +92,7 @@
               <el-date-picker
                   v-model="planDate[1]"
                   type="datetime"
-                  end-placeholder="结束时间"
+                  placeholder="结束时间"
                   class="form-date-picker"
                   format="YYYY/MM/DD HH:mm:ss"
                   value-format="YYYY/MM/DD HH:mm:ss"
@@ -196,6 +196,7 @@ const confirm = () => {
   });
   if (isEmpty) {
     ElNotification({
+      title:"系统提示",
       message: "不能存在空值,请重试",
       type: 'error'
     });

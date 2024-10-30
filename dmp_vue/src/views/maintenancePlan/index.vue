@@ -47,7 +47,7 @@
     </el-row>
 
     <!-- 数据展示-->
-    <el-table :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
+    <el-table  :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
       <el-table-column type="selection" width="28" :selectable="selectable"></el-table-column>
 
       <el-table-column label="保养计划信息">
@@ -193,8 +193,10 @@ import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
 import AdvancedSearchDialog from "@/components/maintenancePlan/advancedSearchDialog.vue";
 import DispatchOrder from "@/components/maintenancePlan/dispatchOrder.vue";
+import {notifySuperior} from "@/api/websocket/index.js";
 
 const tableRef = ref(null)
+
 
 //禁用多选框
 const selectable = (row, index) => {
@@ -218,13 +220,11 @@ const handleItemChange = (selection) => {
 //移除相关计划
 const removeSelectedPlan = (index, planId) => {
   const removedPlan = data.value.find(item => item.planId === planId);  // 找到要删除的计划
-
   // 找到 selectedPlan 中对应的项并删除
   const planIndex = selectedPlan.value.findIndex(plan => plan.planId === removedPlan.planId);
   if (planIndex !== -1) {
     selectedPlan.value.splice(planIndex, 1);  // 同步移除
   }
-
   // 取消表格中该行的选中状态
   if (tableRef.value) {
     const row = data.value.find(item => item.planId === removedPlan.planId);
@@ -236,10 +236,10 @@ const removeSelectedPlan = (index, planId) => {
 
 //派单
 const addOrder = async (param) => {
-  console.log('父组件添加', param)
   const res = await addWorkOrder(param)
   if (res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.data,
       type: "success"
     })
@@ -339,12 +339,14 @@ const handleDelete = (plan) => {
 
         if (res.data.flag) {
           ElNotification({
+            title:"系统提示",
             message: res.data.data,
             type: "success"
           })
           await getMaintenance(maintenancePlanReq.value);
         } else {
           ElNotification({
+            title:"系统提示",
             message: res.data.data,
             type: "error"
           })
@@ -371,6 +373,7 @@ const openDetailDialog = async (planId) => {
   const res = await getPlanDetail(planId)
   if (!res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.data,
       type: "error"
     })
@@ -393,14 +396,17 @@ const addMaintenancePlan = async (Plan) => {
   const res = await addPlan(Plan);
   if (!res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.msg,
       type: "error"
     })
   } else {
     ElNotification({
       message: res.data.data,
+      title:"系统提示",
       type: "success"
     })
+    // await notifySuperior("新的保养计划已经添加，请您及时处理","Manager")
     await getMaintenance(maintenancePlanReq.value);
   }
 
@@ -431,11 +437,13 @@ const editMaintenancePlan = async (val) => {
   const res = await updateMaintenance(editPlan)
   if (!res.data.flag) {
     ElNotification({
+      title:"系统提示",
       message: res.data.msg,
       type: "error"
     })
   } else {
     ElNotification({
+      title:"系统提示",
       message: res.data.data,
       type: "success"
     })
@@ -490,7 +498,6 @@ const searchPlans = () => {
     maintenancePlanReq.value.status = checkboxGroup1.value;
   }
   getMaintenance(maintenancePlanReq.value);
-  currentPage.value = 1
 };
 
 //重置
@@ -522,10 +529,11 @@ const resetFilters = () => {
  */
 const getMaintenance = async (maintenancePlanReq) => {
   const res = await getMaintenancePlan(maintenancePlanReq);
-  console.log(res)
   if (res.data.flag) {
     data.value = res.data.data.records;
     total.value = res.data.data.total
+    currentPage.value = res.data.data.current
+    pageSize.value = res.data.data.size
   }
 
 };
@@ -536,6 +544,8 @@ const equipmentInfo = ref([])
 const equipmentMaintenanceType = ref([])
 
 const equipmentStore = useEquipmentInfoStore()
+
+
 // 初始数据加载
 onMounted(async () => {
   await getMaintenance(maintenancePlanReq.value);

@@ -98,6 +98,11 @@
                 <el-date-picker v-model="maintenancePlanDetail.updateTime" type="datetime" clearable/>
               </el-form-item>
             </el-col>
+<!--            <el-col :span="12">-->
+<!--              <el-form-item label="更新备注">-->
+<!--                <el-input v-model="maintenancePlanDetail.remark" clearable/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
           </el-row>
         </el-form>
       </div>

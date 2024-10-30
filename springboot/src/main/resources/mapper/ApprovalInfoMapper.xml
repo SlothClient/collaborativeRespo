@@ -38,7 +38,7 @@
         equip_info e ON m.equip_id = e.equip_id
         LEFT JOIN
         approval_info ai ON m.plan_id = ai.plan_id AND ai.step_order = 0
-        <where>
+        where a.is_deleted = 0
             <if test="filters.equipId != null and filters.equipId.size() > 0">
                 AND m.equip_id IN
                 <foreach item="item" index="index" collection="filters.equipId" open="(" separator="," close=")">
@@ -72,7 +72,6 @@
                 OR m.plan_name LIKE CONCAT('%', #{filters.searchQuery}, '%')
                 )
             </if>
-        </where>
         ORDER BY ai.manip_time DESC
     </select>
 
@@ -92,6 +91,8 @@
         <result column="endTime" property="endTime"/>
         <result column="planStatus" property="planStatus"/>
         <result column="equipName" property="equipName"/>
+        <result column="equipmentId" property="equipmentId"/>
+        <result column="equipmentPic" property="equipmentPic"/>
 
         <!-- 嵌套集合，放在 result 之后 -->
         <collection property="approvalInfoList" ofType="com.example.springboot.response.ApprovalNode" resultMap="ApprovalNodeResultMap"/>
@@ -107,7 +108,9 @@
                maintance_info.start_time     AS startTime,
                maintance_info.end_time       AS endTime,
                maintance_info.`status`       AS planStatus,
-               equip_info.equip_name         AS equipName
+               equip_info.equip_name         AS equipName,
+               equip_info.equip_id           AS equipmentId,
+               equip_info.equip_pic          AS equipmentPic
         FROM approval_info
                  INNER JOIN
              maintance_info

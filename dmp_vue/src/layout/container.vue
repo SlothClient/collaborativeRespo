@@ -32,7 +32,7 @@ const isCollapse = ref(true);
 
 </script>
 
-<style  scoped>
+<style scoped>
 .common-layout {
   padding: 0;
   margin: 0;
@@ -58,9 +58,11 @@ const isCollapse = ref(true);
 }
 
 .main-header {
+  height:10%;
+  width: 100%;
   display: flex;
   align-items: center;
-  background-color: #f0f2f5;
+  background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: 0 20px;
   position: relative;

@@ -116,6 +116,7 @@ const confirm = () => {
   // 检查是否有选择工人
   if (!selectedWorker.value) {
     ElNotification({
+      title:"系统提示",
       type: 'error',
       message: '未选择工人',
     });
@@ -126,6 +127,7 @@ const confirm = () => {
   const hasEmptyOrderDesc = tableData.value.some((item) => !item.orderDesc.trim());
   if (hasEmptyOrderDesc) {
     ElNotification({
+      title:"系统提示",
       type: 'error',
       message: '描述不能为空',
     });

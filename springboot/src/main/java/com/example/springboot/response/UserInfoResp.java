@@ -42,4 +42,9 @@ public class UserInfoResp {
      */
 
     private List<String>permissions;
+
+    /**
+     * 头像
+     */
+    private String avatar ;
 }

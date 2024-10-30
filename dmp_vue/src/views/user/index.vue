@@ -88,7 +88,7 @@
 import {ref, onMounted, reactive, computed, watch, toRef, toRaw} from 'vue';
 import {getUserInfoList, addUserInfoList, updateUserInfoList, deleteUserInfo} from '@/api/user/index.js';
 import {ElMessage, ElNotification} from 'element-plus';
-import {useUserStore} from '@/store/module/user.js';
+import {useUserStore} from '@/store/module/userStore.js';
 
 // 引入状态管理
 const userStore = useUserStore();

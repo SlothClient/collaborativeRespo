@@ -63,86 +63,86 @@ const getBigNums = async () => {
       }
   }
   catch (err) {
-      ElMessage.error("请求失败！" + err);
+    ElMessage.error("请求失败！" + err);
   }
 };
 
 const getEquipPlans = async () => {
   const response = await axios.post('/api/getEquipPlans');
   try {
-      if (response.data.status) {
-          /**
-           * 将返回的list中的每一个equipId、equipName、planCount做成数组
-           * 如equipIds: [1,2,3], equipNames: ['A','B','C'], planCounts: [10,5,8]
-           */
-          const equipIds = [];
-          const equipNames = [];
-          const planCounts = [];
+    if (response.data.status) {
+      /**
+       * 将返回的list中的每一个equipId、equipName、planCount做成数组
+       * 如equipIds: [1,2,3], equipNames: ['A','B','C'], planCounts: [10,5,8]
+       */
+      const equipIds = [];
+      const equipNames = [];
+      const planCounts = [];
 
-          response.data.list.forEach(item => {
-              equipIds.push(item.equipId);
-              equipNames.push(item.equipName);
-              planCounts.push(item.planCount);
-          });
-          // 将equipIds和equipNames拼接成一个数组["1-A","2-B","3-C"]并赋值
-          equipOption.value.xAxis.data = equipIds.map((id, index) => `${id}-${equipNames[index]}`);
-          equipOption.value.series[0].data = planCounts;
-      }
-      else {
-          ElMessage.error(response.data.msg);
-      }
+      response.data.list.forEach(item => {
+        equipIds.push(item.equipId);
+        equipNames.push(item.equipName);
+        planCounts.push(item.planCount);
+      });
+      // 将equipIds和equipNames拼接成一个数组["1-A","2-B","3-C"]并赋值
+      equipOption.value.xAxis.data = equipIds.map((id, index) => `${id}-${equipNames[index]}`);
+      equipOption.value.series[0].data = planCounts;
+    }
+    else {
+      ElMessage.error(response.data.msg);
+    }
   }
   catch (err) {
-      ElMessage.error("请求失败！" + err);
+    ElMessage.error("请求失败！" + err);
   }
 }
 
 const getPlanTypes = async () => {
   const response = await axios.post('/api/getPlanTypes');
   try {
-      if (response.data.status) {
-          // 将返回的list数据转换成图表所需格式
-          const planTypesData = response.data.list.map(item => ({
-              value: item.typeCount,
-              name: item.planType
-          }));
-          // 更新planOption的series数据
-          planOption.value.series[0].data = planTypesData;
+    if (response.data.status) {
+      // 将返回的list数据转换成图表所需格式
+      const planTypesData = response.data.list.map(item => ({
+        value: item.typeCount,
+        name: item.planType
+      }));
+      // 更新planOption的series数据
+      planOption.value.series[0].data = planTypesData;
 
-      } else {
-          ElMessage.error(response.data.msg);
-      }
+    } else {
+      ElMessage.error(response.data.msg);
+    }
   } catch (err) {
-      ElMessage.error("请求失败！" + err);
+    ElMessage.error("请求失败！" + err);
   }
 };
 
 const getWorkerRank = async () => {
   const response = await axios.post('/api/getWorkerRank');
   try {
-      if (response.data.status) {
-          const workerIds = [];
-          const workerNames = [];
-          const workerOrds = [];
-          const workerHours = [];
-          response.data.list.forEach(item => {
-              workerIds.push(item.workerId);
-              workerNames.push(item.workerName);
-              workerOrds.push(item.workerOrds);
-              workerHours.push(item.workerHours);
-          });
-          workerOption.value.xAxis[0].data = workerIds.map((id, index) => `${id}-${workerNames[index]}`);
-          workerOption.value.series[0].data = workerOrds;
-          workerOption.value.series[1].data = workerHours;
-          // console.log("workerIds", workerIds);
-          // console.log("workerNames", workerNames);
-          // console.log("workerOrds", workerOrds);
-          // console.log("workerHours", workerHours);
-      } else {
-          ElMessage.error(response.data.msg);
-      }
+    if (response.data.status) {
+      const workerIds = [];
+      const workerNames = [];
+      const workerOrds = [];
+      const workerHours = [];
+      response.data.list.forEach(item => {
+        workerIds.push(item.workerId);
+        workerNames.push(item.workerName);
+        workerOrds.push(item.workerOrds);
+        workerHours.push(item.workerHours);
+      });
+      workerOption.value.xAxis[0].data = workerIds.map((id, index) => `${id}-${workerNames[index]}`);
+      workerOption.value.series[0].data = workerOrds;
+      workerOption.value.series[1].data = workerHours;
+      // console.log("workerIds", workerIds);
+      // console.log("workerNames", workerNames);
+      // console.log("workerOrds", workerOrds);
+      // console.log("workerHours", workerHours);
+    } else {
+      ElMessage.error(response.data.msg);
+    }
   } catch (err) {
-      ElMessage.error("请求失败！" + err);
+    ElMessage.error("请求失败！" + err);
   }
 }
 
@@ -181,19 +181,19 @@ const getEquipType = async () => {
 
 const planOption = ref({
   title: {
-      text: '计划类型',
-      subtext: '保养/维修',
-      left: 'right',
-      padding: [20, 10, 0, 0]
+    text: '计划类型',
+    subtext: '保养/维修',
+    left: 'right',
+    padding: [20, 10, 0, 0]
 
   },
   tooltip: {
-      trigger: 'item'
+    trigger: 'item'
   },
   legend: {
-      orient: 'vertical',
-      left: 'left',
-      top: 20
+    orient: 'vertical',
+    left: 'left',
+    top: 20
   },
   series: [
       {
@@ -219,81 +219,81 @@ const planOption = ref({
 
 const workerOption = ref({
   title: {
-      text: '工时排名',
-      padding: [20, 0, 10, 10],
-      right: 10
+    text: '工时排名',
+    padding: [20, 0, 10, 10],
+    right: 10
   },
   tooltip: {
-      trigger: 'axis'
+    trigger: 'axis'
   },
   legend: {
-      data: ['单量', '工时'],
-      top: 45,
-      right: 10
+    data: ['单量', '工时'],
+    top: 45,
+    right: 10
   },
   toolbox: {
-      show: true,
-      feature: {
-          dataView: { show: true, readOnly: false },
-          saveAsImage: { show: true }
-      },
-      left: 10,
-      top: 10
+    show: true,
+    feature: {
+      dataView: { show: true, readOnly: false },
+      saveAsImage: { show: true }
+    },
+    left: 10,
+    top: 10
 
 
   },
   calculable: true,
   xAxis: [
-      {
-          name: '工人',
-          nameTextStyle: {
-              align: "left",
-              verticalAlign: "bottom",
-              lineHeight: 40
-          },
-          type: 'category',
-          data: ['张三', '李四', '王五', '赵六']
-      }
+    {
+      name: '工人',
+      nameTextStyle: {
+        align: "left",
+        verticalAlign: "bottom",
+        lineHeight: 40
+      },
+      type: 'category',
+      data: ['张三', '李四', '王五', '赵六']
+    }
   ],
   yAxis: [
-      {
-          name: '工单/工时',
-          type: 'value'
-      }
+    {
+      name: '工单/工时',
+      type: 'value'
+    }
   ],
   series: [
-      {
-          name: '单量',
-          type: 'bar',
-          data: [
-              2.0, 4.9, 7.0, 23.2
-          ],
-          markPoint: {
-              data: [
-                  { type: 'max', name: 'Max' },
-                  { type: 'min', name: 'Min' }
-              ]
-          },
-          markLine: {
-              data: [{ type: 'average', name: 'Avg' }]
-          }
+    {
+      name: '单量',
+      type: 'bar',
+      data: [
+        2.0, 4.9, 7.0, 23.2
+      ],
+      markPoint: {
+        data: [
+          { type: 'max', name: 'Max' },
+          { type: 'min', name: 'Min' }
+        ]
       },
-      {
-          name: '工时',
-          type: 'bar',
-          data: [
-              2.6, 5.9, 9.0, 26.4
-          ],
-          markPoint: {
-              data: [
-                  { type: 'max', name: 'Max' },
-                  { type: 'min', name: 'Min' }
-              ]
-          },
-          markLine: {
-              data: [{ type: 'average', name: 'Avg' }]
-          }
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }]
       }
+    },
+    {
+      name: '工时',
+      type: 'bar',
+      data: [
+        2.6, 5.9, 9.0, 26.4
+      ],
+      markPoint: {
+        data: [
+          { type: 'max', name: 'Max' },
+          { type: 'min', name: 'Min' }
+        ]
+      },
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }]
+      }
+    }
   ],
   grid: {
       top: "18%",
@@ -303,27 +303,27 @@ const workerOption = ref({
 
 const equipOption = ref({
   title: {
-      text: '设备计划数',
-      left: 'center',
-      padding: [20, 0, 0, 0]
+    text: '设备计划数',
+    left: 'center',
+    padding: [20, 0, 0, 0]
   },
   tooltip: {
-      trigger: 'axis'
+    trigger: 'axis'
   },
   xAxis: {
-      name: "设备",
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    name: "设备",
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
   yAxis: {
-      name: "计划数",
-      type: 'value'
+    name: "计划数",
+    type: 'value'
   },
   series: [
-      {
-          data: [150, 230, 224, 218, 135, 147, 260],
-          type: 'line'
-      }
+    {
+      data: [150, 230, 224, 218, 135, 147, 260],
+      type: 'line'
+    }
   ],
   grid: {
       top: "18%",
@@ -408,11 +408,11 @@ const resizeCharts = () => {
 
 onMounted(async () => {
   const observer = new ResizeObserver(() => {
-      resizeCharts();
+    resizeCharts();
   });
 
   if (chartsContainer.value) {
-      observer.observe(chartsContainer.value);
+    observer.observe(chartsContainer.value);
   }
 
   if (radarContainer.value) {
@@ -444,18 +444,29 @@ onBeforeUnmount(() => {
   display: flex;
 }
 
+#upper {
+  display: flex;
+}
+
 #numBlocks {
+  flex: 1;
   flex: 1;
   display: flex;
   justify-content: space-between;
   width: 50%;
   flex-wrap: wrap;
+  width: 50%;
+  flex-wrap: wrap;
 }
 
 .numBlock {
-  background-color: rgb(85, 181, 102);
+  background-color: rgb(73, 153, 232);
   border-radius: 10px;
   box-shadow: 2px 3px 3px 3px #ccc;
+  /* flex: 1; */
+  flex: 1 1 calc(50% - 20px);
+  /* 设置为每行两个，考虑间距 */
+  box-sizing: border-box;
   /* flex: 1; */
   flex: 1 1 calc(50% - 20px);
   /* 设置为每行两个，考虑间距 */
@@ -493,6 +504,7 @@ onBeforeUnmount(() => {
 
 .midiumChart {
   flex: 1;
+  flex: 1;
   background-color: rgba(64, 158, 255, .1);
   margin: 5px;
   box-shadow: 1px 5px 6px 2px #eee;
@@ -500,8 +512,19 @@ onBeforeUnmount(() => {
 
 #planType {
   height: 425px;
+  height: 425px;
 }
 
+/* 新增雷达图 */
+#raderBlock {
+  flex: 1;
+  display: flex;
+  padding: 5px 0;
+}
+
+#radarBlock .midiumChart {
+  flex: 1;
+}
 /* 新增雷达图 */
 #raderBlock {
   flex: 1;

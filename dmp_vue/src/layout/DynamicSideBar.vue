@@ -61,8 +61,8 @@ const handleClose = (key, keyPath) => {
 .sidebar {
   height: 100%;
   background-color: #304156;
-  transition: width 0.3s;
-  width: 200px;
+  transition: width 0.1s;
+  width: 300px;
   overflow-x: hidden;
 
   &.collapsed {
@@ -108,7 +108,7 @@ const handleClose = (key, keyPath) => {
 
 
 .horizontal-collapse-transition {
-  transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+  transition: 0.1s width ease-in-out, 0.1s padding-left ease-in-out, 0.1s padding-right ease-in-out;
 }
 
 @media (max-width: 768px) {
