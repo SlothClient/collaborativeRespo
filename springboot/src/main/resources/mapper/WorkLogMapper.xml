@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.WorkLogMapper">
+    <insert id="insertWorkLog">
+        INSERT INTO work_log (log_id, order_id, worker_id, log_content, log_attachment,attachment_name)
+        VALUES (#{logId}, #{orderId}, #{workerId}, #{logContent}, #{logAttachment}, #{attachmentName})
+    </insert>
+    <select id="findLogsByOrderId" resultType="com.example.springboot.entity.WorkLog">
+        SELECT *
+        FROM work_log
+        WHERE order_id = #{orderId}
+    </select>
+    <select id="findLogById" resultType="com.example.springboot.entity.WorkLog">
+        SELECT * FROM work_log WHERE log_id = #{logId}
+    </select>
+    <update id="updateWorkLog" parameterType="com.example.springboot.entity.WorkLog">
+        UPDATE work_log
+        SET log_content = #{logContent},
+            log_attachment = #{logAttachment},
+            attachment_name = #{attachmentName}
+        WHERE log_id = #{logId}
+    </update>
+    <select id="fileRelated" parameterType="java.lang.String">
+        select count(*) from work_log where log_attachment = #{filePath}
+    </select>
+</mapper>

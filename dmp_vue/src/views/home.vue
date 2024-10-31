@@ -1,41 +1,41 @@
 <template>
   <div id="dynamicOrder">
-    <div id="upper">
-      <div id="numBlocks">
-        <div class="numBlock">
-          <div class="bigNum">{{ bigNums.totalOrder }}</div>
-          <div class="titleDown">工单总数</div>
-        </div>
-        <div class="numBlock">
-          <div class="bigNum">{{ bigNums.toSendOrder }}</div>
-          <div class="titleDown">待派单计划数</div>
-        </div>
-        <div class="numBlock">
-          <div class="bigNum">{{ bigNums.toFinishOrder }}</div>
-          <div class="titleDown">待完成工单数</div>
-        </div>
-        <div class="numBlock">
-          <div class="bigNum">{{ bigNums.finishOrder }}</div>
-          <div class="titleDown">已完成工单数</div>
-        </div>
+      <div id="upper">
+          <div id="numBlocks">
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.totalOrder }}</div>
+                  <div class="titleDown">工单总数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.toSendOrder }}</div>
+                  <div class="titleDown">待派单计划数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.toFinishOrder }}</div>
+                  <div class="titleDown">待完成工单数</div>
+              </div>
+              <div class="numBlock">
+                  <div class="bigNum">{{ bigNums.finishOrder }}</div>
+                  <div class="titleDown">已完成工单数</div>
+              </div>
+          </div>
+          <div ref="radarContainer" id="raderBlock">
+              <div class="midiumChart">
+                  <v-chart ref="equipType" id="equipType" :option="typeOption"></v-chart>
+              </div>
+          </div>
       </div>
-      <div ref="radarContainer" id="raderBlock">
-        <div class="midiumChart">
-          <v-chart ref="equipType" id="equipType" :option="typeOption"></v-chart>
-        </div>
+      <div ref="chartsContainer" id="midiumCharts">
+          <div class="midiumChart">
+              <v-chart ref="equipPlan" id="equipPlan" :option="equipOption"></v-chart>
+          </div>
+          <div class="midiumChart">
+              <v-chart ref="planType" id="planType" :option="planOption"></v-chart>
+          </div>
+          <div class="midiumChart">
+              <v-chart ref="workerRank" id="workerRank" :option="workerOption"></v-chart>
+          </div>
       </div>
-    </div>
-    <div ref="chartsContainer" id="midiumCharts">
-      <div class="midiumChart">
-        <v-chart ref="equipPlan" id="equipPlan" :option="equipOption"></v-chart>
-      </div>
-      <div class="midiumChart">
-        <v-chart ref="planType" id="planType" :option="planOption"></v-chart>
-      </div>
-      <div class="midiumChart">
-        <v-chart ref="workerRank" id="workerRank" :option="workerOption"></v-chart>
-      </div>
-    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -53,14 +53,14 @@ const bigNums = reactive({
 const getBigNums = async () => {
   const response = await axios.post('/api/getBigNums');
   try {
-    if (response.data.status) {
-      Object.assign(bigNums, response.data.list[0]);
-      // console.log("bigNums", bigNums);
-      ElMessage.info("草率的可视化...");
-    }
-    else {
-      ElMessage.error(response.data.msg);
-    }
+      if (response.data.status) {
+          Object.assign(bigNums, response.data.list[0]);
+          // console.log("bigNums", bigNums);
+        //   ElMessage.info("草率的可视化...");
+      }
+      else {
+          ElMessage.error(response.data.msg);
+      }
   }
   catch (err) {
     ElMessage.error("请求失败！" + err);
@@ -152,30 +152,30 @@ const getEquipType = async () => {
   console.log(res);
 
   try {
-    if (res.data.status && Array.isArray(res.data.list)) {
-      equipTypeData.value = res.data.list.map(item => {
-        if (item.typeCount !== undefined && item.equipType !== undefined) {
-          return {
-            value: item.typeCount,
-            name: item.equipType
-          };
-        } else {
-          console.warn('Invalid item in list:', item);
-          return null;
-        }
-      }).filter(item => item !== null); // 过滤掉无效的项
-      const maxVal = Math.max(...equipTypeData.value.map(item => item.value))+1;
-      typeOption.value.radar.indicator = equipTypeData.value.map((item) => ({
-        name: item.name,
-        max: maxVal,
-        color: '#666'
-      }));
-      typeOption.value.series[0].data[0] = equipTypeData.value.map((item) => item.value);
-    } else {
-      ElMessage.error(res.data.msg || 'Invalid response data');
-    }
+      if (res.data.status && Array.isArray(res.data.list)) {
+          equipTypeData.value = res.data.list.map(item => {
+              if (item.typeCount !== undefined && item.equipType !== undefined) {
+                  return {
+                      value: item.typeCount,
+                      name: item.equipType
+                  };
+              } else {
+                  console.warn('Invalid item in list:', item);
+                  return null;
+              }
+          }).filter(item => item !== null); // 过滤掉无效的项
+          const maxVal = Math.max(...equipTypeData.value.map(item => item.value))+1;
+          typeOption.value.radar.indicator = equipTypeData.value.map((item) => ({
+              name: item.name,
+              max: maxVal,
+              color: '#666'
+          }));
+          typeOption.value.series[0].data[0] = equipTypeData.value.map((item) => item.value);
+      } else {
+          ElMessage.error(res.data.msg || 'Invalid response data');
+      }
   } catch (err) {
-    ElMessage.error("请求失败！" + err);
+      ElMessage.error("请求失败！" + err);
   }
 };
 
@@ -196,24 +196,24 @@ const planOption = ref({
     top: 20
   },
   series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: '40%',
-      data: [
-        { value: 1048, name: '大修' },
-        { value: 735, name: '中修' },
-        { value: 580, name: '小修' }
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      },
-      bottom: -190
-    }
+      {
+          name: 'Access From',
+          type: 'pie',
+          radius: '40%',
+          data: [
+              { value: 1048, name: '大修' },
+              { value: 735, name: '中修' },
+              { value: 580, name: '小修' }
+          ],
+          emphasis: {
+              itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+          },
+          bottom: -190
+      }
   ]
 })
 
@@ -296,8 +296,8 @@ const workerOption = ref({
     }
   ],
   grid: {
-    top: "18%",
-    bottom: "8%"
+      top: "18%",
+      bottom: "8%"
   }
 })
 
@@ -326,68 +326,68 @@ const equipOption = ref({
     }
   ],
   grid: {
-    top: "18%",
-    bottom: "8%"
+      top: "18%",
+      bottom: "8%"
   }
 })
 
 const typeOption = ref({
   title: {
-    text: '设备类型',
-    left: 'right',
-    padding: [20, 10, 0, 0]
+      text: '设备类型',
+      left: 'right',
+      padding: [20, 10, 0, 0]
   },
   tooltip: {
-    trigger: 'item'
+      trigger: 'item'
   },
   radar: {
-    // shape: 'circle',
-    indicator: [
-      { name: '木', max: 7000  },
-      { name: '火', max: 16000 },
-      { name: '土', max: 30000 },
-      { name: '金', max: 38000 },
-      { name: '水', max: 52000 },
-      { name: '天', max: 25000 }
-    ],
-    darkMode: true,
-    center: ['50%', '55%'],
+      // shape: 'circle',
+      indicator: [
+          { name: '木', max: 6500 },
+          { name: '火', max: 16000 },
+          { name: '土', max: 30000 },
+          { name: '金', max: 38000 },
+          { name: '水', max: 52000 },
+          { name: '天', max: 25000 }
+      ],
+      darkMode: true,
+      center: ['50%', '55%'],
   },
   series: [
-    {
-      name: '设备类型',
-      type: 'radar',
-      symbol: 'circle',
-      symbolSize: 8,
-      itemStyle: {
-        color: '#4999e8'
-      },
-      areaStyle: {
-        color: '#4999e8',
-        opacity: 0.3
-      },
-      lineStyle: {
-        width: 2,
-        color: '#4999e8'
-      },
-      label: {
-        show: true,
-        position: 'top',
-        distance: 3,
-        color: '#4999e8',
-        fontWeight: '900',
-        fontSize: 14,
-        fontFamily: '苹方'
+      {
+          name: '设备类型',
+          type: 'radar',
+          symbol: 'circle',
+          symbolSize: 8,
+          itemStyle: {
+              color: '#55b566'
+          },
+          areaStyle: {
+              color: '#55b566',
+              opacity: 0.3
+          },
+          lineStyle: {
+              width: 2,
+              color: '#55b566'
+          },
+          label: {
+              show: true,
+              position: 'top',
+              distance: 3,
+              color: '#55b566',
+              fontWeight: '900',
+              fontSize: 14,
+              fontFamily: '苹方'
 
 
-      },
-      data: [
-        {
-          value: [4200, 3000, 20000, 35000, 50000, 18000],
-          name: '设备类型'
-        }
-      ]
-    }
+          },
+          data: [
+              {
+                  value: [4200, 3000, 20000, 35000, 50000, 18000],
+                  name: '设备类型'
+              }
+          ]
+      }
   ]
 })
 
@@ -416,7 +416,7 @@ onMounted(async () => {
   }
 
   if (radarContainer.value) {
-    observer.observe(radarContainer.value)
+      observer.observe(radarContainer.value)
   };
 
   resizeCharts(); // 初始化时调用一次 resize
@@ -444,10 +444,17 @@ onBeforeUnmount(() => {
   display: flex;
 }
 
+#upper {
+  display: flex;
+}
+
 #numBlocks {
+  flex: 1;
   flex: 1;
   display: flex;
   justify-content: space-between;
+  width: 50%;
+  flex-wrap: wrap;
   width: 50%;
   flex-wrap: wrap;
 }
@@ -456,6 +463,10 @@ onBeforeUnmount(() => {
   background-color: rgb(73, 153, 232);
   border-radius: 10px;
   box-shadow: 2px 3px 3px 3px #ccc;
+  /* flex: 1; */
+  flex: 1 1 calc(50% - 20px);
+  /* 设置为每行两个，考虑间距 */
+  box-sizing: border-box;
   /* flex: 1; */
   flex: 1 1 calc(50% - 20px);
   /* 设置为每行两个，考虑间距 */
@@ -469,8 +480,8 @@ onBeforeUnmount(() => {
 /* 媒体查询用于小屏幕上的响应式设计 */
 @media (max-width: 768px) {
   .numBlock {
-    flex: 1 1 100%;
-    /* 小屏幕时每个 numBlock 占满一行 */
+      flex: 1 1 100%;
+      /* 小屏幕时每个 numBlock 占满一行 */
   }
 }
 
@@ -493,6 +504,7 @@ onBeforeUnmount(() => {
 
 .midiumChart {
   flex: 1;
+  flex: 1;
   background-color: rgba(64, 158, 255, .1);
   margin: 5px;
   box-shadow: 1px 5px 6px 2px #eee;
@@ -500,8 +512,19 @@ onBeforeUnmount(() => {
 
 #planType {
   height: 425px;
+  height: 425px;
 }
 
+/* 新增雷达图 */
+#raderBlock {
+  flex: 1;
+  display: flex;
+  padding: 5px 0;
+}
+
+#radarBlock .midiumChart {
+  flex: 1;
+}
 /* 新增雷达图 */
 #raderBlock {
   flex: 1;

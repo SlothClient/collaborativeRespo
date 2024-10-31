@@ -25,7 +25,7 @@ export function useEquipInfo(selectedOrder) {
             if (response.data.status) {
                 tableData.value = response.data.list;
                 console.log(tableData);
-                ElMessage.success('获取设备信息成功!');
+                // ElMessage.success('获取设备信息成功!');
             } else {
                 ElMessage.error(response.data.msg);
             }

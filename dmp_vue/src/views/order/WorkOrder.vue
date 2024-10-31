@@ -88,34 +88,41 @@
                                     <arrow-down/>
                                 </el-icon>
                             </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                      @click="handleWorkRecord(scope.$index, scope.row)">工作记录
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="handleSubmit(scope.row)">提交工单</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 分页容器 -->
-      <div id="pagination">
-        <span style="margin-right: 20px;">共<span style="color: #409eff;">{{ totalOrders }}</span>条</span>
-        <!-- 直接使用:报错，无法显示分页器，使用v-model:不报错 -->
-        <el-pagination background layout="prev, pager, next, sizes" @change="fetchOrders(statusFilter)"
-                       v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:total="totalOrders"
-                       :page-sizes="[3, 5, 10]"/>
-      </div>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item @click="pullDrawer(scope.$index, scope.row)">工作记录</el-dropdown-item>
+                                    <el-dropdown-item @click="handleWorkLog(scope.$index, scope.row)">工作日志</el-dropdown-item>
+                                    <el-dropdown-item @click="handleSubmit(scope.row)">提交工单</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 分页容器 -->
+            <div id="pagination">
+                <span style="margin-right: 20px;">共<span style="color: #409eff;">{{ totalOrders }}</span>条</span>
+                <!-- 直接使用:报错，无法显示分页器，使用v-model:不报错 -->
+                <el-pagination background layout="prev, pager, next, sizes" @change="fetchOrders(statusFilter)"
+                    v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:total="totalOrders"
+                    :page-sizes="[3, 5, 10]" />
+            </div>
+        </div>
+        <!-- 详情框组件 -->
+        <detailDialog :dialogVisible="dialogVisible" :selectedOrder="selectedOrder"
+            @update:dialogVisible="dialogVisible = $event" />
+        <!-- 工作记录框组件 -->
+        <recordDialog :recordDialogVisible="recordDialogVisible" :selectedOrder="selectedOrder"
+            @update:recordDialogVisible="recordDialogVisible = $event" />
+        <!-- 工作日志框组件 -->
+        <LogDialog :recordDialogVisible="logDialogVisible" :selectedOrder="selectedOrder"
+            @update:recordDialogVisible="logDialogVisible = $event" />
+        <!-- 工作记录抽屉组件-deprecated -->
+        <LogsDialog :logsDrawerVisible="logsDrawerVisible" :selectedOrder="selectedOrder"
+            @update:logsDrawerVisible="logsDrawerVisible = $event" />
+        <diyLogsDialog :drawerVisible="drawerVisible" :selectedOrder="selectedOrder"
+            @update:drawerVisible="drawerVisible = $event" />
     </div>
-    <!-- 详情框组件 -->
-    <detailDialog :dialogVisible="dialogVisible" :selectedOrder="selectedOrder"
-                  @update:dialogVisible="dialogVisible = $event"/>
-    <!-- 工作记录框组件 -->
-    <recordDialog :recordDialogVisible="recordDialogVisible" :selectedOrder="selectedOrder"
-                  @update:recordDialogVisible="recordDialogVisible = $event"/>
-  </div>
 </template>
 <script setup>
 import {Refresh, Search} from '@element-plus/icons-vue';
@@ -125,10 +132,10 @@ import {ElMessage, ElMessageBox} from 'element-plus'; // 导入 ElMessage
 import detailDialog from '@/components/workOrder/detailDialog.vue'; // 导入详情对话框组件
 import recordDialog from '@/components/workOrder/recordDialog.vue';
 import {useLoadingStore} from "@/store/module/loadingStore.js"; // 导入工作记录对话框组件
-
-
+import LogDialog from '@/components/workOrder/LogDialog.vue'; // 导入工作日志对话框组件
+import LogsDialog from '@/components/workOrder/LogsDialog.vue'; // 导入工作日志对话框组件
+import diyLogsDialog from '@/components/workOrder/diyLogsDialog.vue'; // 导入工作日志对话框组件
 const loading = useLoadingStore();
-
 
 const orderId = ref('');
 const orderSpan = ref([]);
@@ -180,32 +187,32 @@ const fetchOrders = async (status = 'no') => {
           // 修复bug：事先判断
           const endTime = order.endTime ? new Date(order.endTime) : null;
 
-          switch (status) {
-            case 'not_started':
-              return now < startTime;
-            case 'in_progress':
-              // 未结单就是执行中
-              return endTime === null ? (now >= startTime) : (now >= startTime && now < endTime);
-              // return now >= startTime && now <= endTime;
-            case 'completed':
-              // 未结单就是执行中，不返回
-              return endTime === null ? (null) : (now > endTime);
-              // return now > endTime;
-            default:
-              return true; // 工单状态为全部，不筛选
-          }
-        });
-        ElMessage.success("查询筛选成功！");
-      }
-    } else {
-      // 错误处理，但此处不一定为错误导致，可能没有符合筛选条件的数据，除了错误提示之外也要接收数据
-      orderTable.value = response.data.list;
-      totalOrders.value = response.data.totalCount;
-      ElMessage.error(response.data.msg);
+                    switch (status) {
+                        case 'not_started':
+                            return now < startTime;
+                        case 'in_progress':
+                            // 未结单就是执行中
+                            return endTime === null ? (now >= startTime) : (now >= startTime && now < endTime);
+                        // return now >= startTime && now <= endTime;
+                        case 'completed':
+                            // 未结单就是执行中，不返回
+                            return endTime === null ? (null) : (now > endTime);
+                        // return now > endTime;
+                        default:
+                            return true; // 工单状态为全部，不筛选
+                    }
+                });
+                // ElMessage.success("查询筛选成功！");
+            }
+        } else {
+            // 错误处理，但此处不一定为错误导致，可能没有符合筛选条件的数据，除了错误提示之外也要接收数据
+            orderTable.value = response.data.list;
+            totalOrders.value = response.data.totalCount;
+            ElMessage.error(response.data.msg);
+        }
+    } catch (error) {
+        ElMessage.error("获取工单时出错，请稍后再试！");
     }
-  } catch (error) {
-    ElMessage.error("获取工单时出错，请稍后再试！");
-  }
 };
 
 // 页面加载，获取订单
@@ -284,6 +291,22 @@ const handleWorkRecord = (index, row) => {
   // 发送选中数据到详情框组件
   selectedOrder.value = row;
 };
+// -----------------------------------------工作日志框-------------------------------------------
+const logDialogVisible = ref(false);
+/**
+ * 处理工作日志事件
+ * 
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ * */
+const handleWorkLog = (index, row) => {
+    // 打印查看
+    // console.log(index, row);
+    // 打开详情框
+    logDialogVisible.value = true;
+    // 发送选中数据到详情框组件
+    selectedOrder.value = row;
+}
 // -----------------------------------------临时提交工单框-----------------------------------------
 const handleSubmit = (row) => {
   ElMessageBox.confirm('请确认提交', '提示')
@@ -338,6 +361,26 @@ const getOrderStatus = (row) => {
       class: "finishBtn"
     };
   }
+}
+// -----------------------------------------工作记录抽屉组件-----------------------------------------
+const logsDrawerVisible = ref(false);
+/**
+ * 处理工作记录抽屉事件
+ * 
+ * @param {number} index - 当前行的索引
+ * @param {Object} row - 当前行的数据对象
+ */
+const handleLogsDrawer = (index, row) => {
+    // 打印查看
+    // console.log(index, row);
+    logsDrawerVisible.value = true;
+    selectedOrder.value = row;
+};
+
+const drawerVisible = ref(false);
+const pullDrawer = (index, row) => {
+    drawerVisible.value = true;
+    selectedOrder.value = row;
 }
 </script>
 <style scoped>
