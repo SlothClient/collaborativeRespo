@@ -35,6 +35,9 @@
             <if test="orderId != null and orderId != ''">
                 AND order_id LIKE CONCAT('%', #{orderId}, '%')
             </if>
+            <if test="startTime != null and endTime != null">
+                AND start_time &gt; #{startTime} AND end_time &lt; #{endTime}
+            </if>
         </where>
     </select>
 
