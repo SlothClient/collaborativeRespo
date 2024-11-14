@@ -228,7 +228,7 @@ const handleEditSubmit = (log) => {
 };
 
 // 添加主题相关的响应式变量
-const currentTheme = ref('classic'); // 默认使用经典主题
+const currentTheme = ref('business'); // 默认使用经典主题
 
 // 可以添加主题切换后的处理函数（可选）
 watch(currentTheme, (newTheme) => {
@@ -237,18 +237,18 @@ watch(currentTheme, (newTheme) => {
 });
 
 // 如果需要持久化主题设置，可以添加以下代码
-onMounted(() => {
-  // 从 localStorage 读取上次保存的主题
-  const savedTheme = localStorage.getItem('diyLogsDialogTheme');
-  if (savedTheme) {
-    currentTheme.value = savedTheme;
-  }
-});
+// onMounted(() => {
+//   // 从 localStorage 读取上次保存的主题
+//   const savedTheme = localStorage.getItem('diyLogsDialogTheme');
+//   if (savedTheme) {
+//     currentTheme.value = savedTheme;
+//   }
+// });
 
 // 监听主题变化并保存到 localStorage
-watch(currentTheme, (newTheme) => {
-  localStorage.setItem('diyLogsDialogTheme', newTheme);
-});
+// watch(currentTheme, (newTheme) => {
+//   localStorage.setItem('diyLogsDialogTheme', newTheme);
+// });
 </script>
 
 <style scoped>
@@ -270,6 +270,9 @@ watch(currentTheme, (newTheme) => {
 
 .content-card:hover {
   transform: translate(-1px, -2px);
+}
+.content-card:last-child {
+  margin-bottom: 20px;
 }
 
 .logs {

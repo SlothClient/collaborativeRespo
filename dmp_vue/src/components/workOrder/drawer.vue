@@ -443,7 +443,7 @@ const drawerWidth = computed(() => {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4f46e5, #818cf8);
+    /* background: linear-gradient(90deg, #4f46e5, #818cf8); */
     opacity: 0;
     transition: opacity 0.3s;
 }
