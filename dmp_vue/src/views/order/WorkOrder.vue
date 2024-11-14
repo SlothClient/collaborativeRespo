@@ -316,6 +316,12 @@ const handleSubmit = (row) => {
 }
 
 const submitOrder = async (row) => {
+  // 检查工单是否已完成
+  if (row.orderStatus === '已完成') {
+    ElMessage.warning("该工单已完成,无需重复提交!");
+    return;
+  }
+
   const condition = {
     planId:row.planId,
     orderId: row.orderId,
