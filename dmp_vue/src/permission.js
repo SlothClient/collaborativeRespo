@@ -4,7 +4,7 @@ import { usePermissionStore } from "@/store/module/permissionStore.js";
 import { getToken, removeToken } from "@/utils/token.js";
 import { useLoadingStore } from "@/store/module/loadingStore.js";
 
-const whiteList = ["/login", '/loginTest'];
+const whiteList = ["/login"];
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
