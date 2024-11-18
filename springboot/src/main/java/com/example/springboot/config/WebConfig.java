@@ -11,6 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 映射 /avatars/ 路径到本地的 avatars 文件夹
         registry.addResourceHandler("/avatar/**")
-                .addResourceLocations("file:E:/scientific_research_practice/code/uploadFile/avatar/");
+                .addResourceLocations("file:E:/scientific_research_practice/code/springboot/uploads/avatar/");
     }
 }

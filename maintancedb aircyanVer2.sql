@@ -20,6 +20,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for approval_info
 -- ----------------------------
+create DATABASE maintenance_db;
+use maintenance_db;
 DROP TABLE IF EXISTS `approval_info`;
 CREATE TABLE `approval_info`  (
   `approval_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,

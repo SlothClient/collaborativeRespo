@@ -53,7 +53,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
 
     @Override
-    public Result<String>  login(UserInfo user) {
+    public Result<String> login(UserInfo user) {
         UserInfo userInfo = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
                 .select(UserInfo::getUserId)
                 .eq(UserInfo::getUsername, user.getUsername())
@@ -70,9 +70,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Override
     public UserInfoResp getUserInfo() {
         String userId = (String) StpUtil.getLoginId();
+
         //查询用户信息
-        UserInfo user = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
-                .eq(UserInfo::getUserId, userId));
+        UserInfo user = userInfoMapper.selectOne(
+                new LambdaQueryWrapper<UserInfo>()
+                        .eq(UserInfo::getUserId, userId));
 
         //查询用户角色
         List<String> roles = StpUtil.getRoleList();
@@ -196,7 +198,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
             //删除原有文件
             String userAvatar = userInfo.getAvatarUrl();
-            if (userAvatar != null){
+            if (userAvatar != null) {
                 String oldAvatarPath = userInfo.getAvatarUrl().split("/")[userInfo.getAvatarUrl().split("/").length - 1];
                 if (oldAvatarPath != null && !oldAvatarPath.isEmpty()) {
                     File oldFile = new File(filePath + oldAvatarPath);

@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="baa83cdd-e54e-4baf-b77b-b7be9d5d58e2" name="更改" comment="update(workLog-relevant):using md5 accomplished unique file store the same time saving net traffic">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.zip" afterDir="false" />
@@ -254,6 +255,9 @@
       <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-26_1729918218156_th__1_.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-26_1729925333277_th.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/picture1.jpg" beforeDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/../dmp_vue/src/views/order/WorkOrder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/src/views/order/WorkOrder.vue" afterDir="false" />
+>>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -294,7 +298,10 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+<<<<<<< HEAD
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+=======
+>>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
@@ -304,7 +311,11 @@
     &quot;Spring Boot.SpringbootApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;yes&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+<<<<<<< HEAD
     &quot;last_opened_file_path&quot;: &quot;E:/SequenceDiagram-3.0.7-signed.zip&quot;,
+=======
+    &quot;last_opened_file_path&quot;: &quot;E:/scientific_research_practice/code/springboot&quot;,
+>>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -313,7 +324,11 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+<<<<<<< HEAD
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+=======
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
+>>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>

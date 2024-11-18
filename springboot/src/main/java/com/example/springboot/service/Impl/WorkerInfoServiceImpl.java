@@ -63,11 +63,11 @@ public class WorkerInfoServiceImpl extends ServiceImpl<WorkerInfoMapper, WorkerI
 //                    .checkId(workOrderReq.getCheckId())
                     .build();
             orderInfoMapper.insert(orderInfo);
-            if(workOrderReq.getCheckId()!=null){
-                CheckInfoDetail checkInfoDetail = checkInfoMapper.selectById(workOrderReq.getCheckId());
-                checkInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
-                checkInfoMapper.updateById(checkInfoDetail);
-            }
+//            if(workOrderReq.getCheckId()!=null){
+//                CheckInfoDetail checkInfoDetail = checkInfoMapper.selectById(workOrderReq.getCheckId());
+//                checkInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
+//                checkInfoMapper.updateById(checkInfoDetail);
+//            }
             if(workOrderReq.getPlanId()!=null){
                 MaintanceInfoDetail maintanceInfoDetail = maintanceInfoMapper.selectById(workOrderReq.getPlanId());
                 maintanceInfoDetail.setStatus(PLAN_DISPATCHED.getCode());
