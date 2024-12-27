@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.example.springboot.controller.ApprovalController</OriginalElement>
+  <nodes>
+    <node x="-135.5" y="2036.0">com.example.springboot.controller.ApprovalController</node>
+    <node x="-135.75" y="1010.25">com.example.springboot.request.PageReq</node>
+    <node x="-1007.0555555555554" y="1357.5833333333326">com.example.springboot.response.ApprovalDetailResp</node>
+    <node x="-160.75" y="2396.4166666666674">com.example.springboot.response.ApprovalResp</node>
+    <node x="616.083333333333" y="2050.416666666666">com.example.springboot.service.Impl.ApprovalInfoServiceImpl</node>
+    <node x="-160.75" y="1497.5833333333326">com.example.springboot.request.FiltersReq</node>
+    <node x="437.55555555555543" y="1497.5833333333326">com.example.springboot.service.ApprovalInfoService</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.example.springboot.request.FiltersReq" target="com.example.springboot.request.PageReq" relationship="GENERALIZATION">
+      <point x="0.0" y="-214.0" />
+      <point x="-2.75" y="1021.9583333333334" />
+      <point x="-2.75" y="1021.9583333333334" />
+      <point x="0.0" y="177.79861111111103" />
+    </edge>
+    <edge source="com.example.springboot.controller.ApprovalController" target="com.example.springboot.response.ApprovalResp" relationship="DEPENDENCY">
+      <point x="-216.40972222222217" y="123.11111111111131" />
+      <point x="-86.40972222222217" y="2589.2638888888896" />
+      <point x="128.25" y="2589.2638888888896" />
+      <point x="0.0" y="249.0" />
+    </edge>
+    <edge source="com.example.springboot.controller.ApprovalController" target="com.example.springboot.request.FiltersReq" relationship="DEPENDENCY">
+      <point x="-132.75" y="-125.0" />
+      <point x="-2.75" y="1853.3611111111113" />
+      <point x="-2.75" y="1853.3611111111113" />
+      <point x="0.0" y="214.0" />
+    </edge>
+    <edge source="com.example.springboot.service.Impl.ApprovalInfoServiceImpl" target="com.example.springboot.service.ApprovalInfoService" relationship="REALIZATION">
+      <point x="0.0" y="-160.5" />
+      <point x="881.583333333333" y="1641.0" />
+      <point x="835.8055555555554" y="1641.0" />
+      <point x="132.75" y="107.0" />
+    </edge>
+    <edge source="com.example.springboot.controller.ApprovalController" target="com.example.springboot.response.ApprovalDetailResp" relationship="DEPENDENCY">
+      <point x="-199.59027777777783" y="-121.52777777777783" />
+      <point x="-69.59027777777783" y="2001.0" />
+      <point x="-725.0555555555554" y="2001.0" />
+      <point x="0.0" y="284.0" />
+    </edge>
+    <edge source="com.example.springboot.controller.ApprovalController" target="com.example.springboot.service.ApprovalInfoService" relationship="TO_ONE">
+      <point x="199.27083333333326" y="-106.31944444444434" />
+      <point x="329.27083333333326" y="1758.3541666666665" />
+      <point x="570.3055555555554" y="1758.3541666666665" />
+      <point x="-132.75" y="107.0" />
+    </edge>
+  </edges>
+  <settings layout="分层紧凑" zoom="0.4161849710982659" showDependencies="true" x="-78.0" y="1981.1180555555557" />
+  <SelectedNodes />
+  <Categories>
+    <Category>内部类</Category>
+    <Category>属性</Category>
+    <Category>方法</Category>
+    <Category>构造函数</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
