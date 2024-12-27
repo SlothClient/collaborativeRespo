@@ -1,12 +1,7 @@
 <template>
   <div class="chat-list">
     <el-scrollbar>
-      <el-card
-          v-for="(chat, index) in chatList"
-          :key="index"
-          class="chat-card"
-          @click="selectChat(chat)"
-      >
+      <el-card v-for="(chat, index) in chatList" :key="index" class="chat-card" @click="selectChat(chat)">
         <div class="chat-content">
           <div class="avatar">
             <el-avatar :src="`http://localhost:8080`+chat.chatUserWithAvatar" />
@@ -14,12 +9,13 @@
           <div class="chat-info">
             <div class="chat-header">
               <span class="chat-title">{{ chat.chatUserWith }}</span>
-              <el-badge :value="currentUserUnreadMessageCounts[chat.chatUserWithId]" :hidden="currentUserUnreadMessageCounts[chat.chatUserWithId] === 0" class="notification"/>
+              <el-badge :value="currentUserUnreadMessageCounts[chat.chatUserWithId]"
+                :hidden="currentUserUnreadMessageCounts[chat.chatUserWithId] === 0" class="notification" />
             </div>
-            <p class="chat-preview">{{
-                chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].text
-              }}</p>
-            <span class="chat-time">{{ chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].time }}</span>
+
+            <div class="chat-preview" v-html="getMessageText(chat)"></div>
+            <span class="chat-time">{{ chat.messages.length === 0 ? "无消息" : chat.messages[chat.messages.length - 1].time
+              }}</span>
           </div>
         </div>
       </el-card>
@@ -35,6 +31,12 @@ const messageStore = useMessageStore();
 const chatList = computed(() => {
   return messageStore.filteredChats
 });
+
+const getMessageText = (chat) => {
+  if (chat.messages.length === 0) return "无消息";
+  console.log(chat.messages[chat.messages.length - 1].text)
+  return chat.messages[chat.messages.length - 1].text;
+};
 
 const selectChat = (chat) => {
   messageStore.setCurrentChat(chat);

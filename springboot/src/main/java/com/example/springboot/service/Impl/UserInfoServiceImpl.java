@@ -104,13 +104,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Override
     public Result<String> updateUserInfoList(UserReq user) {
         UserInfo userInfo = userInfoMapper.selectById(user.getUserId());
-        System.out.println("userId=" + userInfo.getUserId());
-        System.out.println("user=" + user);
         UserRole userRole = userRoleMapper.selectOne(
                 new LambdaQueryWrapper<UserRole>()
                         .eq(UserRole::getUserId, user.getUserId())
         );
-        System.out.println("userRole = ");
         userInfo.setUsername(user.getUsername());
         userInfo.setUserpwd(user.getUserpwd());
         userRole.setRoleId(user.getRoleId());
@@ -126,7 +123,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Override
     public Result<String> addUserInfoList(UserReq user) {
         // 创建并设置UserInfo对象
-        System.out.println("add user = " + user);
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(user.getUsername());
         userInfo.setUserpwd(user.getUserpwd());
@@ -145,7 +141,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
 
     @Override
     public Result<String> deleteUserInfo(UserReq user) {
-        System.out.println("delete user = " + user);
         int userInfoRows = userInfoMapper.deleteById(user.getUserId());
         UserRole userRole = userRoleMapper.selectOne(new LambdaQueryWrapper<UserRole>()
                 .eq(UserRole::getUserId, user.getUserId())
@@ -184,14 +179,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         // 时间戳（或UUID）和文件名拼接，确保唯一性
         String newFileName = format + "_" + System.currentTimeMillis() + "_" + sanitizedFileName;
 
+        String avatarSavePath = filePath +"avatar\\";
+
         // 得到文件保存的位置以及新文件名
-        File dest = new File(filePath + newFileName);
+        File dest = new File(avatarSavePath + newFileName);
 
         try {
             // 上传的文件被保存了
             file.transferTo(dest);
             // 打印日志
-            System.out.println("上传成功，当前上传的文件保存在 " + filePath + newFileName);
 
             String userId = (String) StpUtil.getLoginId();
             UserInfo userInfo = userInfoMapper.selectById(userId);
@@ -279,8 +275,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         StpUtil.logout(userId);
         return "退出成功";
     }
-
-
 }
 
 

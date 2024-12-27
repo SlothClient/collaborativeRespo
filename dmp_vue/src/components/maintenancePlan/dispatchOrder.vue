@@ -89,6 +89,7 @@ const dialogVisible = ref(props.visible);
 // 监听外部传入的 `visible`，控制 dialog 的显示状态
 watch(() => props.visible, (newVal) => {
   dialogVisible.value = newVal;
+  // console.log(props.selectedPlan)
 });
 
 const equipInfoStore = useEquipmentInfoStore();

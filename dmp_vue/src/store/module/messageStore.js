@@ -23,7 +23,6 @@ export const useMessageStore = defineStore('message', () => {
             unreadMessages.value[chat.chatUserWithId] = chat.unreadCountTotal
             unreadCountTotal.value += chat.unreadCountTotal
         })
-        console.log(unreadCountTotal.value )
     }
 
     // 设置当前用户总未读消息数量
@@ -78,7 +77,6 @@ export const useMessageStore = defineStore('message', () => {
                     message: error.message || "获取历史聊天记录失败"
                 });
             }
-            console.log(chatHistory.value)
         }
     };
 

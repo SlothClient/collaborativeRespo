@@ -4,273 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="baa83cdd-e54e-4baf-b77b-b7be9d5d58e2" name="更改" comment="update(workLog-relevant):using md5 accomplished unique file store the same time saving net traffic">
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/8138fb7f-1b33-4dcc-8449-c0867d80dbc0/storage_v2/_src_/schema/maintenance_db.KkHSTA.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/shelf/_2024_10_13_23_12____.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/shelf/_2024_10_13_23_12____.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dmp_vue/src/permission.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/src/permission.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dmp_vue/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../maintancedb aircyanVer2.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../maintancedb aircyanVer2.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1245223e-d6af-4761-affd-6b23c06d5283" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/uploads/logFiles/dd3452c43fa3729bc6929aeef10b2090.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dmp_vue/src/components/maintenancePlan/dispatchOrder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/src/components/maintenancePlan/dispatchOrder.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dmp_vue/src/utils/MyWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/src/utils/MyWebSocket.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/ApprovalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/ApprovalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/response/MenuResp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/response/MenuResp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/EquipInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/EquipInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/ApprovalInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/ApprovalInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/MaintanceInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/MaintanceInfoServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/UserInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/UserInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/WorkerInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/WorkerInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/WorkLogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/Impl/WorkLogServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729345869808_20241019192659.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729345869808_20241019192659.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729345927870_QQ__20221019075038.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729345927870_QQ__20221019075038.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729346215435_QQ__20221030202610.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729346215435_QQ__20221030202610.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729347278538_QQ__20221030202610.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729347278538_QQ__20221030202610.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729347394237_12_19.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729347394237_12_19.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348246011_IMG_0446_20240830_133622_.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348246011_IMG_0446_20240830_133622_.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348298472_05E9B6E27B30E8F655D272B0860E4849.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348298472_05E9B6E27B30E8F655D272B0860E4849.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348336290_IMG_0455_20240830_190238_.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348336290_IMG_0455_20240830_190238_.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348608361_9AFCF6CBBBDA21E4F5EDA456493FA3F3.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348608361_9AFCF6CBBBDA21E4F5EDA456493FA3F3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348707913_IMG_0470_20240831_165509_.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348707913_IMG_0470_20240831_165509_.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729348776805_IMG_0453_20240830_165622_.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729348776805_IMG_0453_20240830_165622_.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729349090543_05E9B6E27B30E8F655D272B0860E4849.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729349090543_05E9B6E27B30E8F655D272B0860E4849.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729350309797_3D6A8CEB8923AAC810AB41B7877DAD09_20240830_133320_.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729350309797_3D6A8CEB8923AAC810AB41B7877DAD09_20240830_133320_.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_1729352383122_th.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_1729352383122_th.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_20241019192659.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_20241019192659.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_QQ图片20221019075038.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_QQ图片20221019075038.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_QQ图片20221030202610.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_QQ图片20221030202610.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_Snipaste_2022-11-28_20-24-46.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_Snipaste_2022-11-28_20-24-46.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_Snipaste_2024-08-08_21-17-56.png" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_Snipaste_2024-08-08_21-17-56.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-19_微信图片_20241019192659.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-19_微信图片_20241019192659.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-20_1729386931017_th.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-20_1729386931017_th.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-20_1729387075289_OIP_C.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-20_1729387075289_OIP_C.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-20_1729388049200_OIP_C.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-20_1729388049200_OIP_C.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-20_1729393495743_th.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-20_1729393495743_th.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-21_1729520125024_th__1_.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-21_1729520125024_th__1_.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-21_1729520127073_th__1_.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-21_1729520127073_th__1_.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-24_1729756214414_w700d1q75cms.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-24_1729756214414_w700d1q75cms.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-25_1729844862429_OIP_C.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-25_1729844862429_OIP_C.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-26_1729918218156_th__1_.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-26_1729918218156_th__1_.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/2024-10-26_1729925333277_th.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/2024-10-26_1729925333277_th.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/uploadFile/avatar/picture1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/avatar/picture1.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application-dev.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/SpringbootApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/JacksonConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/MyBatisPlusConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/WebConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/WebSocket/WebSocketConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/saToken/SaTokenConfigure.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/saToken/SaTokenDemoApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/config/saToken/StpInterfaceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/ApprovalController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/CheckInfoController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/DepartmentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/EquipInfoController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/EquipStatusController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/MaintenancePlanController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/MessageController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/OrderController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/RoleInfoController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/SiteController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/TypeController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/UserRoleController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/VisualizeController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/WorkLogController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/controller/userController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/ApprovalInfo$ApprovalInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/ApprovalInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/ChatRecord.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/CheckInfoDetail$CheckInfoDetailBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/CheckInfoDetail.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/Department.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/EquipInfo$EquipInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/EquipInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/EquipStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/MaintanceInfoDetail$MaintanceInfoDetailBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/MaintanceInfoDetail.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/MaintanceType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/MenuInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/Message.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/OrderInfo$OrderInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/OrderInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/Params.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/RoleInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/SelectedEquipInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/Site.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/Type.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/UserInfo$UserInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/UserInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/UserRole.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/VisualInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/WorkLog.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/entity/WorkerInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/enums/StatusCodeEnum.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/enums/maintenanceCodeEnum.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/handler/ChatWebSocketServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/ApprovalInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/ChatRecordMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/CheckInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/DepartmentMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/EquipInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/EquipStatusMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/MaintanceInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/MaintanceTypeMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/MenuInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/OrderInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/OrderMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/RoleInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/SiteMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/TypeMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/UserInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/UserRoleMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/VisualizeMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/WorkLogMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/mapper/WorkerInfoMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/AdvancedSearchReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/CheckInfoReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/EquipInfoReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/FiltersReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/MaintenancePlanReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/PageReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/UserInfoReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/UserReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/WorkLogRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/request/WorkOrderReq.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ApprovalDetailResp$ApprovalDetailRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ApprovalDetailResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ApprovalNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ApprovalResp$ApprovalRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ApprovalResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/ChatHistory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/CheckDetailResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/CheckInfo$CheckInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/CheckInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/CheckInfoResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/EquipmentResp$EquipmentRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/EquipmentResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/FileUploadResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MaintenanceInfo$MaintenanceInfoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MaintenanceInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MaintenanceInfoResp$MaintenanceInfoRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MaintenanceInfoResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MenuResp$MenuRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/MenuResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/PlanDetailResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/UserInfoResp$UserInfoRespBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/response/UserInfoResp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/ApprovalInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/ChatRecordService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/CheckInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/DepartmentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/EquipInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/EquipStatusService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/MaintanceInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/MaintanceTypeService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/MenuInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/MessageService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/OrderInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/OrderService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/RoleInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/SiteService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/TypeService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/UserInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/UserRoleService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/VisualizeService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/WorkLogService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/WorkerInfoService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/ApprovalInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/ChatRecordServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/CheckInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/DepartmentServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/EquipInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/EquipStatusServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/MaintanceInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/MaintanceTypeServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/MenuInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/MessageServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/OrderInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/OrderServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/RoleInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/SiteServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/TypeServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/UserInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/UserRoleServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/VisualizeServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/WorkLogServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/service/impl/WorkerInfoServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/utils/Condition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/utils/EquipIdGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/utils/EquipIdInitializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/utils/Result.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/springboot/utils/ResultMap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/ApprovalInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/ChatRecordMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/CheckInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/DepartmentService.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/EquipInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/EquipStatusMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/MaintanceInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/MaintanceTypeMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/MenuInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/OrderInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/OrderMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/RoleInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/SiteMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/TypeService.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/UserInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/UserRoleMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/VisualizeMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/WorkLogMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/WorkerInfoMapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729345869808_20241019192659.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729345927870_QQ__20221019075038.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729346215435_QQ__20221030202610.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729347278538_QQ__20221030202610.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729347394237_12_19.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348246011_IMG_0446_20240830_133622_.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348298472_05E9B6E27B30E8F655D272B0860E4849.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348336290_IMG_0455_20240830_190238_.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348608361_9AFCF6CBBBDA21E4F5EDA456493FA3F3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348707913_IMG_0470_20240831_165509_.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729348776805_IMG_0453_20240830_165622_.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729349090543_05E9B6E27B30E8F655D272B0860E4849.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729350309797_3D6A8CEB8923AAC810AB41B7877DAD09_20240830_133320_.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_1729352383122_th.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_20241019192659.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_QQ图片20221019075038.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_QQ图片20221030202610.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_Snipaste_2022-11-28_20-24-46.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_Snipaste_2024-08-08_21-17-56.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-19_微信图片_20241019192659.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-20_1729386931017_th.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-20_1729387075289_OIP_C.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-20_1729388049200_OIP_C.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-20_1729393495743_th.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-21_1729520125024_th__1_.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-21_1729520127073_th__1_.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-24_1729756214414_w700d1q75cms.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-25_1729844862429_OIP_C.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-26_1729918218156_th__1_.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/2024-10-26_1729925333277_th.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/uploadFile/avatar/picture1.jpg" beforeDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/../dmp_vue/src/views/order/WorkOrder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../dmp_vue/src/views/order/WorkOrder.vue" afterDir="false" />
->>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Class" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -278,73 +28,40 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="customMavenHome" value="$PROJECT_DIR$/../../../apps/apache-maven-3.6.1" />
-        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 7
 }</component>
-  <component name="ProjectId" id="2n9fPUf4gY1OqrzLkh8pFNmZxt6" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="2qKIiqozrIuCCmUCDXytZ9I7ybz" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-<<<<<<< HEAD
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-=======
->>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.SpringbootApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;yes&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-<<<<<<< HEAD
-    &quot;last_opened_file_path&quot;: &quot;E:/SequenceDiagram-3.0.7-signed.zip&quot;,
-=======
-    &quot;last_opened_file_path&quot;: &quot;E:/scientific_research_practice/code/springboot&quot;,
->>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-<<<<<<< HEAD
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-=======
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
->>>>>>> 3f0c8fa5f437aa776ff271df99ef81c6a5fe62bf
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.SpringbootApplication.executor": "Run",
+    "git-widget-placeholder": "yes",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\gitTestPkg\code\springboot\src\main\resources" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
     <configuration name="SpringbootApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="21" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="springboot" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.springboot.SpringbootApplication" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.springboot.*" />
@@ -362,90 +79,20 @@
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
-      <changelist id="baa83cdd-e54e-4baf-b77b-b7be9d5d58e2" name="更改" comment="" />
-      <created>1728390189285</created>
+      <changelist id="1245223e-d6af-4761-affd-6b23c06d5283" name="更改" comment="" />
+      <created>1734404971489</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1728390189285</updated>
-      <workItem from="1728390191629" duration="159000" />
-      <workItem from="1728390368279" duration="58000" />
-      <workItem from="1729907322123" duration="5853000" />
-      <workItem from="1729923717276" duration="2017000" />
-      <workItem from="1729934197180" duration="1158000" />
-      <workItem from="1729943401537" duration="1735000" />
-      <workItem from="1729951365474" duration="12000" />
-      <workItem from="1730375215951" duration="1471000" />
-      <workItem from="1730451024070" duration="1527000" />
-      <workItem from="1730453533406" duration="357000" />
-      <workItem from="1730453902043" duration="365000" />
-      <workItem from="1730454286464" duration="1021000" />
-      <workItem from="1730455626788" duration="353000" />
-      <workItem from="1730461011226" duration="410000" />
-      <workItem from="1730461441312" duration="102000" />
-      <workItem from="1730461556636" duration="521000" />
-      <workItem from="1730462182634" duration="1444000" />
-      <workItem from="1730600395648" duration="1998000" />
-      <workItem from="1730602528411" duration="705000" />
-      <workItem from="1730708496126" duration="874000" />
-      <workItem from="1730709394276" duration="146000" />
-      <workItem from="1730709551104" duration="706000" />
-      <workItem from="1730810780770" duration="71000" />
-      <workItem from="1730899804381" duration="1523000" />
-      <workItem from="1731144328539" duration="24000" />
-      <workItem from="1731209469381" duration="52000" />
-      <workItem from="1731488237516" duration="345000" />
-      <workItem from="1731584911692" duration="314000" />
-      <workItem from="1731585574580" duration="14000" />
-      <workItem from="1731585613508" duration="1341000" />
-      <workItem from="1731651444723" duration="37000" />
-      <workItem from="1731651635949" duration="1204000" />
-      <workItem from="1731655748809" duration="412000" />
+      <updated>1734404971489</updated>
+      <workItem from="1734404972959" duration="318000" />
+      <workItem from="1735046752710" duration="1108000" />
+      <workItem from="1735298287285" duration="4453000" />
     </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="update(workLog-relevant):accomplished log-update and log-edit" />
-    <MESSAGE value="update(workLog-relevant):using md5 accomplished unique file store the same time saving net traffic" />
-    <option name="LAST_COMMIT_MESSAGE" value="update(workLog-relevant):using md5 accomplished unique file store the same time saving net traffic" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/springboot/controller/WorkLogController.java</url>
-          <line>51</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/springboot/controller/WorkLogController.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

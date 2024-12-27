@@ -2,24 +2,21 @@
   <div v-if="currentChat" class="chat-detail">
     <!-- 聊天头部 -->
     <div class="chat-header" v-if="currentChat.messages">
-      <el-avatar :src="`http://localhost:8080`+currentChat.chatUserWithAvatar " size="default"/>
+      <el-avatar :src="`http://localhost:8080`+currentChat.chatUserWithAvatar " size="default" />
       <h3>{{ currentChat.chatUserWith }}</h3>
     </div>
 
     <!-- 聊天消息区域 -->
     <div class="chat-messages" ref="chatMessages">
       <div>
-        <div
-            v-for="(message, index) in currentChat.messages"
-            :key="index"
-            :class="['message-container', { 'self': isSelf(message) }]"
-        >
+        <div v-for="(message, index) in currentChat.messages" :key="index"
+          :class="['message-container', { 'self': isSelf(message) }]">
           <el-avatar
-              :src="isSelf(message) ? userStore.user.avatar : `http://localhost:8080`+currentChat.chatUserWithAvatar"
-              size="small"
-          />
+            :src="isSelf(message) ? userStore.user.avatar : `http://localhost:8080`+currentChat.chatUserWithAvatar"
+            size="small" />
           <div class="message-content">
-            <div class="message-text" :class= "['message-text', { 'self': isSelf(message) }]" >{{ message.text }}</div>
+            <div class="message-text" @click="handleMessageClick" :class="['message-text', { 'self': isSelf(message) }]"
+              v-html="message.text"></div>
             <div class="message-time">{{ message.time }}</div>
           </div>
         </div>
@@ -28,27 +25,41 @@
 
     <!-- 聊天输入框 -->
     <div class="chat-input">
-      <el-input
-          v-model="newMessage"
-          placeholder="输入消息..."
-          @keyup.enter="sendMessage"
-      >
+      <el-input v-model="newMessage" placeholder="输入消息..." @keyup.enter="sendMessage">
         <template #append>
           <el-button type="success" @click="sendMessage">发送</el-button>
         </template>
       </el-input>
     </div>
   </div>
-  <div class="chat-detail" v-else><el-empty><p>请选择一个聊天对象</p></el-empty></div>
+  <div class="chat-detail" v-else><el-empty>
+      <p>请选择一个聊天对象</p>
+    </el-empty></div>
 </template>
 
 
 <script setup>
+import { useRouter } from 'vue-router';
 import {ref, computed, nextTick, onMounted, onBeforeUnmount, watch} from 'vue';
 import {useMessageStore} from "@/store/module/messageStore.js";
 import {useUserStore} from "@/store/module/userStore.js";
 import moment from "moment";
 import {initializeWebSocket, webSocketSendMessage} from "@/utils/webSocket.js";
+
+
+const handleMessageClick = (event) => {
+  const link = event.target.closest('a')
+  if (!link) return
+
+  event.preventDefault()
+  const href = link.getAttribute('href')
+
+  if (href?.startsWith('#/')) {
+    router.push(href.substring(1))
+  } else if (href) {
+    window.open(href, '_blank')
+  }
+}
 
 const messageStore = useMessageStore();
 const userStore = useUserStore();
@@ -59,6 +70,12 @@ const currentChat = computed(() => messageStore.currentChat);
 const newMessage = ref('');
 const chatMessages = ref(null);
 const userId = userStore.user.id;
+
+
+// 添加点击处理函数
+const router = useRouter();
+
+
 
 const isSelf =(message) =>{
   return message.sender === userId || message.from === userId;
@@ -101,6 +118,7 @@ onMounted(() => {
   // 这里初始化 WebSocket，并传递 emit 函数
   initializeWebSocket(userId, emit);
 });
+
 
 </script>
 
