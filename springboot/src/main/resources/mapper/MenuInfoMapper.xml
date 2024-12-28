@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.MenuInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springboot.entity.MenuInfo">
+            <id property="menuId" column="menu_id" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+            <result property="menuUrl" column="menu_url" jdbcType="VARCHAR"/>
+            <result property="menuIcon" column="menu_icon" jdbcType="VARCHAR"/>
+            <result property="menuOrder" column="menu_order" jdbcType="VARCHAR"/>
+            <result property="permission" column="permission" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id,parent_id,menu_url,
+        menu_icon,menu_order,permission
+    </sql>
+    <select id="selectPermissionByRoleId" resultType="java.lang.String">
+        SELECT DISTINCT(m.permission)
+        FROM menu_info m
+                 JOIN role_menu rm ON m.menu_id = rm.menu_id
+                 JOIN role_info r ON rm.role_id = r.role_id
+        WHERE r.role_id = #{roleId}
+    </select>
+</mapper>
