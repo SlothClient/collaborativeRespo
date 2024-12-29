@@ -2,11 +2,10 @@ package com.example.springboot.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.entity.CheckitemEquip;
-import com.example.springboot.entity.CheckitemInfo;
 import com.example.springboot.mapper.CheckitemEquipMapper;
 import com.example.springboot.service.CheckitemEquipService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

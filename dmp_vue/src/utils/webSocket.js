@@ -37,8 +37,6 @@ export const initializeWebSocket = (userId,emit) => {
         })
 
 
-        console.log(`接收到的消息：`, receivedMessage);
-
         const senderId = receivedMessage.from
 
         // 获取当前聊天对象的 ID

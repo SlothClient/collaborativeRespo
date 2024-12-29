@@ -1,59 +1,50 @@
 <template>
-    <div id="drawerCtn" v-if="drawerVisible" @click.self="closeDrawer">
-        <div id="drawerIn" @animationend="handleAnimationEnd" :class="{ closing: isClosing }">
-            <div id="drawerHead">
-                <div id="closeDrawer" @click="closeDrawer">
-                    <el-icon size="25px" color="rgb(255,255,255)">
-                        <Close />
-                    </el-icon>
-                </div>
-                <span class="title">工单记录</span>
-            </div>
-            <div id="space"></div>
-            <div class="logItem" v-for="(log, index) in logs" :key="index">
-                <span class="logDate marked">记录日期：{{ log.logDate }}</span>
-                <div class="logs">
-                    <div class="wordLog">
-                        <span class="logTitle marked">文字记录</span>
-                        <!-- 根据 isEditing 控制是否为可编辑的 textarea -->
-                        <textarea class="wordArea logArea" v-model="log.logContent" :readonly="!log.isEditing">
-            </textarea>
-                    </div>
-                    <div class="fileLog">
-                        <span class="logTitle marked">文件记录</span>
-                        <div class="fileArea logArea">
-                            <!-- 编辑模式下原文件保留，清除后才显示选择框 -->
-                            <a v-if="log.logAttachment && !log.ifSelect" :href="log.logAttachment" target="_blank"
-                                class="attachmentLot">
-                                <img :src="getFileIcon(log.attachmentName)" alt="file icon"
-                                    style="width: 40px; height: 40px;" />
-                                <span style="margin-left: 10px; font-size: 16px;">
-                                    {{ getFileName(log.attachmentName) }}
-                                </span>
-                            </a>
-                            <span v-else-if="!log.logAttachment && !log.isEditing">暂无文件</span>
-
-                            <!-- 文件清除按钮和选择框 -->
-                            <el-button v-if="log.isEditing && log.logAttachment" type="danger" circle size="small"
-                                icon="Close" style="margin-left: 10px;" @click="cleanFile(log)">
-                            </el-button>
-                            <label v-if="log.isEditing && log.ifSelect" class="selectFile">+
-                                <input type="file" @change="handleFileChange($event, log)">
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- 取消编辑和提交编辑按钮 -->
-                    <button class="LogBtn cancelEditBtn" v-if="log.isEditing" @click="cancelEdit(log)">
-                        阅读模式
-                    </button>
-                    <button class="LogBtn editLogBtn" @click="handleEditSubmit(log)">
-                        {{ log.funcBtnVal }}
-                    </button>
-                </div>
-            </div>
+  <drawer v-model:visible="drawerVisible" :width="'36%'" v-model:theme="currentTheme">
+    <!-- 标题插槽 -->
+    <template #drawer-title>
+      <span class="title">工单记录</span>
+    </template>
+    
+    <!-- 内容插槽 -->
+    <template #content>
+      <div class="content-card" v-for="(log, index) in logs" :key="index">
+        <!-- 卡片标题部分 -->
+        <div class="card-title">
+          <span class="logDate">记录日期：{{ log.logDate }}</span>
         </div>
-    </div>
+        
+        <!-- 卡片内容部分 -->
+        <div class="card-content">
+          <div class="logs">
+            <div class="wordLog">
+              <span class="logTitle marked">文字记录</span>
+              <textarea class="wordArea logArea" v-model="log.logContent" :readonly="!log.isEditing"></textarea>
+            </div>
+            <div class="fileLog">
+              <span class="logTitle marked">文件记录</span>
+              <div class="fileArea logArea">
+                <a v-if="log.logAttachment && !log.ifSelect" :href="log.logAttachment" target="_blank" class="attachmentLot">
+                  <img :src="getFileIcon(log.attachmentName)" alt="file icon" style="width: 40px; height: 40px;" />
+                  <span style="margin-left: 10px; font-size: 16px;">{{ getFileName(log.attachmentName) }}</span>
+                </a>
+                <span v-else-if="!log.logAttachment && !log.isEditing">暂无文件</span>
+
+                <el-button v-if="log.isEditing && log.logAttachment" type="danger" circle size="small" icon="Close" 
+                  style="margin-left: 10px;" @click="cleanFile(log)">
+                </el-button>
+                <label v-if="log.isEditing && log.ifSelect" class="selectFile">+
+                  <input type="file" @change="handleFileChange($event, log)">
+                </label>
+              </div>
+            </div>
+
+            <button class="LogBtn cancelEditBtn" v-if="log.isEditing" @click="cancelEdit(log)">阅读模式</button>
+            <button class="LogBtn editLogBtn" @click="handleEditSubmit(log)">{{ log.funcBtnVal }}</button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </drawer>
 </template>
 
 <script setup>
@@ -61,6 +52,7 @@ import emitter from '@/utils/emitter';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref, watch } from 'vue';
+import Drawer from '@/components/workOrder/drawer.vue'
 
 const props = defineProps({
     drawerVisible: {
@@ -234,271 +226,275 @@ const handleEditSubmit = (log) => {
         editLog(log);
     }
 };
+
+// 添加主题相关的响应式变量
+const currentTheme = ref('business'); // 默认使用经典主题
+
+// 可以添加主题切换后的处理函数（可选）
+watch(currentTheme, (newTheme) => {
+  // 这里可以添加主题切换后的额外处理逻辑
+  console.log('Theme changed to:', newTheme);
+});
+
+// 如果需要持久化主题设置，可以添加以下代码
+// onMounted(() => {
+//   // 从 localStorage 读取上次保存的主题
+//   const savedTheme = localStorage.getItem('diyLogsDialogTheme');
+//   if (savedTheme) {
+//     currentTheme.value = savedTheme;
+//   }
+// });
+
+// 监听主题变化并保存到 localStorage
+// watch(currentTheme, (newTheme) => {
+//   localStorage.setItem('diyLogsDialogTheme', newTheme);
+// });
 </script>
 
 <style scoped>
-#drawerCtn {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(127, 127, 127, .3);
-    display: flex;
-    overflow: hidden;
-    z-index: 10;
-}
-
-#drawerIn {
-    position: absolute;
-    right: 0;
-    width: 36%;
-    height: 100%;
-    background-color: rgb(255, 255, 255);
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
-    animation: pull .5s ease forwards;
-    overflow-y: auto;
-    /* 允许垂直滚动 */
-    overflow-x: hidden;
-    /* 隐藏横向滚动条 */
-}
-
-#drawerIn::-webkit-scrollbar {
-    width: 8px;
-    /* 自定义滚动条宽度 */
-}
-
-#drawerIn::-webkit-scrollbar-thumb {
-    background-color: rgba(64, 148, 238, 0.6);
-    /* 滚动条颜色 */
-    border-radius: 10px;
-    /* 滚动条圆角 */
-}
-
-#drawerIn::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(64, 148, 238, 0.8);
-    /* 滚动条悬停颜色 */
-}
-
-#drawerIn::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    /* 滚动条轨道颜色 */
-    border-radius: 10px;
-}
-
-#drawerIn.closing {
-    animation: push .5s ease forwards;
-}
-
-@keyframes pull {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 36%;
-    }
-}
-
-@keyframes push {
-    from {
-        width: 36%;
-    }
-
-    to {
-        width: 0;
-    }
-}
-
-#drawerHead {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-#closeDrawer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    background-color: rgb(64, 148, 238, .8);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom-right-radius: 30px;
-}
-
 .title {
-    position: absolute;
-    top: 0;
-    right: 20px;
-    height: 50px;
-    line-height: 50px;
-    font-weight: 900;
-    font-size: 24px;
-    font-family: "宋体";
-    color: rgb(64, 148, 238);
+  font-weight: 900;
+  font-size: 24px;
+  font-family: "宋体";
+  color: rgb(64, 148, 238);
 }
 
-#space {
-    height: 50px;
+.content-card {
+  box-shadow: 3px 2px 9px 2px rgba(0, 0, 0, .2);
+  border-radius: 10px;
+  transition: all .3s;
+  font-family: "幼圆";
+  padding: 10px;
+  /* margin: 20px 30px; */
 }
 
-.logItem {
-    box-shadow: 3px 2px 9px 2px rgba(0, 0, 0, .2);
-    border-radius: 10px;
-    transition: all .3s;
-    font-family: "幼圆";
-    padding: 10px;
-    margin: 20px 30px;
+.content-card:hover {
+  transform: translate(-1px, -2px);
 }
-
-.logItem:hover {
-    transform: translate(-1px, -2px);
+.content-card:last-child {
+  margin-bottom: 20px;
 }
 
 .logs {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .logs>div {
-    position: relative;
-    width: 80%;
-    /* flex: 1; */
-    /* height: 300px; */
+  position: relative;
+  width: 80%;
+  /* flex: 1; */
+  /* height: 300px; */
 }
 
 .logs>div:first-child {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .marked {
-    display: block;
-    /* text-decoration: underline 3px wavy rgb(64, 148, 238); */
-    margin: 10px 0;
+  display: block;
+  /* text-decoration: underline 3px wavy rgb(64, 148, 238); */
+  margin: 10px 0;
 }
 
 .logArea {
-    box-sizing: border-box;
-    width: 100%;
-    height: fit-content;
-    min-height: 66px;
-    max-height: 200px;
-    background-color: rgba(221, 247, 199, .5);
-    border-radius: 6px;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    overflow: auto
-        /* 溢出显示滚动条 */
+  box-sizing: border-box;
+  width: 100%;
+  height: fit-content;
+  min-height: 66px;
+  max-height: 200px;
+  background-color: rgba(221, 247, 199, .5);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  overflow: auto
+      /* 溢出显示滚动条 */
 }
 
 .logArea::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    /* 自定义滚动条宽度 */
+  width: 6px;
+  height: 6px;
+  /* 自定义滚动条宽度 */
 }
 
 .logArea::-webkit-scrollbar-thumb {
-    background-color: rgba(64, 148, 238, 0.6);
-    /* 滚动条颜色 */
-    border-radius: 10px;
-    /* 滚动条圆角 */
+  background-color: rgba(64, 148, 238, 0.6);
+  /* 滚动条颜色 */
+  border-radius: 10px;
+  /* 滚动条圆角 */
 }
 
 .logArea::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(64, 148, 238, 0.8);
-    /* 滚动条悬停颜色 */
+  background-color: rgba(64, 148, 238, 0.8);
+  /* 滚动条悬停颜色 */
 }
 
 .logArea::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    /* 滚动条轨道颜色 */
-    border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+  /* 滚动条轨道颜色 */
+  border-radius: 10px;
 }
 
 .wordArea {
-    overflow-wrap: break-word;
-    /* 溢出换行 */
-    resize: none;
-    /* 禁止调整容器尺寸 */
-    border: none;
-    outline: none;
+  overflow-wrap: break-word;
+  /* 溢出换行 */
+  resize: none;
+  /* 禁止调整容器尺寸 */
+  border: none;
+  outline: none;
 }
 
 /* 只读样式 */
 .wordArea[readonly] {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .attachmentLot {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: #000;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
 }
 
 .attachmentLot:hover {
-    text-decoration: underline;
-    color: rgb(65, 148, 203);
+  text-decoration: underline;
+  color: rgb(65, 148, 203);
 }
 
 .logDate {
-    padding-bottom: 10px;
-    border-bottom: 3px dotted #ddd;
+  padding-bottom: 10px;
+  border-bottom: 3px dotted #ddd;
 }
 
 .logTitle {
-    position: absolute;
-    bottom: 0;
-    right: 10px;
-    color: rgba(64, 148, 238, 0.3);
-    font-weight: 900;
-    font-family: "宋体", "幼圆";
-    font-size: x-large;
-    user-select: none;
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  color: rgba(64, 148, 238, 0.3);
+  font-weight: 900;
+  font-family: "宋体", "幼圆";
+  font-size: x-large;
+  user-select: none;
 }
 
 .LogBtn {
-    position: absolute;
-    right: 10px;
-    padding: 2px 5px;
-    border-radius: 5px;
-    cursor: pointer;
+  position: absolute;
+  right: 10px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .editLogBtn {
-    bottom: 5px;
-    color: #52c41a;
-    background: #f6ffed;
-    border: 1px solid #b7eb8f;
+  bottom: 5px;
+  color: #52c41a;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
 }
 
 .cancelEditBtn {
-    bottom: 40px;
-    color: #fa8c16;
-    background: #fff7e6;
-    border: 1px solid #ffd591;
+  bottom: 40px;
+  color: #fa8c16;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
 }
 
 .selectFile {
-    cursor: pointer;
-    width: 100px;
-    height: 66px;
-    border: 2px dotted #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 900;
-    font-size: xx-large;
+  cursor: pointer;
+  width: 100px;
+  height: 66px;
+  border: 2px dotted #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: xx-large;
 }
 
 .selectFile input {
-    display: none;
+  display: none;
+}
+
+/* 为不同主题添加特定样式 */
+:deep(.theme-classic) .title {
+  color: rgb(64, 148, 238);
+}
+
+:deep(.theme-lively) .title {
+  background: linear-gradient(45deg, #4f46e5, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:deep(.theme-business) .title {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 调整不同主题下的按钮样式 */
+:deep(.theme-classic) .LogBtn {
+  border: 1px solid #e9ecef;
+}
+
+:deep(.theme-lively) .LogBtn {
+  background: linear-gradient(45deg, #4f46e5, #818cf8);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+
+:deep(.theme-business) .LogBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+/* 调整不同主题下的文本区域样式 */
+:deep(.theme-classic) .logArea {
+  background-color: rgba(221, 247, 199, .5);
+}
+
+:deep(.theme-lively) .logArea {
+  background-color: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+:deep(.theme-business) .logArea {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 调整不同主题下的文件选择区域样式 */
+:deep(.theme-classic) .selectFile {
+  border-color: #e9ecef;
+}
+
+:deep(.theme-lively) .selectFile {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+:deep(.theme-business) .selectFile {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 调整不同主题下的滚动条样式 */
+:deep(.theme-classic) .logArea::-webkit-scrollbar-thumb {
+  background-color: rgba(64, 148, 238, 0.6);
+}
+
+:deep(.theme-lively) .logArea::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #4f46e5, #818cf8);
+}
+
+:deep(.theme-business) .logArea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
 }
 </style>

@@ -51,7 +51,6 @@ public class EquipInfoController {
     @ResponseBody
     @PostMapping("/addEquipInfo")
     public Result addEquipInfo(@RequestBody EquipInfo equipInfo) {
-        System.out.println(equipInfo);
         return equipInfoService.addEquipInfo(equipInfo);
     }
 
@@ -59,7 +58,6 @@ public class EquipInfoController {
     @ResponseBody
     @PostMapping("/updateEquipInfo")
     public Result updateEquipInfo(@RequestBody EquipInfo equipInfo) {
-        System.out.println(equipInfo);
         return equipInfoService.updateEquipInfo(equipInfo);
     }
 

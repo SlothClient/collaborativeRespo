@@ -126,7 +126,9 @@ public class MaintanceInfoServiceImpl extends ServiceImpl<MaintanceInfoMapper, M
 
         //发起成功,通知第一级
         try {
-            messageService.notifySuperior("用户"+userInfo.getUsername()+"发起了保养计划申请："+maintenanceInfo.getPlanName()+",请您及时处理","Manager");
+            messageService.notifySuperior("用户"+userInfo.getUsername()+"发起了保养计划申请："+maintenanceInfo.getPlanName()+",<a href='#/dashboard/approval/index'>点击处理</a>","Manager");
+
+
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

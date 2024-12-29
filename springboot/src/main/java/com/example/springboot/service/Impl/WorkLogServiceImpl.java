@@ -5,6 +5,7 @@ import com.example.springboot.mapper.WorkLogMapper;
 import com.example.springboot.response.FileUploadResponse;
 import com.example.springboot.service.WorkLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +22,14 @@ import java.util.List;
 public class WorkLogServiceImpl implements WorkLogService {
     @Autowired
     private WorkLogMapper workLogMapper;
+
+    @Value("${gorit.file.root.path}")
+    private String filePath;
     @Override
     public FileUploadResponse saveFile(MultipartFile file) {
         try {
             // 文件上传目录
-            String uploadDir = "D:/gitTestPkg/code/springboot/uploads/logFiles";
+            String uploadDir = filePath + "logFiles\\";
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();

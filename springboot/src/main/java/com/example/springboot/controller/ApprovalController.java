@@ -64,6 +64,4 @@ public class ApprovalController {
     public Result<String> delete(@RequestParam("planId") String planId) {
         return approvalInfoService.delete(planId);
     }
-
-
 }

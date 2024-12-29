@@ -1,7 +1,7 @@
 package com.example.springboot.service;
 
-import com.example.springboot.entity.CheckitemEquip;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.springboot.entity.CheckitemEquip;
 import com.example.springboot.utils.Result;
 
 import java.util.List;

@@ -1,258 +1,1340 @@
 /*
- Navicat Premium Data Transfer
+Navicat MySQL Data Transfer
 
- Source Server         : AirCyan
- Source Server Type    : MySQL
- Source Server Version : 100137
- Source Host           : localhost:3306
- Source Schema         : maintancedb
+Source Server         : 哈哈
+Source Server Version : 80026
+Source Host           : localhost:3306
+Source Database       : maintancedb
 
- Target Server Type    : MySQL
- Target Server Version : 100137
- File Encoding         : 65001
+Target Server Type    : MYSQL
+Target Server Version : 80026
+File Encoding         : 65001
 
- Date: 23/09/2024 16:36:36
+Date: 2024-12-29 23:10:45
 */
 
-create database  maintenance_db;
+SET FOREIGN_KEY_CHECKS=0;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
-use maintenance_db;
 -- ----------------------------
 -- Table structure for approval_info
 -- ----------------------------
 DROP TABLE IF EXISTS `approval_info`;
-CREATE TABLE `approval_info`  (
+CREATE TABLE `approval_info` (
   `approval_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `plan_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `father_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `applicant_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `manip_time` datetime(0) NULL DEFAULT NULL,
-  `approval_status` tinyint(255) NULL DEFAULT NULL,
-  `step_order` tinyint(255) NULL DEFAULT NULL,
-  `approval_remark` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `plan_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `father_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `applicant_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `manip_time` datetime DEFAULT NULL,
+  `approval_status` tinyint DEFAULT NULL,
+  `step_order` tinyint DEFAULT NULL,
+  `approval_remark` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `is_deleted` int DEFAULT '0',
+  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`approval_id`) USING BTREE,
-  INDEX `pid_fk`(`plan_id`) USING BTREE,
-  INDEX `aid_fk`(`father_id`) USING BTREE,
+  KEY `pid_fk` (`plan_id`) USING BTREE,
+  KEY `aid_fk` (`father_id`) USING BTREE,
+  KEY `applicantId_fk` (`applicant_id`) USING BTREE,
+  KEY `cid_fk` (`check_id`) USING BTREE,
   CONSTRAINT `aid_fk` FOREIGN KEY (`father_id`) REFERENCES `approval_info` (`approval_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `applicantId_fk` FOREIGN KEY (`applicant_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `cid_fk` FOREIGN KEY (`check_id`) REFERENCES `check_info` (`check_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `pid_fk` FOREIGN KEY (`plan_id`) REFERENCES `maintance_info` (`plan_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of approval_info
 -- ----------------------------
+INSERT INTO `approval_info` VALUES ('1839921085444485122', '1839921085398347778', null, 'U001', '2024-09-28 14:52:25', '0', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1839921085444485123', '1839921085398347778', null, null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1839921085444485124', '1839921085398347778', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1839922184649920514', '1839922184649920513', null, 'U001', '2024-09-28 14:56:47', '0', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1839922184649920515', '1839922184649920513', null, null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1839922184649920516', '1839922184649920513', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840350924668354561', '1840350924613828610', null, 'U003', '2024-09-29 19:20:27', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840350924668354562', '1840350924613828610', null, 'U002', '2024-09-29 21:08:03', '2', '1', '我是manager,我同意', '1', null);
+INSERT INTO `approval_info` VALUES ('1840350924668354563', '1840350924613828610', null, 'U001', '2024-09-29 21:08:44', '2', '2', '我是admin,我同意', '1', null);
+INSERT INTO `approval_info` VALUES ('1840382441503215617', '1840382441486438402', null, 'U002', '2024-09-29 21:25:41', '0', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840382441553547265', '1840382441486438402', null, null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840382441553547266', '1840382441486438402', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840389569781657601', '1840389569731325954', null, 'U003', '2024-09-29 21:54:00', '0', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840389569781657602', '1840389569731325954', null, null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840389569781657603', '1840389569731325954', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840580697608937475', '1840580697608937474', null, 'U003', '2024-09-30 10:33:29', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840580697680240641', '1840580697608937474', null, 'U002', '2024-09-30 10:34:09', '2', '1', '我是manager，我同意该计划', '1', null);
+INSERT INTO `approval_info` VALUES ('1840580697680240642', '1840580697608937474', null, 'U001', '2024-09-30 10:34:45', '2', '2', '我是admin，我同意该计划', '1', null);
+INSERT INTO `approval_info` VALUES ('1840585257077391361', '1840585257048031233', null, 'U003', '2024-09-30 10:51:36', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1840585257077391362', '1840585257048031233', null, 'U002', '2024-09-30 10:56:10', '2', '1', '看你不爽，驳回你', '1', null);
+INSERT INTO `approval_info` VALUES ('1840585257077391363', '1840585257048031233', null, 'U001', '2024-09-30 10:57:16', '2', '2', '啊？', '1', null);
+INSERT INTO `approval_info` VALUES ('1840587262277664770', '1840587262277664769', null, 'U003', '2024-09-30 10:59:34', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1840587262340579330', '1840587262277664769', null, 'U002', '2024-09-30 11:00:10', '3', '1', '驳回', '0', null);
+INSERT INTO `approval_info` VALUES ('1840587262340579331', '1840587262277664769', null, 'U001', '2024-09-30 11:04:14', '2', '2', '测试一下驳回了能不能再次通过', '0', null);
+INSERT INTO `approval_info` VALUES ('1840754307132727298', '1840754307044646914', null, 'U003', '2024-09-30 22:03:20', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1840754307174670337', '1840754307044646914', null, 'U002', '2024-09-30 22:05:04', '3', '1', 'manager驳回', '0', null);
+INSERT INTO `approval_info` VALUES ('1840754307220807681', '1840754307044646914', null, 'U001', '2024-09-30 22:05:49', '2', '2', 'manager驳回了admin还能同意？', '0', null);
+INSERT INTO `approval_info` VALUES ('1841110877431635970', '1841110877385498626', null, 'U003', '2024-10-01 21:40:13', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1841110877490356226', '1841110877385498626', null, null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1841110877490356227', '1841110877385498626', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1841111151470682113', '1841111151407767553', null, 'U003', '2024-10-01 21:41:19', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1841111151470682114', '1841111151407767553', null, 'U002', '2024-10-01 22:04:50', '3', '1', '我就要驳回', '1', null);
+INSERT INTO `approval_info` VALUES ('1841111151500042241', '1841111151407767553', null, null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1841113178846187522', '1841113178846187521', null, 'U003', '2024-10-01 21:49:22', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1841113178917490690', '1841113178846187521', null, 'U002', '2024-10-01 21:54:26', '2', '1', '我同意该计划', '0', null);
+INSERT INTO `approval_info` VALUES ('1841113178917490691', '1841113178846187521', null, 'U001', '2024-10-01 21:55:12', '3', '2', '我不同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1841391043391250433', '1841391043374473217', null, 'U003', '2024-10-02 16:13:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1841391043391250434', '1841391043374473217', null, 'U002', '2024-10-02 16:23:41', '2', '1', '下一级同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1841391043391250435', '1841391043374473217', null, 'U001', '2024-10-02 16:25:57', '3', '2', '拒绝不需要理由', '0', null);
+INSERT INTO `approval_info` VALUES ('1841395469682204675', '1841395469682204674', null, 'U003', '2024-10-02 16:31:06', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1841395469745119233', '1841395469682204674', null, 'U002', '2024-10-02 16:32:40', '3', '1', '驳回试试', '0', null);
+INSERT INTO `approval_info` VALUES ('1841395469745119234', '1841395469682204674', null, null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1841408674227769346', '1841408674164854786', null, 'U003', '2024-10-02 17:23:34', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1841408674227769347', '1841408674164854786', null, 'U002', '2024-10-02 17:23:57', '2', '1', '通过', '0', null);
+INSERT INTO `approval_info` VALUES ('1841408674257129474', '1841408674164854786', null, null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1843655390027403266', '1843655390027403265', null, 'U003', '2024-10-08 22:11:13', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1843655390027403267', '1843655390027403265', '1843655390027403266', 'U002', '2024-10-08 22:23:29', '2', '1', 'pass', '0', null);
+INSERT INTO `approval_info` VALUES ('1843655390027403268', '1843655390027403265', '1843655390027403267', 'U001', '2024-10-08 22:23:49', '2', '2', 'pass', '0', null);
+INSERT INTO `approval_info` VALUES ('1844045153909604354', '1844045153909604353', null, 'U003', '2024-10-10 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045153951547394', '1844045153909604353', '1844045153909604354', 'U002', '2024-10-12 22:49:15', '2', '1', '同意了', '0', null);
+INSERT INTO `approval_info` VALUES ('1844045153951547395', '1844045153909604353', '1844045153951547394', 'U001', '2024-10-12 22:49:55', '2', '2', '我也同意了', '0', null);
+INSERT INTO `approval_info` VALUES ('1844045153951547397', '1844045153951547396', null, 'U003', '2024-10-10 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045153951547398', '1844045153951547396', '1844045153951547397', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154014461953', '1844045153951547396', '1844045153951547398', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154014461955', '1844045154014461954', null, 'U003', '2024-10-10 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154014461956', '1844045154014461954', '1844045154014461955', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154014461957', '1844045154014461954', '1844045154014461956', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376513', '1844045154014461958', null, 'U003', '2024-10-10 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376514', '1844045154014461958', '1844045154077376513', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376515', '1844045154014461958', '1844045154077376514', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376517', '1844045154077376516', null, 'U003', '2024-10-10 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376518', '1844045154077376516', '1844045154077376517', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844045154077376519', '1844045154077376516', '1844045154077376518', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844407541771067395', '1844407541771067394', null, 'U003', '2024-10-11 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844407541771067396', '1844407541771067394', '1844407541771067395', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844407541838176257', '1844407541771067394', '1844407541771067396', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929611563011', '1844769929611563010', null, 'U003', '2024-10-12 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929611563012', '1844769929611563010', '1844769929611563011', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929611563013', '1844769929611563010', '1844769929611563012', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477570', '1844769929674477569', null, 'U003', '2024-10-12 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477571', '1844769929674477569', '1844769929674477570', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477572', '1844769929674477569', '1844769929674477571', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477574', '1844769929674477573', null, 'U003', '2024-10-12 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477575', '1844769929674477573', '1844769929674477574', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477576', '1844769929674477573', '1844769929674477575', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477578', '1844769929674477577', null, 'U003', '2024-10-12 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477579', '1844769929674477577', '1844769929674477578', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929674477580', '1844769929674477577', '1844769929674477579', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929741586433', '1844769929674477581', null, 'U003', '2024-10-12 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929741586434', '1844769929674477581', '1844769929741586433', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1844769929741586435', '1844769929674477581', '1844769929741586434', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1845132317745479681', '1845132317703536642', null, 'U003', '2024-10-13 00:00:00', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1845132317888086018', '1845132317703536642', '1845132317745479681', null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1845132317955194881', '1845132317703536642', '1845132317888086018', null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1845711037628956673', '1845711037561847810', null, 'U003', '2024-10-01 14:19:37', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1845711037691871234', '1845711037561847810', '1845711037628956673', null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1845711037691871235', '1845711037561847810', '1845711037691871234', null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1846059908800458754', '1846059908733349890', null, 'U002', '2024-10-15 13:25:55', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1846059908800458755', '1846059908733349890', '1846059908800458754', 'U002', '2024-10-15 13:26:26', '2', '1', '通过3', '0', null);
+INSERT INTO `approval_info` VALUES ('1846059908800458756', '1846059908733349890', '1846059908800458755', 'U001', '2024-10-15 13:27:06', '2', '2', '通过33', '0', null);
+INSERT INTO `approval_info` VALUES ('1846502833955045377', '1846502833804050433', null, 'U003', '2024-10-16 18:45:56', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1846502834022154241', '1846502833804050433', '1846502833955045377', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1846502834022154242', '1846502833804050433', '1846502834022154241', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1846768546011758593', '1846768545906900994', null, 'U003', '2024-10-17 12:21:47', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1846768546078867458', '1846768545906900994', '1846768546011758593', 'U002', '2024-10-17 12:24:39', '2', '1', 'hhhh', '0', null);
+INSERT INTO `approval_info` VALUES ('1846768546141782018', '1846768545906900994', '1846768546078867458', 'U001', '2024-10-17 12:25:22', '2', '2', 'hhhhhh', '0', null);
+INSERT INTO `approval_info` VALUES ('1847216222977536002', '1847216222939787265', null, 'U003', '2024-10-18 18:00:41', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1847216222977536003', '1847216222939787265', '1847216222977536002', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1847216223011090433', '1847216222939787265', '1847216222977536003', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1847220047977263105', '1847220047952097281', null, 'U003', '2024-10-18 18:15:53', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1847220047977263106', '1847220047952097281', '1847220047977263105', 'U002', '2024-10-18 18:17:33', '2', '1', '没啥就是同意一下', '1', null);
+INSERT INTO `approval_info` VALUES ('1847220047977263107', '1847220047952097281', '1847220047977263106', 'U001', '2024-10-18 22:31:54', '2', '2', '同意把', '1', null);
+INSERT INTO `approval_info` VALUES ('1847282595074363393', '1847282594973700098', null, 'U001', '2024-10-18 22:24:26', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1847282595074363394', '1847282594973700098', '1847282595074363393', 'U002', '2024-10-18 22:32:50', '2', '1', '啥也不是', '1', null);
+INSERT INTO `approval_info` VALUES ('1847282595133083650', '1847282594973700098', '1847282595074363394', 'U001', '2024-10-18 22:33:08', '3', '2', '不同意', '1', null);
+INSERT INTO `approval_info` VALUES ('1847293121754034177', '1847293121686925313', null, 'U003', '2024-10-18 23:06:15', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1847293121754034178', '1847293121686925313', '1847293121754034177', null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1847293121754034179', '1847293121686925313', '1847293121754034178', null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1848695177341501443', '1848695177341501442', null, 'U003', '2024-10-22 19:57:31', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848695177400221698', '1848695177341501442', '1848695177341501443', 'U002', '2024-10-22 19:58:38', '2', '1', '十月二十七manager同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1848695177400221699', '1848695177341501442', '1848695177400221698', 'U001', '2024-10-22 19:59:02', '3', '2', 'admin不同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1848724155238404098', '1848724155192266753', null, 'U003', '2024-10-22 21:52:40', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848724155238404099', '1848724155192266753', '1848724155238404098', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848724155238404100', '1848724155192266753', '1848724155238404099', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848724286167797761', '1848724286125854722', null, 'U003', '2024-10-22 21:53:12', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848724286167797762', '1848724286125854722', '1848724286167797761', 'U002', '2024-10-23 22:40:39', '2', '1', 'manager同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1848724286167797763', '1848724286125854722', '1848724286167797762', 'U001', '2024-10-23 22:41:25', '2', '2', 'admin同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1848724380845821953', '1848724380808073217', null, 'U003', '2024-10-22 21:53:34', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1848724380845821954', '1848724380808073217', '1848724380845821953', 'U002', '2024-10-23 21:51:02', '2', '1', '同意❓', '0', null);
+INSERT INTO `approval_info` VALUES ('1848724380845821955', '1848724380808073217', '1848724380845821954', 'U001', '2024-10-23 21:52:06', '2', '2', '我同意', '0', null);
+INSERT INTO `approval_info` VALUES ('1849827608329138177', '1849827608278806530', null, 'U003', '2024-10-25 22:57:24', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849827608329138178', '1849827608278806530', '1849827608329138177', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849827608387858434', '1849827608278806530', '1849827608329138178', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849829437267996674', '1849829437259608066', null, 'U003', '2024-10-25 23:04:40', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849829437267996675', '1849829437259608066', '1849829437267996674', 'U002', '2024-10-31 00:24:16', '2', '1', 'fine with me', '0', null);
+INSERT INTO `approval_info` VALUES ('1849829437267996676', '1849829437259608066', '1849829437267996675', 'U001', '2024-10-31 00:26:26', '2', '2', '做吧做吧', '0', null);
+INSERT INTO `approval_info` VALUES ('1849830326825349122', '1849830326825349121', null, 'U003', '2024-10-25 23:08:12', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849830326879875073', '1849830326825349121', '1849830326825349122', 'U002', '2024-10-31 00:50:03', '2', '1', '必须收到啊。。睡觉zzz', '0', null);
+INSERT INTO `approval_info` VALUES ('1849830326879875074', '1849830326825349121', '1849830326879875073', 'U001', '2024-10-31 00:50:43', '2', '2', '睡觉睡觉过过过！！！', '0', null);
+INSERT INTO `approval_info` VALUES ('1849831991422906370', '1849831991313854466', null, 'U003', '2024-10-25 23:14:49', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1849831991422906371', '1849831991313854466', '1849831991422906370', 'U002', '2024-10-31 00:24:02', '2', '1', 'fine with me', '0', null);
+INSERT INTO `approval_info` VALUES ('1849831991422906372', '1849831991313854466', '1849831991422906371', 'U001', '2024-10-31 00:26:14', '2', '2', '可以做咧', '0', null);
+INSERT INTO `approval_info` VALUES ('1850023742540521474', '1850023742465024001', null, 'U003', '2024-10-26 11:56:46', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1850023742578270210', '1850023742465024001', '1850023742540521474', 'U002', '2024-10-26 12:06:25', '2', '1', '通过，能发消息吗', '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238513025026', '1853467238492053505', null, 'U003', '2024-11-05 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238580133889', '1853467238492053505', '1853467238513025026', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238580133890', '1853467238492053505', '1853467238580133889', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238647242754', '1853467238580133891', null, 'U003', '2024-11-05 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238647242755', '1853467238580133891', '1853467238647242754', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238647242756', '1853467238580133891', '1853467238647242755', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238710157313', '1853467238647242757', null, 'U003', '2024-11-05 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238710157314', '1853467238647242757', '1853467238710157313', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238710157315', '1853467238647242757', '1853467238710157314', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238710157317', '1853467238710157316', null, 'U003', '2024-11-05 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238835986434', '1853467238710157316', '1853467238710157317', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238835986435', '1853467238710157316', '1853467238835986434', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238835986437', '1853467238835986436', null, 'U003', '2024-11-05 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238835986438', '1853467238835986436', '1853467238835986437', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853467238903095297', '1853467238835986436', '1853467238835986438', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688794107907', '1853829688794107906', null, 'U003', '2024-11-06 00:00:15', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688794107908', '1853829688794107906', '1853829688794107907', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688873799682', '1853829688794107906', '1853829688794107908', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688873799684', '1853829688873799683', null, 'U003', '2024-11-06 00:00:15', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688873799685', '1853829688873799683', '1853829688873799684', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1853829688873799686', '1853829688873799683', '1853829688873799685', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014139351041', '1854192014072242177', null, 'U003', '2024-11-07 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014139351042', '1854192014072242177', '1854192014139351041', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014139351043', '1854192014072242177', '1854192014139351042', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014139351045', '1854192014139351044', null, 'U003', '2024-11-07 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014206459905', '1854192014139351044', '1854192014139351045', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014206459906', '1854192014139351044', '1854192014206459905', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014206459908', '1854192014206459907', null, 'U003', '2024-11-07 00:00:00', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014206459909', '1854192014206459907', '1854192014206459908', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1854192014206459910', '1854192014206459907', '1854192014206459909', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307310346241', '1873036307289374721', null, 'U003', '2024-12-29 00:00:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307448758274', '1873036307289374721', '1873036307310346241', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307448758275', '1873036307289374721', '1873036307448758274', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307448758277', '1873036307448758276', null, 'U003', '2024-12-29 00:00:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307507478530', '1873036307448758276', '1873036307448758277', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307507478531', '1873036307448758276', '1873036307507478530', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307507478533', '1873036307507478532', null, 'U003', '2024-12-29 00:00:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307570393090', '1873036307507478532', '1873036307507478533', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307570393091', '1873036307507478532', '1873036307570393090', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307570393093', '1873036307570393092', null, 'U003', '2024-12-29 00:00:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307570393094', '1873036307570393092', '1873036307570393093', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307570393095', '1873036307570393092', '1873036307570393094', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307633307649', '1873036307570393096', null, 'U003', '2024-12-29 00:00:30', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307633307650', '1873036307570393096', '1873036307633307649', null, null, '0', '1', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873036307633307651', '1873036307570393096', '1873036307633307650', null, null, '0', '2', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873200143724212226', '1873200143707435009', null, 'U001', '2024-12-29 10:51:31', '2', '0', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1873200143791321090', '1873200143707435009', '1873200143724212226', null, null, '0', '1', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1873200143921344515', '1873200143707435009', '1873200143791321090', null, null, '0', '2', null, '1', null);
+INSERT INTO `approval_info` VALUES ('1873200350260129794', '1873200350197215233', null, 'U003', '2024-12-29 10:52:20', '2', '0', null, '0', null);
+INSERT INTO `approval_info` VALUES ('1873200350327238658', '1873200350197215233', '1873200350260129794', 'U002', '2024-12-29 10:53:08', '2', '1', 'ty', '0', null);
+INSERT INTO `approval_info` VALUES ('1873200350457262081', '1873200350197215233', '1873200350327238658', 'U001', '2024-12-29 10:53:42', '3', '2', 'bty', '0', null);
 
 -- ----------------------------
--- Table structure for check_info
+-- Table structure for chat_record
 -- ----------------------------
-DROP TABLE IF EXISTS `check_info`;
-CREATE TABLE `check_info`  (
-  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `check_time` datetime(0) NULL DEFAULT NULL,
-  `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `check_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `check_out` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  PRIMARY KEY (`check_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+DROP TABLE IF EXISTS `chat_record`;
+CREATE TABLE `chat_record` (
+  `chat_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `sender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `receiver` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `time` datetime DEFAULT NULL,
+  `is_read` int DEFAULT '0',
+  PRIMARY KEY (`chat_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Records of check_info
+-- Records of chat_record
 -- ----------------------------
+INSERT INTO `chat_record` VALUES ('1848026833017778178', 'U001', 'U001', '啊啊啊', '2024-10-21 18:15:57', '1');
+INSERT INTO `chat_record` VALUES ('1848026847915945986', 'U001', 'U001', '啊啊啊啊', '2024-10-21 18:16:00', '1');
+INSERT INTO `chat_record` VALUES ('1848026868509978625', 'U001', 'U001', '啊', '2024-10-21 18:16:03', '1');
+INSERT INTO `chat_record` VALUES ('1848027142481915906', 'U001', 'U001', '啊', '2024-10-21 18:16:05', '1');
+INSERT INTO `chat_record` VALUES ('1848027235884871682', 'U001', 'U001', '好的', '2024-10-21 18:16:07', '1');
+INSERT INTO `chat_record` VALUES ('1848027715788746754', 'U003', 'U001', 'a', '2024-10-21 18:16:09', '1');
+INSERT INTO `chat_record` VALUES ('1848027926669963266', 'U003', 'U003', '滚', '2024-10-21 18:16:13', '1');
+INSERT INTO `chat_record` VALUES ('1848027970185867265', 'U003', 'U004', '噢噢', '2024-10-21 18:16:16', '1');
+INSERT INTO `chat_record` VALUES ('1848241278373543937', 'U003', 'U003', 'haolei', '2024-10-21 18:16:19', '1');
+INSERT INTO `chat_record` VALUES ('1848241905912725506', 'U003', 'U001', 'a', '2024-10-21 18:16:21', '1');
+INSERT INTO `chat_record` VALUES ('1848242012003450881', 'U001', 'U001', 'a', '2024-10-21 18:16:23', '1');
+INSERT INTO `chat_record` VALUES ('1848242032995942402', 'U003', 'U001', 'a', '2024-10-21 18:16:26', '1');
+INSERT INTO `chat_record` VALUES ('1848244168987209730', 'U003', 'U001', 'a', '2024-10-21 18:16:28', '1');
+INSERT INTO `chat_record` VALUES ('1848244204034813954', 'U003', 'U001', 'b', '2024-10-21 18:16:30', '1');
+INSERT INTO `chat_record` VALUES ('1848244224096169985', 'U001', 'U001', 'c', '2024-10-21 18:16:32', '1');
+INSERT INTO `chat_record` VALUES ('1848248197968523265', 'U003', 'U001', 'a', '2024-10-21 18:16:34', '1');
+INSERT INTO `chat_record` VALUES ('1848366697890443265', 'U003', 'U001', '啥玩意', '2024-10-21 22:12:16', '1');
+INSERT INTO `chat_record` VALUES ('1848366961041076226', 'U001', 'U003', '我是你爹', '2024-10-21 22:13:19', '1');
+INSERT INTO `chat_record` VALUES ('1848367038446956545', 'U001', 'U003', '我是你爹', '2024-10-21 22:13:37', '1');
+INSERT INTO `chat_record` VALUES ('1848367117547335681', 'U003', 'U001', '啊？', '2024-10-21 22:13:56', '1');
+INSERT INTO `chat_record` VALUES ('1848367292487561217', 'U003', 'U001', '没用吗？', '2024-10-21 22:14:38', '1');
+INSERT INTO `chat_record` VALUES ('1848367359130857474', 'U001', 'U003', '还真没用', '2024-10-21 22:14:54', '1');
+INSERT INTO `chat_record` VALUES ('1848372648743747586', 'U001', 'U002', '发', '2024-10-21 22:35:55', '1');
+INSERT INTO `chat_record` VALUES ('1848372741609832449', 'U001', 'U001', '发', '2024-10-21 22:36:17', '1');
+INSERT INTO `chat_record` VALUES ('1848372759787945986', 'U001', 'U002', '发', '2024-10-21 22:36:21', '1');
+INSERT INTO `chat_record` VALUES ('1848374461681319938', 'U001', 'U002', 'sha', '2024-10-21 22:43:07', '1');
+INSERT INTO `chat_record` VALUES ('1848374801663213569', 'U001', 'U001', '啊', '2024-10-21 22:44:28', '1');
+INSERT INTO `chat_record` VALUES ('1848374816221642754', 'U001', 'U002', '在', '2024-10-21 22:44:31', '1');
+INSERT INTO `chat_record` VALUES ('1848375094530490369', 'U001', 'U002', '发给manager', '2024-10-21 22:45:38', '1');
+INSERT INTO `chat_record` VALUES ('1848375665832443905', 'U003', 'U001', '发给admin', '2024-10-21 22:47:54', '1');
+INSERT INTO `chat_record` VALUES ('1848375760804069377', 'U003', 'U002', '发给manager', '2024-10-21 22:48:17', '1');
+INSERT INTO `chat_record` VALUES ('1848376686705065985', 'U003', 'U002', 'a', '2024-10-21 22:51:57', '1');
+INSERT INTO `chat_record` VALUES ('1848376826065010690', 'U003', 'U002', '为啥', '2024-10-21 22:52:31', '1');
+INSERT INTO `chat_record` VALUES ('1848377112527585282', 'U003', 'U002', '❓', '2024-10-21 22:53:39', '1');
+INSERT INTO `chat_record` VALUES ('1848377333307359233', 'U003', 'U002', '发给manager', '2024-10-21 22:54:32', '1');
+INSERT INTO `chat_record` VALUES ('1848377766985809922', 'U003', 'U002', '发给manager', '2024-10-21 22:56:15', '1');
+INSERT INTO `chat_record` VALUES ('1848378060679364610', 'U003', 'U002', '啥', '2024-10-21 22:57:25', '1');
+INSERT INTO `chat_record` VALUES ('1848378189939425281', 'U003', 'U002', '而', '2024-10-21 22:57:56', '1');
+INSERT INTO `chat_record` VALUES ('1848378449638146049', 'U003', 'U002', '啊？', '2024-10-21 22:58:58', '1');
+INSERT INTO `chat_record` VALUES ('1848378475873517569', 'U003', 'U002', '有了', '2024-10-21 22:59:04', '1');
+INSERT INTO `chat_record` VALUES ('1848378601195126785', 'U003', 'U002', '啊', '2024-10-21 22:59:34', '1');
+INSERT INTO `chat_record` VALUES ('1848378726084722689', 'U003', 'U002', 'user', '2024-10-21 23:00:04', '1');
+INSERT INTO `chat_record` VALUES ('1848378744648712193', 'U002', 'U003', 'user', '2024-10-21 23:00:08', '1');
+INSERT INTO `chat_record` VALUES ('1848378827448467457', 'U002', 'U003', '这也不同步啊', '2024-10-21 23:00:28', '1');
+INSERT INTO `chat_record` VALUES ('1848379077521260545', 'U003', 'U001', '滚', '2024-10-21 23:01:27', '1');
+INSERT INTO `chat_record` VALUES ('1848379211273420801', 'U003', 'U001', '啥啊', '2024-10-21 23:01:59', '1');
+INSERT INTO `chat_record` VALUES ('1848381791449858049', 'U001', 'U002', 'a', '2024-10-21 23:12:15', '1');
+INSERT INTO `chat_record` VALUES ('1848381812375240706', 'U001', 'U003', 'b', '2024-10-21 23:12:20', '1');
+INSERT INTO `chat_record` VALUES ('1848382371111059457', 'U001', 'U002', '啥啊', '2024-10-21 23:14:33', '1');
+INSERT INTO `chat_record` VALUES ('1848385269228322818', 'U003', 'U001', '3', '2024-10-21 23:26:04', '1');
+INSERT INTO `chat_record` VALUES ('1848385300559773697', 'U001', 'U003', '4', '2024-10-21 23:26:11', '1');
+INSERT INTO `chat_record` VALUES ('1848642029050609666', 'U001', 'U003', 'test', '2024-10-22 16:26:20', '1');
+INSERT INTO `chat_record` VALUES ('1848642561827880962', 'U001', 'U003', 'aaa', '2024-10-22 16:28:27', '1');
+INSERT INTO `chat_record` VALUES ('1848642968146886657', 'U001', 'U003', 'a', '2024-10-22 16:30:04', '1');
+INSERT INTO `chat_record` VALUES ('1848643128272830465', 'U001', 'U003', 'a', '2024-10-22 16:30:42', '1');
+INSERT INTO `chat_record` VALUES ('1848646688901382146', 'U003', 'U001', 'a', '2024-10-22 16:44:51', '1');
+INSERT INTO `chat_record` VALUES ('1848646861731872769', 'U001', 'U003', 'a', '2024-10-22 16:45:32', '1');
+INSERT INTO `chat_record` VALUES ('1848647050676879361', 'U001', 'U003', 'a', '2024-10-22 16:46:17', '1');
+INSERT INTO `chat_record` VALUES ('1848647281351016450', 'U001', 'U003', 'a', '2024-10-22 16:47:12', '1');
+INSERT INTO `chat_record` VALUES ('1848647445096644609', 'U001', 'U003', 'a', '2024-10-22 16:47:51', '1');
+INSERT INTO `chat_record` VALUES ('1848647606489268226', 'U001', 'U003', 'a', '2024-10-22 16:48:30', '1');
+INSERT INTO `chat_record` VALUES ('1848647826904137730', 'U001', 'U003', 'a', '2024-10-22 16:49:22', '1');
+INSERT INTO `chat_record` VALUES ('1848648074120609793', 'U001', 'U003', 'b', '2024-10-22 16:50:21', '1');
+INSERT INTO `chat_record` VALUES ('1848648479718195202', 'U001', 'U003', '嘿嘿', '2024-10-22 16:51:58', '1');
+INSERT INTO `chat_record` VALUES ('1848648515428499457', 'U003', 'U001', 'gun ', '2024-10-22 16:52:06', '1');
+INSERT INTO `chat_record` VALUES ('1848648549230395394', 'U003', 'U001', 'sha', '2024-10-22 16:52:15', '1');
+INSERT INTO `chat_record` VALUES ('1848650257146789890', 'U001', 'U003', '你是？', '2024-10-22 16:59:02', '1');
+INSERT INTO `chat_record` VALUES ('1848650288960585729', 'U003', 'U001', '有了', '2024-10-22 16:59:09', '1');
+INSERT INTO `chat_record` VALUES ('1848650309114216449', 'U001', 'U003', '好玩', '2024-10-22 16:59:14', '1');
+INSERT INTO `chat_record` VALUES ('1848650354605637634', 'U003', 'U001', '呃呃', '2024-10-22 16:59:25', '1');
+INSERT INTO `chat_record` VALUES ('1848650464995524610', 'U003', 'U001', 'ee', '2024-10-22 16:59:51', '1');
+INSERT INTO `chat_record` VALUES ('1848650492937977858', 'U001', 'U002', 'ee', '2024-10-22 16:59:58', '1');
+INSERT INTO `chat_record` VALUES ('1848650529298399233', 'U003', 'U002', '啥啊', '2024-10-22 17:00:07', '1');
+INSERT INTO `chat_record` VALUES ('1848650595438379010', 'U001', 'U003', '啥啊', '2024-10-22 17:00:22', '1');
+INSERT INTO `chat_record` VALUES ('1848650641202429953', 'U001', 'U003', '啥啊', '2024-10-22 17:00:33', '1');
+INSERT INTO `chat_record` VALUES ('1848652135620362242', 'U001', 'U002', '发给manager', '2024-10-22 17:06:30', '1');
+INSERT INTO `chat_record` VALUES ('1848652265694117890', 'U001', 'U003', '你好', '2024-10-22 17:07:01', '1');
+INSERT INTO `chat_record` VALUES ('1848652326494748674', 'U001', 'U003', '啊？', '2024-10-22 17:07:15', '1');
+INSERT INTO `chat_record` VALUES ('1848652552244772865', 'U001', 'U003', '你好', '2024-10-22 17:08:09', '1');
+INSERT INTO `chat_record` VALUES ('1848652825096830978', 'U001', 'U003', '滚', '2024-10-22 17:09:14', '1');
+INSERT INTO `chat_record` VALUES ('1848652918508175362', 'U001', 'U003', '啊？', '2024-10-22 17:09:36', '1');
+INSERT INTO `chat_record` VALUES ('1848652959784321026', 'U001', 'U003', '啥啊', '2024-10-22 17:09:46', '1');
+INSERT INTO `chat_record` VALUES ('1848653061173231617', 'U003', 'U001', '？', '2024-10-22 17:10:10', '1');
+INSERT INTO `chat_record` VALUES ('1848653564019949569', 'U001', 'U003', '嗯嗯', '2024-10-22 17:12:10', '1');
+INSERT INTO `chat_record` VALUES ('1848653626062094337', 'U001', 'U003', '啊？', '2024-10-22 17:12:25', '1');
+INSERT INTO `chat_record` VALUES ('1848653691052834818', 'U001', 'U003', '不报bug', '2024-10-22 17:12:40', '1');
+INSERT INTO `chat_record` VALUES ('1848653729657208834', 'U001', 'U002', '你是？', '2024-10-22 17:12:50', '1');
+INSERT INTO `chat_record` VALUES ('1848653761743634433', 'U001', 'U003', '有了', '2024-10-22 17:12:57', '1');
+INSERT INTO `chat_record` VALUES ('1848657306626768897', 'U002', 'U003', '哈哈', '2024-10-22 17:27:02', '1');
+INSERT INTO `chat_record` VALUES ('1848657452588548098', 'U003', 'U001', '呃呃呃', '2024-10-22 17:27:37', '1');
+INSERT INTO `chat_record` VALUES ('1848657652380024834', 'U001', 'U003', '好玩', '2024-10-22 17:28:25', '1');
+INSERT INTO `chat_record` VALUES ('1848689066701955074', 'U003', 'U002', '哈哈', '2024-10-22 19:33:15', '1');
+INSERT INTO `chat_record` VALUES ('1848695948514623489', 'U001', 'U002', '啊❓', '2024-10-22 20:00:35', '1');
+INSERT INTO `chat_record` VALUES ('1848695978193518593', 'U002', 'U001', 'oo', '2024-10-22 20:00:42', '1');
+INSERT INTO `chat_record` VALUES ('1848695996031893506', 'U001', 'U002', '啥', '2024-10-22 20:00:47', '1');
+INSERT INTO `chat_record` VALUES ('1848696022518923265', 'U002', 'U001', '没啥', '2024-10-22 20:00:53', '1');
+INSERT INTO `chat_record` VALUES ('1848696057889488898', 'U002', 'U003', '哦哦哦', '2024-10-22 20:01:01', '1');
+INSERT INTO `chat_record` VALUES ('1848696149459533826', 'U003', 'U002', '哦你个大头鬼', '2024-10-22 20:01:23', '1');
+INSERT INTO `chat_record` VALUES ('1849028737223024642', 'U003', 'U001', 'nihao', '2024-10-23 18:02:58', '1');
+INSERT INTO `chat_record` VALUES ('1849028770811011073', 'U001', 'U003', '你也好', '2024-10-23 18:03:06', '1');
+INSERT INTO `chat_record` VALUES ('1849028790092226562', 'U001', 'U003', '啥', '2024-10-23 18:03:11', '1');
+INSERT INTO `chat_record` VALUES ('1849028808077402114', 'U001', 'U003', '啥也不是', '2024-10-23 18:03:15', '1');
+INSERT INTO `chat_record` VALUES ('1849352782053326849', 'U003', 'U002', 'a', '2024-10-24 15:30:37', '1');
+INSERT INTO `chat_record` VALUES ('1849373516901285889', 'U005', 'U003', '哈喽', '2024-10-24 16:53:00', '1');
+INSERT INTO `chat_record` VALUES ('1849373655279763458', 'U003', 'U005', '你的申请已被拒绝理由如下：', '2024-10-24 16:53:33', '1');
+INSERT INTO `chat_record` VALUES ('1849382525104496642', 'U004', 'U003', '❓', '2024-10-24 17:28:48', '1');
+INSERT INTO `chat_record` VALUES ('1849701257601343489', 'currentUserId', 'U004', '你好', '2024-10-25 14:35:20', '0');
+INSERT INTO `chat_record` VALUES ('1849701490066448385', 'currentUserId', 'U001', '好的', '2024-10-25 14:36:15', '0');
+INSERT INTO `chat_record` VALUES ('1849703017074122754', 'U001', 'U004', 'nihao', '2024-10-25 14:42:19', '1');
+INSERT INTO `chat_record` VALUES ('1849712056583577601', 'U003', 'U001', '你好', '2024-10-25 15:18:14', '1');
+INSERT INTO `chat_record` VALUES ('1849717731627884545', 'U003', 'U001', 'hello', '2024-10-25 15:40:47', '1');
+INSERT INTO `chat_record` VALUES ('1849718040089583617', 'U001', 'U003', 'hi', '2024-10-25 15:42:01', '1');
+INSERT INTO `chat_record` VALUES ('1849718133287018497', 'U003', 'U001', 'hi', '2024-10-25 15:42:23', '1');
+INSERT INTO `chat_record` VALUES ('1849731805900128257', 'U004', 'U003', '哈哈', '2024-10-25 16:36:43', '1');
+INSERT INTO `chat_record` VALUES ('1849732122272284673', 'U003', 'U004', '❓', '2024-10-25 16:37:58', '1');
+INSERT INTO `chat_record` VALUES ('1849732140991463426', 'U004', 'U003', '为啥', '2024-10-25 16:38:03', '1');
+INSERT INTO `chat_record` VALUES ('1849732395657019393', 'U003', 'U004', '啊？', '2024-10-25 16:39:04', '1');
+INSERT INTO `chat_record` VALUES ('1849732415944867842', 'U004', 'U003', '啥', '2024-10-25 16:39:08', '1');
+INSERT INTO `chat_record` VALUES ('1849732792282988545', 'U001', 'U003', '额', '2024-10-25 16:40:38', '1');
+INSERT INTO `chat_record` VALUES ('1849733169908748290', 'U001', 'U003', '你好', '2024-10-25 16:42:08', '1');
+INSERT INTO `chat_record` VALUES ('1849733191521996802', 'U003', 'U001', '你也好', '2024-10-25 16:42:13', '1');
+INSERT INTO `chat_record` VALUES ('1849733214188015618', 'U001', 'U003', '网不好', '2024-10-25 16:42:19', '1');
+INSERT INTO `chat_record` VALUES ('1849735896613195777', 'U001', 'U003', '还行', '2024-10-25 16:52:58', '1');
+INSERT INTO `chat_record` VALUES ('1849735914854223874', 'U001', 'U003', '啊？', '2024-10-25 16:53:03', '1');
+INSERT INTO `chat_record` VALUES ('1849736067094876161', 'U001', 'U003', '啥', '2024-10-25 16:53:39', '1');
+INSERT INTO `chat_record` VALUES ('1849736814381436929', 'U001', 'U003', '为啥没用', '2024-10-25 16:56:37', '1');
+INSERT INTO `chat_record` VALUES ('1849736840528728065', 'U001', 'U003', '有啊', '2024-10-25 16:56:43', '1');
+INSERT INTO `chat_record` VALUES ('1849736968887013377', 'U001', 'U003', '啊？', '2024-10-25 16:57:14', '1');
+INSERT INTO `chat_record` VALUES ('1849737575978962945', 'U001', 'U003', '\\(@^0^@)/', '2024-10-25 16:59:39', '1');
+INSERT INTO `chat_record` VALUES ('1849737805982011393', 'U001', 'U003', '凭啥', '2024-10-25 17:00:34', '1');
+INSERT INTO `chat_record` VALUES ('1849737837430902785', 'U001', 'U003', '咋没用啊', '2024-10-25 17:00:41', '1');
+INSERT INTO `chat_record` VALUES ('1849737877444562945', 'U001', 'U003', '不应该吧', '2024-10-25 17:00:51', '1');
+INSERT INTO `chat_record` VALUES ('1849738252973182977', 'U001', 'U003', '啊', '2024-10-25 17:02:20', '1');
+INSERT INTO `chat_record` VALUES ('1849738368345903106', 'U001', 'U003', '嗯嗯', '2024-10-25 17:02:48', '1');
+INSERT INTO `chat_record` VALUES ('1849738411777921025', 'U001', 'U003', '噢噢', '2024-10-25 17:02:58', '1');
+INSERT INTO `chat_record` VALUES ('1849738621455372290', 'U001', 'U003', '哦？', '2024-10-25 17:03:48', '1');
+INSERT INTO `chat_record` VALUES ('1849738696533413889', 'U001', 'U003', '凭啥呢', '2024-10-25 17:04:06', '1');
+INSERT INTO `chat_record` VALUES ('1849739231395254274', 'U001', 'U003', '我就不信了', '2024-10-25 17:06:13', '1');
+INSERT INTO `chat_record` VALUES ('1849739782287724545', 'U001', 'U003', 'a', '2024-10-25 17:08:25', '1');
+INSERT INTO `chat_record` VALUES ('1849740005093347330', 'U001', 'U003', '你看呗', '2024-10-25 17:09:18', '1');
+INSERT INTO `chat_record` VALUES ('1849740056028975105', 'U001', 'U003', '哈哈', '2024-10-25 17:09:30', '1');
+INSERT INTO `chat_record` VALUES ('1849740082583113729', 'U001', 'U003', '啊啊', '2024-10-25 17:09:36', '1');
+INSERT INTO `chat_record` VALUES ('1849740737167167490', 'U001', 'U003', '你好', '2024-10-25 17:12:12', '1');
+INSERT INTO `chat_record` VALUES ('1849740789956677634', 'U001', 'U003', '你好', '2024-10-25 17:12:25', '1');
+INSERT INTO `chat_record` VALUES ('1849741403818233857', 'U001', 'U003', '太完美辣', '2024-10-25 17:14:51', '1');
+INSERT INTO `chat_record` VALUES ('1849741496705290241', 'U001', 'U003', '???', '2024-10-25 17:15:14', '1');
+INSERT INTO `chat_record` VALUES ('1849741525385940993', 'U001', 'U003', '?????', '2024-10-25 17:15:20', '1');
+INSERT INTO `chat_record` VALUES ('1849778105676943362', 'U003', 'U001', '1', '2024-10-25 19:40:42', '1');
+INSERT INTO `chat_record` VALUES ('1849778132306579458', 'U003', 'U001', '2', '2024-10-25 19:40:48', '1');
+INSERT INTO `chat_record` VALUES ('1849782647428698113', 'U004', 'U001', '哈哈', '2024-10-25 19:58:45', '1');
+INSERT INTO `chat_record` VALUES ('1849824803669315585', 'U003', 'U001', '钱钱钱', '2024-10-25 22:46:15', '1');
+INSERT INTO `chat_record` VALUES ('1849831991477432322', 'U005', '1847279528782286850', '新的保养计划已经添加，请您及时处理', '2024-10-25 23:14:50', '0');
+INSERT INTO `chat_record` VALUES ('1849831991531958274', 'U005', 'U002', '新的保养计划已经添加，请您及时处理', '2024-10-25 23:14:50', '1');
+INSERT INTO `chat_record` VALUES ('1849832218397667330', 'U003', 'U002', '??', '2024-10-25 23:15:43', '1');
+INSERT INTO `chat_record` VALUES ('1849835372153565186', 'U003', 'U002', '你好', '2024-10-25 23:28:15', '1');
+INSERT INTO `chat_record` VALUES ('1849835903429275649', 'U003', 'U002', '你好啊', '2024-10-25 23:30:22', '1');
+INSERT INTO `chat_record` VALUES ('1849836212851470338', 'U003', 'U002', '啥也不是', '2024-10-25 23:31:36', '1');
+INSERT INTO `chat_record` VALUES ('1849839911376154625', 'U003', 'U002', '哈哈', '2024-10-25 23:46:17', '1');
+INSERT INTO `chat_record` VALUES ('1849994968692334593', 'U004', 'U003', '哈哈', '2024-10-26 10:02:26', '1');
+INSERT INTO `chat_record` VALUES ('1849995022073241602', 'U004', 'U003', '没事', '2024-10-26 10:02:39', '1');
+INSERT INTO `chat_record` VALUES ('1849997957561753601', 'U003', 'U004', '泥豪', '2024-10-26 10:14:19', '0');
+INSERT INTO `chat_record` VALUES ('1849998015808053249', 'U003', 'U004', '泥嚎', '2024-10-26 10:14:32', '0');
+INSERT INTO `chat_record` VALUES ('1849998488942321665', 'U003', 'U004', '啥也不是', '2024-10-26 10:16:25', '0');
+INSERT INTO `chat_record` VALUES ('1849999461437841410', 'U003', 'U004', '一点都不好', '2024-10-26 10:20:17', '0');
+INSERT INTO `chat_record` VALUES ('1850023742628601857', 'U005', '1847279528782286850', '用户user发起了保养计划申请：看看消息通知,请您及时处理', '2024-10-26 11:56:47', '0');
+INSERT INTO `chat_record` VALUES ('1850023742628601858', 'U005', 'U002', '用户user发起了保养计划申请：看看消息通知,请您及时处理', '2024-10-26 11:56:47', '1');
+INSERT INTO `chat_record` VALUES ('1850023742775402498', 'U005', '1847279528782286850', '新的保养计划已经添加，请您及时处理', '2024-10-26 11:56:47', '0');
+INSERT INTO `chat_record` VALUES ('1850023742775402499', 'U005', 'U002', '新的保养计划已经添加，请您及时处理', '2024-10-26 11:56:47', '1');
+INSERT INTO `chat_record` VALUES ('1850026170170122241', 'U005', '1847275432939524098', '保养计划：看看消息通知已经通过一级审核，请耐心等待。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170170122242', 'U005', '1847276923100286978', '保养计划：看看消息通知已经通过一级审核，请耐心等待。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170170122243', 'U005', '1847279182831898626', '保养计划：看看消息通知已经通过一级审核，请耐心等待。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170170122244', 'U005', 'U003', '保养计划：看看消息通知已经通过一级审核，请耐心等待。', '2024-10-26 12:06:25', '1');
+INSERT INTO `chat_record` VALUES ('1850026170170122245', 'U005', 'U004', '保养计划：看看消息通知已经通过一级审核，请耐心等待。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170170122246', 'U005', '1847276254314319873', '保养计划：看看消息通知需要您的审核，请及时处理。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170170122247', 'U005', '1847279592762200066', '保养计划：看看消息通知需要您的审核，请及时处理。', '2024-10-26 12:06:25', '0');
+INSERT INTO `chat_record` VALUES ('1850026170233036802', 'U005', 'U001', '保养计划：看看消息通知需要您的审核，请及时处理。', '2024-10-26 12:06:25', '1');
+INSERT INTO `chat_record` VALUES ('1850026464954195969', 'U005', '1847275432939524098', '保养计划：看看消息通知已被(二级)admin驳回。具体原因如下:\n不同意', '2024-10-26 12:07:36', '0');
+INSERT INTO `chat_record` VALUES ('1850026464954195970', 'U005', '1847276923100286978', '保养计划：看看消息通知已被(二级)admin驳回。具体原因如下:\n不同意', '2024-10-26 12:07:36', '0');
+INSERT INTO `chat_record` VALUES ('1850026464954195971', 'U005', '1847279182831898626', '保养计划：看看消息通知已被(二级)admin驳回。具体原因如下:\n不同意', '2024-10-26 12:07:36', '0');
+INSERT INTO `chat_record` VALUES ('1850026464954195972', 'U005', 'U003', '保养计划：看看消息通知已被(二级)admin驳回。具体原因如下:\n不同意', '2024-10-26 12:07:36', '1');
+INSERT INTO `chat_record` VALUES ('1850026465017110529', 'U005', 'U004', '保养计划：看看消息通知已被(二级)admin驳回。具体原因如下:\n不同意', '2024-10-26 12:07:36', '0');
+INSERT INTO `chat_record` VALUES ('1850026842483499009', 'U003', 'U002', '哈哈', '2024-10-26 12:09:05', '0');
+INSERT INTO `chat_record` VALUES ('1850027800252817411', 'U005', '1847279528782286850', '用户user发起了保养计划申请：啊？,请您及时处理', '2024-10-26 12:12:54', '0');
+INSERT INTO `chat_record` VALUES ('1850027800252817412', 'U005', 'U002', '用户user发起了保养计划申请：啊？,请您及时处理', '2024-10-26 12:12:54', '1');
+INSERT INTO `chat_record` VALUES ('1850028051227385857', 'U005', '1847275432939524098', '保养计划：啊？已经通过一级审核，请耐心等待。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051227385858', 'U005', '1847276923100286978', '保养计划：啊？已经通过一级审核，请耐心等待。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051227385859', 'U005', '1847279182831898626', '保养计划：啊？已经通过一级审核，请耐心等待。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051302883330', 'U005', 'U003', '保养计划：啊？已经通过一级审核，请耐心等待。', '2024-10-26 12:13:54', '1');
+INSERT INTO `chat_record` VALUES ('1850028051302883331', 'U005', 'U004', '保养计划：啊？已经通过一级审核，请耐心等待。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051302883332', 'U005', '1847276254314319873', '保养计划：啊？需要您的审核，请及时处理。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051302883333', 'U005', '1847279592762200066', '保养计划：啊？需要您的审核，请及时处理。', '2024-10-26 12:13:54', '0');
+INSERT INTO `chat_record` VALUES ('1850028051302883334', 'U005', 'U001', '保养计划：啊？需要您的审核，请及时处理。', '2024-10-26 12:13:54', '1');
+INSERT INTO `chat_record` VALUES ('1850028311408451586', 'U005', '1847275432939524098', '保养计划：啊？已被(二级)admin驳回。具体原因如下:\n我也通过吧', '2024-10-26 12:14:56', '0');
+INSERT INTO `chat_record` VALUES ('1850028311408451587', 'U005', '1847276923100286978', '保养计划：啊？已被(二级)admin驳回。具体原因如下:\n我也通过吧', '2024-10-26 12:14:56', '0');
+INSERT INTO `chat_record` VALUES ('1850028311408451588', 'U005', '1847279182831898626', '保养计划：啊？已被(二级)admin驳回。具体原因如下:\n我也通过吧', '2024-10-26 12:14:56', '0');
+INSERT INTO `chat_record` VALUES ('1850028311408451589', 'U005', 'U003', '保养计划：啊？已被(二级)admin驳回。具体原因如下:\n我也通过吧', '2024-10-26 12:14:56', '1');
+INSERT INTO `chat_record` VALUES ('1850028311408451590', 'U005', 'U004', '保养计划：啊？已被(二级)admin驳回。具体原因如下:\n我也通过吧', '2024-10-26 12:14:56', '0');
+INSERT INTO `chat_record` VALUES ('1850147500836233217', 'U005', '1847279528782286850', '用户user发起了保养计划申请：啊啊啊啊,请您及时处理', '2024-10-26 20:08:33', '0');
+INSERT INTO `chat_record` VALUES ('1850147500903342082', 'U005', 'U002', '用户user发起了保养计划申请：啊啊啊啊,请您及时处理', '2024-10-26 20:08:33', '1');
+INSERT INTO `chat_record` VALUES ('1850148578768166914', 'U005', '1847275432939524098', '保养计划：啊啊啊啊已经通过一级审核，请耐心等待。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578768166915', 'U005', '1847276923100286978', '保养计划：啊啊啊啊已经通过一级审核，请耐心等待。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578831081473', 'U005', '1847279182831898626', '保养计划：啊啊啊啊已经通过一级审核，请耐心等待。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578831081474', 'U005', 'U003', '保养计划：啊啊啊啊已经通过一级审核，请耐心等待。', '2024-10-26 20:12:50', '1');
+INSERT INTO `chat_record` VALUES ('1850148578831081475', 'U005', 'U004', '保养计划：啊啊啊啊已经通过一级审核，请耐心等待。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578893996034', 'U005', '1847276254314319873', '保养计划：啊啊啊啊需要您的审核，请及时处理。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578893996035', 'U005', '1847279592762200066', '保养计划：啊啊啊啊需要您的审核，请及时处理。', '2024-10-26 20:12:50', '0');
+INSERT INTO `chat_record` VALUES ('1850148578893996036', 'U005', 'U001', '保养计划：啊啊啊啊需要您的审核，请及时处理。', '2024-10-26 20:12:50', '1');
+INSERT INTO `chat_record` VALUES ('1850148733592510465', 'U005', '1847275432939524098', '保养计划：啊啊啊啊已经通过审核，请及时派单。', '2024-10-26 20:13:27', '0');
+INSERT INTO `chat_record` VALUES ('1850148733592510466', 'U005', '1847276923100286978', '保养计划：啊啊啊啊已经通过审核，请及时派单。', '2024-10-26 20:13:27', '0');
+INSERT INTO `chat_record` VALUES ('1850148733592510467', 'U005', '1847279182831898626', '保养计划：啊啊啊啊已经通过审核，请及时派单。', '2024-10-26 20:13:27', '0');
+INSERT INTO `chat_record` VALUES ('1850148733659619330', 'U005', 'U003', '保养计划：啊啊啊啊已经通过审核，请及时派单。', '2024-10-26 20:13:27', '1');
+INSERT INTO `chat_record` VALUES ('1850148733659619331', 'U005', 'U004', '保养计划：啊啊啊啊已经通过审核，请及时派单。', '2024-10-26 20:13:27', '0');
+INSERT INTO `chat_record` VALUES ('1851661347693002753', 'U005', '1847275432939524098', '保养计划：球球manager收到信息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347693002754', 'U005', '1847276923100286978', '保养计划：球球manager收到信息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347693002755', 'U005', '1847279182831898626', '保养计划：球球manager收到信息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347693002756', 'U005', 'U003', '保养计划：球球manager收到信息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:02', '1');
+INSERT INTO `chat_record` VALUES ('1851661347693002757', 'U005', 'U004', '保养计划：球球manager收到信息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347760111617', 'U005', '1847276254314319873', '保养计划：球球manager收到信息需要您的审核，请及时处理。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347760111618', 'U005', '1847279592762200066', '保养计划：球球manager收到信息需要您的审核，请及时处理。', '2024-10-31 00:24:02', '0');
+INSERT INTO `chat_record` VALUES ('1851661347760111619', 'U005', 'U001', '保养计划：球球manager收到信息需要您的审核，请及时处理。', '2024-10-31 00:24:02', '1');
+INSERT INTO `chat_record` VALUES ('1851661406761385986', 'U005', '1847275432939524098', '保养计划：看看manager能不能收到消息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406824300546', 'U005', '1847276923100286978', '保养计划：看看manager能不能收到消息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406824300547', 'U005', '1847279182831898626', '保养计划：看看manager能不能收到消息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406824300548', 'U005', 'U003', '保养计划：看看manager能不能收到消息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:16', '1');
+INSERT INTO `chat_record` VALUES ('1851661406824300549', 'U005', 'U004', '保养计划：看看manager能不能收到消息已经通过一级审核，请耐心等待。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406887215105', 'U005', '1847276254314319873', '保养计划：看看manager能不能收到消息需要您的审核，请及时处理。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406887215106', 'U005', '1847279592762200066', '保养计划：看看manager能不能收到消息需要您的审核，请及时处理。', '2024-10-31 00:24:16', '0');
+INSERT INTO `chat_record` VALUES ('1851661406887215107', 'U005', 'U001', '保养计划：看看manager能不能收到消息需要您的审核，请及时处理。', '2024-10-31 00:24:16', '1');
+INSERT INTO `chat_record` VALUES ('1851661536331825153', 'U002', 'U005', 'fine with me', '2024-10-31 00:24:47', '0');
+INSERT INTO `chat_record` VALUES ('1851661625490145281', 'U002', 'U005', 'waiting for admin‘s', '2024-10-31 00:25:08', '0');
+INSERT INTO `chat_record` VALUES ('1851661795812442114', 'U001', 'U005', '收到了', '2024-10-31 00:25:48', '0');
+INSERT INTO `chat_record` VALUES ('1851661903618637826', 'U005', '1847275432939524098', '保养计划：球球manager收到信息已经通过审核，请及时派单。', '2024-10-31 00:26:14', '0');
+INSERT INTO `chat_record` VALUES ('1851661903618637827', 'U005', '1847276923100286978', '保养计划：球球manager收到信息已经通过审核，请及时派单。', '2024-10-31 00:26:14', '0');
+INSERT INTO `chat_record` VALUES ('1851661903618637828', 'U005', '1847279182831898626', '保养计划：球球manager收到信息已经通过审核，请及时派单。', '2024-10-31 00:26:14', '0');
+INSERT INTO `chat_record` VALUES ('1851661903618637829', 'U005', 'U003', '保养计划：球球manager收到信息已经通过审核，请及时派单。', '2024-10-31 00:26:14', '1');
+INSERT INTO `chat_record` VALUES ('1851661903681552385', 'U005', 'U004', '保养计划：球球manager收到信息已经通过审核，请及时派单。', '2024-10-31 00:26:14', '0');
+INSERT INTO `chat_record` VALUES ('1851661954160001025', 'U005', '1847275432939524098', '保养计划：看看manager能不能收到消息已经通过审核，请及时派单。', '2024-10-31 00:26:26', '0');
+INSERT INTO `chat_record` VALUES ('1851661954227109890', 'U005', '1847276923100286978', '保养计划：看看manager能不能收到消息已经通过审核，请及时派单。', '2024-10-31 00:26:26', '0');
+INSERT INTO `chat_record` VALUES ('1851661954227109891', 'U005', '1847279182831898626', '保养计划：看看manager能不能收到消息已经通过审核，请及时派单。', '2024-10-31 00:26:26', '0');
+INSERT INTO `chat_record` VALUES ('1851661954227109892', 'U005', 'U003', '保养计划：看看manager能不能收到消息已经通过审核，请及时派单。', '2024-10-31 00:26:26', '1');
+INSERT INTO `chat_record` VALUES ('1851661954227109893', 'U005', 'U004', '保养计划：看看manager能不能收到消息已经通过审核，请及时派单。', '2024-10-31 00:26:26', '0');
+INSERT INTO `chat_record` VALUES ('1851667896075288577', 'U005', '1847275432939524098', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过一级审核，请耐心等待。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896075288578', 'U005', '1847276923100286978', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过一级审核，请耐心等待。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896075288579', 'U005', '1847279182831898626', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过一级审核，请耐心等待。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896075288580', 'U005', 'U003', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过一级审核，请耐心等待。', '2024-10-31 00:50:03', '1');
+INSERT INTO `chat_record` VALUES ('1851667896075288581', 'U005', 'U004', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过一级审核，请耐心等待。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896138203138', 'U005', '1847276254314319873', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊需要您的审核，请及时处理。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896138203139', 'U005', '1847279592762200066', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊需要您的审核，请及时处理。', '2024-10-31 00:50:03', '0');
+INSERT INTO `chat_record` VALUES ('1851667896138203140', 'U005', 'U001', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊需要您的审核，请及时处理。', '2024-10-31 00:50:03', '1');
+INSERT INTO `chat_record` VALUES ('1851668065336426497', 'U005', '1847275432939524098', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过审核，请及时派单。', '2024-10-31 00:50:43', '0');
+INSERT INTO `chat_record` VALUES ('1851668065336426498', 'U005', '1847276923100286978', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过审核，请及时派单。', '2024-10-31 00:50:43', '0');
+INSERT INTO `chat_record` VALUES ('1851668065382563842', 'U005', '1847279182831898626', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过审核，请及时派单。', '2024-10-31 00:50:43', '0');
+INSERT INTO `chat_record` VALUES ('1851668065382563843', 'U005', 'U003', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过审核，请及时派单。', '2024-10-31 00:50:43', '1');
+INSERT INTO `chat_record` VALUES ('1851668065445478401', 'U005', 'U004', '保养计划：哈哈哈哈哈manager能不能收到啊啊啊已经通过审核，请及时派单。', '2024-10-31 00:50:43', '0');
+INSERT INTO `chat_record` VALUES ('1873200143854235650', 'U005', '1847279528782286850', '用户admin发起了保养计划申请：mmm,<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:51:31', '0');
+INSERT INTO `chat_record` VALUES ('1873200143921344514', 'U005', 'U002', '用户admin发起了保养计划申请：mmm,<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:51:31', '1');
+INSERT INTO `chat_record` VALUES ('1873200350394347522', 'U005', '1847279528782286850', '用户user发起了保养计划申请： bbb,<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:52:21', '0');
+INSERT INTO `chat_record` VALUES ('1873200350394347523', 'U005', 'U002', '用户user发起了保养计划申请： bbb,<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:52:21', '1');
+INSERT INTO `chat_record` VALUES ('1873200548499714050', 'U005', '1847275432939524098', '保养计划： bbb已经通过一级审核，请耐心等待。', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548499714051', 'U005', '1847276923100286978', '保养计划： bbb已经通过一级审核，请耐心等待。', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548562628610', 'U005', '1847279182831898626', '保养计划： bbb已经通过一级审核，请耐心等待。', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548562628611', 'U005', 'U003', '保养计划： bbb已经通过一级审核，请耐心等待。', '2024-12-29 10:53:08', '1');
+INSERT INTO `chat_record` VALUES ('1873200548562628612', 'U005', 'U004', '保养计划： bbb已经通过一级审核，请耐心等待。', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548629737473', 'U005', '1847276254314319873', '保养计划： bbb需要您的审核，请及时处理。<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548629737474', 'U005', '1847279592762200066', '保养计划： bbb需要您的审核，请及时处理。<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:53:08', '0');
+INSERT INTO `chat_record` VALUES ('1873200548701040641', 'U005', 'U001', '保养计划： bbb需要您的审核，请及时处理。<a href=\'#/dashboard/approval/index\'>点击处理</a>', '2024-12-29 10:53:08', '1');
+INSERT INTO `chat_record` VALUES ('1873200691798110209', 'U005', '1847275432939524098', '保养计划： bbb已被(二级)admin驳回。具体原因如下:\nbty', '2024-12-29 10:53:42', '0');
+INSERT INTO `chat_record` VALUES ('1873200691861024769', 'U005', '1847276923100286978', '保养计划： bbb已被(二级)admin驳回。具体原因如下:\nbty', '2024-12-29 10:53:42', '0');
+INSERT INTO `chat_record` VALUES ('1873200691861024770', 'U005', '1847279182831898626', '保养计划： bbb已被(二级)admin驳回。具体原因如下:\nbty', '2024-12-29 10:53:42', '0');
+INSERT INTO `chat_record` VALUES ('1873200691923939329', 'U005', 'U003', '保养计划： bbb已被(二级)admin驳回。具体原因如下:\nbty', '2024-12-29 10:53:42', '1');
+INSERT INTO `chat_record` VALUES ('1873200691991048193', 'U005', 'U004', '保养计划： bbb已被(二级)admin驳回。具体原因如下:\nbty', '2024-12-29 10:53:42', '0');
+
+-- ----------------------------
+-- Table structure for checkitem_equip
+-- ----------------------------
+DROP TABLE IF EXISTS `checkitem_equip`;
+CREATE TABLE `checkitem_equip` (
+  `equipItem_id` varchar(30) NOT NULL,
+  `equip_id` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `checkitem_name` varchar(255) DEFAULT NULL,
+  `checkitem_way` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `is_deleted` int DEFAULT '0',
+  PRIMARY KEY (`equipItem_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of checkitem_equip
+-- ----------------------------
+INSERT INTO `checkitem_equip` VALUES ('EI001', 'EQ001', '外观', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI002', 'EQ001', '主轴', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI003', 'EQ001', '夹具和工作台', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI004', 'EQ001', '导轨和滑块', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI005', 'EQ001', '润滑系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI006', 'EQ002', '外观', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI007', 'EQ002', '电气系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI008', 'EQ002', '液压系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI009', 'EQ002', '防护装置', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI010', 'EQ002', '密封点', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI011', 'EQ003', '几何精度检测', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI012', 'EQ003', '振动测试', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI013', 'EQ003', '刚性测试', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI014', 'EQ004', '设备结构和外观', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI015', 'EQ004', '砂轮检查', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI016', 'EQ004', '设备清洁', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI017', 'EQ005', '操作按钮', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI018', 'EQ005', '工作台面', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI019', 'EQ005', '上死点停止位置', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI020', 'EQ006', '焊接电极', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI021', 'EQ006', '温控系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI022', 'EQ006', '安全装置', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI023', 'EQ007', '液压部分', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI024', 'EQ007', '液压油', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI025', 'EQ007', '润滑系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI026', 'EQ008', '螺丝紧固', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI027', 'EQ008', '轴承及有关部位', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI028', 'EQ008', '砂轮片', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI029', 'EQ009', '各指示灯', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI030', 'EQ009', '泄漏现象', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI031', 'EQ009', '操纵机构', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI032', 'EQ010', '传感器和控制系统', '手检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI033', 'EQ010', '电器设备', '目检', '0');
+INSERT INTO `checkitem_equip` VALUES ('EI034', 'EQ010', '机械部件', '手检', '0');
 
 -- ----------------------------
 -- Table structure for checkitem_info
 -- ----------------------------
 DROP TABLE IF EXISTS `checkitem_info`;
-CREATE TABLE `checkitem_info`  (
-  `checkitem_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `checkitem_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `checkitem_time` datetime(0) NULL DEFAULT NULL,
-  `checkitem_out` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+CREATE TABLE `checkitem_info` (
+  `checkitem_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `checkitem_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `checkitem_time` datetime DEFAULT NULL,
+  `checkitem_out` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `checkitem_way` varchar(255) DEFAULT NULL,
+  `is_deleted` int DEFAULT '0',
   PRIMARY KEY (`checkitem_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of checkitem_info
 -- ----------------------------
+INSERT INTO `checkitem_info` VALUES ('1', '外观', '1730903169939', '2024-11-06 22:26:09', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730733186996', '测试0', '1846056067719770114', '2024-11-06 17:21:16', '合格', '测试0', '0');
+INSERT INTO `checkitem_info` VALUES ('1730733236940', '测试1', '1846056067719770114', '2024-11-06 17:21:16', '合格', '测试1', '0');
+INSERT INTO `checkitem_info` VALUES ('1730733239325', '测试2', '1846056067719770114', '2024-11-06 17:21:16', '合格', '测试2', '0');
+INSERT INTO `checkitem_info` VALUES ('1730904522012', '外观', '1730904552279', '2024-11-06 22:49:12', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730904522013', '主轴', '1730904552279', '2024-11-06 22:49:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730904522014', '夹具和工作台', '1730904552279', '2024-11-06 22:49:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730904522015', '导轨和滑块', '1730904552279', '2024-11-06 22:49:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730904522016', '润滑系统', '1730904552279', '2024-11-06 22:49:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730905664414.4941', '操作按钮', '1730905683927.0562', '2024-11-06 23:08:03', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730905664415.742', '工作台面', '1730905683927.0562', '2024-11-06 23:08:03', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730905664416.9988', '上死点停止位置', '1730905683927.0562', '2024-11-06 23:08:03', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730908480580.4314', '焊接电极', '1730908521442.6633', '2024-11-06 23:55:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730908480581.5415', '温控系统', '1730908521442.6633', '2024-11-06 23:55:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730908480582.0002', '安全装置', '1730908521442.6633', '2024-11-06 23:55:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910453105.4844', '外观', '1730910472139.6582', '2024-11-07 00:27:52', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910453106.86', '主轴', '1730910472139.6582', '2024-11-07 00:27:52', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910453107.6267', '夹具和工作台', '1730910472139.6582', '2024-11-07 00:27:52', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910453108.2568', '导轨和滑块', '1730910472139.6582', '2024-11-07 00:27:52', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910453109.552', '润滑系统', '1730910472139.6582', '2024-11-07 00:27:52', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910602575.6353', '几何精度检测', '1730910621785.4653', '2024-11-07 00:30:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910602576.205', '振动测试', '1730910621785.4653', '2024-11-07 00:30:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730910602577.2544', '刚性测试', '1730910621785.4653', '2024-11-07 00:30:21', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730911449452.4707', '砂轮检查', '1730911483730.306', '2024-11-07 00:44:43', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730911449452.9866', '设备清洁', '1730911483730.306', '2024-11-07 00:44:43', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730911449452.9875', '设备结构和外观', '1730911483730.306', '2024-11-07 00:44:43', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1730911470136.6128', '测试', '1730911483730.306', '2024-11-07 00:44:43', null, '纯粹是', '0');
+INSERT INTO `checkitem_info` VALUES ('1731319845820.19', '夹具和工作台', '1731319871884.0662', '2024-11-11 18:11:22', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731319845820.4695', '润滑系统', '1731319871884.0662', '2024-11-11 18:11:22', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731319845820.6345', '外观', '1731319871884.0662', '2024-11-11 18:11:22', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731319845820.86', '主轴', '1731319871884.0662', '2024-11-11 18:11:22', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731319845820.9316', '导轨和滑块', '1731319871884.0662', '2024-11-11 18:11:11', null, '手检', '1');
+INSERT INTO `checkitem_info` VALUES ('1731320104165.1194', '工作台面', '1731320127596.3354', '2024-11-11 18:15:27', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320104165.268', '操作按钮', '1731320127596.3354', '2024-11-11 18:15:27', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320104165.5474', '上死点停止位置', '1731320127596.3354', '2024-11-11 18:15:27', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320208431.2532', '振动测试', '1731320230779.22', '2024-11-11 18:17:10', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320208431.5513', '几何精度检测', '1731320230779.22', '2024-11-11 18:17:10', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320208431.9553', '刚性测试', '1731320230779.22', '2024-11-11 18:17:10', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320291471.481', '振动测试', '1731320309487.3687', '2024-11-11 18:18:29', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320291471.7524', '几何精度检测', '1731320309487.3687', '2024-11-11 18:18:29', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320291471.8855', '刚性测试', '1731320309487.3687', '2024-11-11 18:18:29', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320647403.6338', '刚性测试', '1731320664791.1223', '2024-12-28 23:21:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320647403.6348', '振动测试', '1731320664791.1223', '2024-12-28 23:21:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320647403.7598', '几何精度检测', '1731320664791.1223', '2024-12-28 23:21:12', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('1731320673236', '测试', '1731320664791.1223', '2024-11-11 18:24:40', '', '测试', '1');
+INSERT INTO `checkitem_info` VALUES ('2', '电气系统', '1730903169939', '2024-11-06 22:26:09', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('3', '液压系统', '1730903169939', '2024-11-06 22:26:09', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('4', '防护装置', '1730903169939', '2024-11-06 22:26:09', null, '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('5', '密封点', '1730903169939', '2024-11-06 22:26:09', null, '目检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI001', '油位', 'CH001', '2024-10-01 10:15:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI002', '皮带张力', 'CH001', '2024-10-01 10:30:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI003', '油质', 'CH002', '2024-11-15 09:15:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI004', '轴承状态', 'CH003', '2025-01-10 10:30:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI005', '砂轮平衡', 'CH004', '2024-12-05 10:45:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI006', '液压系统', 'CH005', '2024-10-20 09:30:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI007', '电极状态', 'CH006', '2024-11-01 14:15:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI008', '螺杆清洁度', 'CH007', '2025-02-01 09:45:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI009', '刀片锋利度', 'CH008', '2024-10-10 10:20:00', '', '手检', '0');
+INSERT INTO `checkitem_info` VALUES ('CI010', '压力表准确性', 'CH009', '2025-01-05 09:30:00', '', '手检', '0');
+
+-- ----------------------------
+-- Table structure for check_info
+-- ----------------------------
+DROP TABLE IF EXISTS `check_info`;
+CREATE TABLE `check_info` (
+  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `check_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `status` tinyint DEFAULT '2',
+  `check_site` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `check_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `check_content` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `is_deleted` int DEFAULT '0',
+  PRIMARY KEY (`check_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of check_info
+-- ----------------------------
+INSERT INTO `check_info` VALUES ('1730903169939', '测试55', 'EQ002', '2024-11-20 00:00:00', '2024-12-17 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1730910621785.4653', '测试13', 'EQ003', '2024-11-07 00:00:00', '2024-11-08 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1730911483730.306', '测试17', 'EQ004', '2024-11-07 00:00:00', '2024-12-17 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1731319871884.0662', '测试55', 'EQ001', '2024-11-11 00:00:00', '2024-12-10 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1731320127596.3354', '测试55', 'EQ005', '2024-11-11 00:00:00', '2024-12-10 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1731320230779.22', '测试77', 'EQ003', '2024-11-11 00:00:00', '2024-12-10 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1731320309487.3687', '测试13', 'EQ003', '2024-11-11 00:00:00', '2024-12-09 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1731320664791.1223', '测试17', 'EQ003', '2024-11-11 00:00:00', '2024-12-17 00:00:00', '2', '测试', '测试', '测试', '0');
+INSERT INTO `check_info` VALUES ('1845513402355855361', '测试', 'EQ001', '2024-10-01 00:00:00', '2024-11-05 00:00:00', '2', null, '测试', null, '1');
+INSERT INTO `check_info` VALUES ('1845707910787911681', '测试呀', 'EQ001', '2024-10-14 00:00:00', '2024-11-12 00:00:00', '2', null, '测试', null, '1');
+INSERT INTO `check_info` VALUES ('1845710636229869569', '测试呀呀呀', 'EQ002', '2024-10-14 00:00:00', '2024-11-13 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1846056067719770114', '测试1111111', 'EQ001', '2024-10-15 00:00:00', '2024-11-13 00:00:00', '6', '测试1111', '测试1111', '测试1111', '0');
+INSERT INTO `check_info` VALUES ('1846515590368595969', 'swrwaftea', 'EQ002', '2024-10-16 00:00:00', '2024-11-12 00:00:00', '0', 'zseg', 'aWTG', 'awztgfzse', '1');
+INSERT INTO `check_info` VALUES ('1846516140229386242', 'QAFCVAEG', 'EQ001', '2024-10-16 00:00:00', '2024-11-11 00:00:00', '2', 'AFWWC', 'aFCA', 'AWFCA', '1');
+INSERT INTO `check_info` VALUES ('1848026515718680577', '2222', 'EQ003', '2024-10-18 00:00:00', '2024-11-12 00:00:00', '2', '韩国灌灌灌灌灌灌灌灌', '日日日日日日日日日日日日', '烦烦烦烦烦烦烦烦烦方法', '1');
+INSERT INTO `check_info` VALUES ('1854090323649941506', '测试55', 'EQ001', '2024-11-06 00:00:00', '2024-12-19 00:00:00', '2', '测试55', '测试55', '测试55', '1');
+INSERT INTO `check_info` VALUES ('1854091877744431105', '测试5', 'EQ001', '2024-11-06 00:00:00', '2024-12-07 00:00:00', '2', '测试5', '测试5', '测试5', '1');
+INSERT INTO `check_info` VALUES ('1854095960870014977', '测试5', 'EQ001', '2024-11-06 00:00:00', '2024-12-06 00:00:00', '2', '测试5', '测试5', '测试5', '1');
+INSERT INTO `check_info` VALUES ('1854130318670614529', '测试55', 'EQ001', '2024-11-06 00:00:00', '2024-12-06 00:00:00', '2', '测试55', '测试55', '测试55', '1');
+INSERT INTO `check_info` VALUES ('1854165742155751425', '测试5', 'EQ001', '2024-11-06 00:00:00', '2024-12-11 00:00:00', '2', '测试5', '测试5', '测试5', '1');
+INSERT INTO `check_info` VALUES ('1854166213381611521', '测试5', 'EQ010', '2024-11-06 00:00:00', '2024-12-02 00:00:00', '2', '测试', '测试', '测试', '0');
+INSERT INTO `check_info` VALUES ('1854172291976683521', '测试6', 'EQ001', '2024-11-06 00:00:00', '2024-12-01 00:00:00', '2', '测试', '测试', '测试', '0');
+INSERT INTO `check_info` VALUES ('1854173880535769090', '测试6', 'EQ001', '2024-11-06 00:00:00', '2024-12-01 00:00:00', '2', '测试', '测试', '测试', '0');
+INSERT INTO `check_info` VALUES ('1854174197713231873', '测试66', 'EQ001', '2024-11-06 00:00:00', '2024-12-02 00:00:00', '2', '测试', '测试', '测试', '0');
+INSERT INTO `check_info` VALUES ('1854177301875679233', '测试7', 'EQ001', '2024-11-06 00:00:00', '2024-12-01 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1854177741212246017', '测试7', 'EQ004', '2024-11-06 00:00:00', '2024-12-02 00:00:00', '2', '测试', '测试', '测试', '1');
+INSERT INTO `check_info` VALUES ('1854178944201547778', '测试77', 'EQ005', '2024-11-06 00:00:00', '2024-12-01 00:00:00', '2', '测试', '测试', '生成', '0');
+INSERT INTO `check_info` VALUES ('1854190845664976897', '测试12', 'EQ006', '2024-11-02 00:00:00', '2024-11-26 00:00:00', '2', '传递c', '产生的', 'c使得', '0');
+INSERT INTO `check_info` VALUES ('CH002', '车床换油检查', 'EQ002', '2024-11-15 09:00:00', null, '6', 'W002', '车床换油检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH004', '磨床半年度调试检查', 'EQ004', '2024-12-05 10:00:00', null, '6', 'W004', '磨床半年度调试检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH005', '焊接机季度例行检查', 'EQ005', '2024-11-15 00:04:31', '2024-12-11 00:00:00', '2', 'W005', '冲压机故障修复检查', '故障修复检查', '0');
+INSERT INTO `check_info` VALUES ('CH006', '焊接机季度例行检查', 'EQ006', '2024-11-01 14:00:00', null, '2', 'W006', '焊接机季度例行检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH007', '注塑机大修前检查', 'EQ007', '2025-02-01 09:00:00', null, '2', 'W007', '注塑机大修前检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH008', '切割机月度维护检查', 'EQ008', '2024-10-10 10:00:00', null, '6', 'W008', '切割机月度维护检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH009', '压力机年度校准检查', 'EQ009', '2025-01-05 09:00:00', null, '2', 'W009', '压力机年度校准检查', null, '0');
+INSERT INTO `check_info` VALUES ('CH010', '包装机季度保养检查', 'EQ010', '2024-11-20 10:00:00', null, '2', 'W010', '包装机季度保养检查', null, '0');
+
+-- ----------------------------
+-- Table structure for department
+-- ----------------------------
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department` (
+  `department_id` int NOT NULL AUTO_INCREMENT,
+  `department_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`department_id`) USING BTREE,
+  UNIQUE KEY `department_id_uindex` (`department_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of department
+-- ----------------------------
+INSERT INTO `department` VALUES ('1', '压片组组装组');
+INSERT INTO `department` VALUES ('2', '包装组');
+INSERT INTO `department` VALUES ('3', '模具组');
+INSERT INTO `department` VALUES ('4', '钣金部');
+INSERT INTO `department` VALUES ('5', '机加工部');
 
 -- ----------------------------
 -- Table structure for equip_info
 -- ----------------------------
 DROP TABLE IF EXISTS `equip_info`;
-CREATE TABLE `equip_info`  (
+CREATE TABLE `equip_info` (
   `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `equip_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `equip_pic` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `equip_status` tinyint(4) NULL DEFAULT NULL,
-  `valid_time` tinyint(4) NULL DEFAULT NULL,
-  `purchase_date` datetime(0) NULL DEFAULT NULL,
-  `fix_big` tinyint(4) NULL DEFAULT NULL,
-  `fix_medium` tinyint(4) NULL DEFAULT NULL,
-  `fix_small` tinyint(4) NULL DEFAULT NULL,
-  `count_big` tinyint(255) NULL DEFAULT NULL,
-  `count_medium` tinyint(255) NULL DEFAULT NULL,
-  `count_small` tinyint(255) NULL DEFAULT NULL,
-  `last_maintance` datetime(0) NULL DEFAULT NULL,
-  `remarks` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `equip_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `equip_pic` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `status_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `valid_time` tinyint DEFAULT NULL,
+  `purchase_date` datetime DEFAULT NULL,
+  `fix_big` tinyint DEFAULT NULL,
+  `fix_medium` tinyint DEFAULT NULL,
+  `fix_small` tinyint DEFAULT NULL,
+  `count_big` tinyint DEFAULT NULL,
+  `count_medium` tinyint DEFAULT NULL,
+  `count_small` tinyint DEFAULT NULL,
+  `last_maintance` datetime DEFAULT NULL,
+  `remarks` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `department_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `type_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `site_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`equip_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of equip_info
 -- ----------------------------
+INSERT INTO `equip_info` VALUES ('1873180927830827009', '测试1234567', 'http://localhost:8080/file/download/1735436103977_u=2982164933,520580257&fm=253&fmt=auto&app=138&f=JPEG.', '正常', null, '2024-12-11 16:00:00', null, null, null, null, null, null, '2024-12-06 16:00:00', null, '压片组组装组', '加工中心', '机加工部');
+INSERT INTO `equip_info` VALUES ('EQ001', '钻床', 'https://tse1-mm.cn.bing.net/th/id/OIP-C.vmyd21dzqXtcpXvZwi4zRAHaHu?w=204&h=213&c=7&r=0&o=5&dpr=2.2&pid=1.7', '保养中', '60', '2023-01-15 00:00:00', '12', '6', '3', '1', '0', '1', '2024-10-03 21:35:37', '', '钣金部', '加工中心', '辅机间');
+INSERT INTO `equip_info` VALUES ('EQ002', '车床', 'https://tse4-mm.cn.bing.net/th/id/OIP-C.nguBkq6AVKsYAWkXRgB8LAHaHa?w=193&h=194&c=7&r=0&o=5&dpr=2.2&pid=1.7', '正常', '48', '2023-03-20 00:00:00', '18', '9', '4', '0', '1', '0', '2024-10-07 21:35:45', '无', '钣金部', '混合', '辅机间');
+INSERT INTO `equip_info` VALUES ('EQ003', '铣床', 'https://tse2-mm.cn.bing.net/th/id/OIP-C.IIfbqY-bWSA306_-y2F5eAHaI8?w=171&h=206&c=7&r=0&o=5&dpr=2.2&pid=1.7', '正常', '72', '2022-11-10 00:00:00', '24', '12', '6', '0', '1', '1', '2024-10-06 21:35:50', '无', '钣金部', '混合', '辅机间');
+INSERT INTO `equip_info` VALUES ('EQ004', '磨床', 'https://tse1-mm.cn.bing.net/th/id/OIP-C.uYq_uYbQCDQmkpNrqTIwFAHaLH?w=139&h=208&c=7&r=0&o=5&dpr=2&pid=1.7', '正常', '36', '2023-05-05 00:00:00', '15', '8', '4', '1', '0', '0', '2024-09-12 21:35:54', '无', '模具组', '加工中心', '模具部');
+INSERT INTO `equip_info` VALUES ('EQ005', '冲压机', 'https://tse2-mm.cn.bing.net/th/id/OIP-C.Cc8VCH-EIXV2eXKKOZC3PgHaHa?w=178&h=180&c=7&r=0&o=5&dpr=2&pid=1.7', '保养中', '84', '2022-09-01 00:00:00', '30', '15', '7', '1', '0', '1', '2024-09-17 21:36:00', '无', '模具组', '实验一体机', '模具部');
+INSERT INTO `equip_info` VALUES ('EQ006', '焊接机', 'https://tse3-mm.cn.bing.net/th/id/OIP-C.hu5mAkD9ZgEFmppmu9e2gQHaIw?w=166&h=196&c=7&r=0&o=5&dpr=2&pid=1.7', '正常', '24', '2023-07-10 00:00:00', '10', '5', '2', '1', '1', '0', '2024-09-18 21:36:10', '无', '模具组', '混合', '模具部');
+INSERT INTO `equip_info` VALUES ('EQ007', '注塑机', 'https://tse4-mm.cn.bing.net/th/id/OIP-C.hV4-TsYktCUaMEQNUS9miAHaFt?w=211&h=180&c=7&r=0&o=5&dpr=2&pid=1.7', '正常', '96', '2022-06-15 00:00:00', '36', '18', '9', '1', '1', '1', '2024-09-07 21:36:17', '无', '机加工部', '加工中心', '机加工部');
+INSERT INTO `equip_info` VALUES ('EQ008', '切割机', 'https://th.bing.com/th/id/OIP.p5dTYIwf1obJ3lNvd-RengHaJ4?w=142&h=189&c=7&r=0&o=5&dpr=2&pid=1.7', '正常', '30', '2023-08-20 00:00:00', '12', '6', '3', '1', '0', '0', '2024-10-03 21:36:23', '无', '机加工部', '实验一体机', '机加工部');
+INSERT INTO `equip_info` VALUES ('EQ009', '压力机', 'https://tse4-mm.cn.bing.net/th/id/OIP-C.Iwt_uIRY_h1uh2t5VtHSUQHaHa?w=207&h=206&c=7&r=0&o=5&dpr=2.2&pid=1.7', '正常', '54', '2022-12-05 00:00:00', '20', '10', '5', '0', '0', '1', '2024-10-05 21:36:28', '无', '压片组组装组', '压片机', '压片机车间');
+INSERT INTO `equip_info` VALUES ('EQ010', '包装机', 'https://tse3-mm.cn.bing.net/th/id/OIP-C.EX6zEiUSBXSGcWwnUPbCvwHaEK?w=296&h=180&c=7&r=0&o=5&dpr=2.2&pid=1.7', '正常', '42', '2023-02-28 00:00:00', '16', '8', '4', '1', '0', '0', '2024-10-07 21:36:33', '无', '包装组', '铝塑包装线', '包装间');
+
+-- ----------------------------
+-- Table structure for equip_status
+-- ----------------------------
+DROP TABLE IF EXISTS `equip_status`;
+CREATE TABLE `equip_status` (
+  `status_id` int NOT NULL,
+  `status_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`status_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of equip_status
+-- ----------------------------
+INSERT INTO `equip_status` VALUES ('1', '正常');
+INSERT INTO `equip_status` VALUES ('2', '故障');
+INSERT INTO `equip_status` VALUES ('3', '保养中');
+INSERT INTO `equip_status` VALUES ('4', '闲置');
+INSERT INTO `equip_status` VALUES ('5', '报废');
 
 -- ----------------------------
 -- Table structure for maintance_info
 -- ----------------------------
 DROP TABLE IF EXISTS `maintance_info`;
-CREATE TABLE `maintance_info`  (
+CREATE TABLE `maintance_info` (
   `plan_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `plan_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `maintance_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `start_time` datetime(0) NULL DEFAULT NULL,
-  `end_time` datetime(0) NULL DEFAULT NULL,
-  `maintance_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `plan_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `status` tinyint DEFAULT NULL,
+  `maintance_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `maintance_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `is_deleted` int DEFAULT '0',
   PRIMARY KEY (`plan_id`) USING BTREE,
-  INDEX `eid_fk`(`equip_id`) USING BTREE,
+  KEY `eid_fk` (`equip_id`) USING BTREE,
   CONSTRAINT `eid_fk` FOREIGN KEY (`equip_id`) REFERENCES `equip_info` (`equip_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of maintance_info
 -- ----------------------------
+INSERT INTO `maintance_info` VALUES ('1839912235471466497', 'EQ005', '这是一个测试', '2024-09-30 15:00:00', '2024-10-14 16:00:00', '6', '这是一个测试lll', '小修周期', '1');
+INSERT INTO `maintance_info` VALUES ('1839921085398347778', 'EQ006', '不断地测试', '2024-09-30 00:00:00', '2024-10-01 00:00:00', '6', '测试测试还是测试', '季节性保养', '1');
+INSERT INTO `maintance_info` VALUES ('1839922184649920513', 'EQ006', '测试时间', '2024-08-31 00:00:00', '2024-10-29 00:00:00', '0', '测试时间', '紧急维修', '1');
+INSERT INTO `maintance_info` VALUES ('1840350924613828610', 'EQ001', '审批求通过', '2024-09-20 19:19:54', '2024-10-17 19:19:54', '6', '呜呜呜', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1840382441486438402', 'EQ002', '测试审批', '2024-09-21 21:24:58', '2024-09-30 21:24:58', '0', '测试审批', '紧急维修', '1');
+INSERT INTO `maintance_info` VALUES ('1840389569731325954', 'EQ001', '看看看看', '2024-09-21 21:53:41', '2024-10-26 21:53:41', '0', '酷酷酷酷酷酷', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1840580697608937474', 'EQ001', '我是user该计划由我发起', '2024-10-09 10:32:45', '2024-10-31 10:32:45', '6', '我是user，计划由我发起┭┮﹏┭┮，☆*: .｡. o(≧▽≦)o .｡.:*☆', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1840585257048031233', 'EQ002', '这是一个驳回测试计划', '2024-10-17 10:51:04', '2024-10-26 10:51:04', '6', '测试驳回', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1840587262277664769', 'EQ003', '测试一路驳回', '2024-10-10 10:58:52', '2024-10-24 10:58:52', '6', '我是user，这个测试测试驳回', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1840754307044646914', 'EQ009', 'user发起', '2024-10-15 22:02:27', '2024-10-26 22:02:27', '8', 'user发起然后manager驳回看admin', '预防性维护', '0');
+INSERT INTO `maintance_info` VALUES ('1841110877385498626', 'EQ001', '审批测试1', '2024-10-04 21:39:35', '2024-10-18 00:00:00', '0', '谁国庆在家敲代码啊！', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1841111151407767553', 'EQ005', '测试计划三', '2024-10-25 21:40:51', '2024-11-21 21:40:51', '3', '结束结束', '季节性保养', '0');
+INSERT INTO `maintance_info` VALUES ('1841113178846187521', 'EQ004', '测试图标显示', '2024-10-25 21:48:55', '2024-11-20 21:48:55', '3', '哈哈哈', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1841391043374473217', 'EQ004', '国庆敲代码', '2024-11-12 16:12:48', '2024-11-14 16:12:48', '3', '能不能行', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1841395469682204674', 'EQ001', '一个要用来驳回的计划', '2024-10-26 16:30:40', '2024-11-20 16:30:40', '3', '不行', '零部件更换', '0');
+INSERT INTO `maintance_info` VALUES ('1841408674164854786', 'EQ003', '33333333', '2024-10-19 00:00:00', '2024-11-12 00:00:00', '1', '666666\n', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1843287985004204034', 'EQ002', '测试派单', '2024-10-26 21:50:53', '2024-11-21 00:00:00', '6', '测试派单', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1843655390027403265', 'EQ005', '压力测试', '2024-10-09 00:00:00', '2024-11-15 00:00:00', '8', 'testOnly', '预防性维护', '0');
+INSERT INTO `maintance_info` VALUES ('1844045153909604353', 'EQ004', '定期维护-小修周期', '2024-10-10 00:00:00', '2024-10-17 00:00:00', '8', '保养计划磨床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844045153951547396', 'EQ005', '定期维护-小修周期', '2024-10-10 00:00:00', '2024-10-17 00:00:00', '0', '保养计划冲压机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844045154014461954', 'EQ006', '定期维护-小修周期', '2024-10-10 00:00:00', '2024-10-17 00:00:00', '0', '保养计划焊接机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844045154014461958', 'EQ008', '定期维护-小修周期', '2024-10-10 00:00:00', '2024-10-17 00:00:00', '0', '保养计划切割机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844045154077376516', 'EQ009', '定期维护-小修周期', '2024-10-10 00:00:00', '2024-10-17 00:00:00', '0', '保养计划压力机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844407541771067394', 'EQ004', '定期维护-大修周期', '2024-10-11 00:00:00', '2024-10-18 00:00:00', '0', '保养计划磨床大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844769929611563010', 'EQ001', '定期维护-大修周期', '2024-10-12 00:00:00', '2024-10-19 00:00:00', '0', '保养计划钻床大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844769929674477569', 'EQ002', '定期维护-小修周期', '2024-10-12 00:00:00', '2024-10-19 00:00:00', '0', '保养计划车床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844769929674477573', 'EQ003', '定期维护-小修周期', '2024-10-12 00:00:00', '2024-10-19 00:00:00', '0', '保养计划铣床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844769929674477577', 'EQ006', '定期维护-大修周期', '2024-10-12 00:00:00', '2024-10-19 00:00:00', '0', '保养计划焊接机大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1844769929674477581', 'EQ010', '定期维护-大修周期', '2024-10-12 00:00:00', '2024-10-19 00:00:00', '0', '保养计划包装机大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1845132317703536642', 'EQ008', '定期维护-大修周期', '2024-10-13 00:00:00', '2024-10-20 00:00:00', '0', '保养计划切割机大修周期', '大修周期', '1');
+INSERT INTO `maintance_info` VALUES ('1845711037561847810', 'EQ001', '111111111', '2024-10-14 00:00:00', '2024-11-20 00:00:00', '0', '测试', '大修周期', '1');
+INSERT INTO `maintance_info` VALUES ('1846059908733349890', 'EQ001', '测试333333', '2024-10-15 00:00:00', '2024-11-01 00:00:00', '8', '测试', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1846502833804050433', 'EQ007', 'ces15787', '2024-10-16 00:00:00', '2024-11-13 00:00:00', '0', 'qewqarfearzs', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1846768545906900994', 'EQ001', '唯一让', '2024-10-17 00:00:00', '2024-11-12 00:00:00', '6', '人定胜天国会大厦', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1847216222939787265', 'EQ005', '啊啊啊', '2024-10-19 17:59:03', '2024-11-15 17:59:03', '0', '测试删除', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1847220047952097281', 'EQ004', 'aaaaaaaa', '2024-10-22 00:00:00', '2024-10-18 00:00:00', '2', 'ssss', '紧急维修', '1');
+INSERT INTO `maintance_info` VALUES ('1847282594973700098', 'EQ002', '添加一个试试', '2024-10-23 00:00:00', '2024-10-31 00:00:00', '3', '┭┮﹏┭┮┭┮﹏┭┮┭┮﹏┭┮┭┮﹏┭┮', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1847293121686925313', 'EQ006', '啥也不是', '2024-10-19 00:00:00', '2024-10-24 00:00:00', '0', '啊啊啊啊', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1848695177341501442', 'EQ003', '十月二十七测试计划', '2024-10-17 00:00:00', '2024-10-26 00:00:00', '3', '你好啊', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1848724155192266753', 'EQ004', '测试派单1', '2024-10-23 00:00:00', '2024-10-26 00:00:00', '0', '这个派单待开起始', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1848724286125854722', 'EQ008', '测试派单2', '2024-10-23 00:00:00', '2024-10-26 00:00:00', '8', '测试派单2', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1848724380808073217', 'EQ010', '测试派单3', '2024-10-26 00:00:00', '2024-10-31 00:00:00', '8', '测试派单3', '年度检查', '0');
+INSERT INTO `maintance_info` VALUES ('1849827608278806530', 'EQ006', '看看能不能将消息发给manager', '2024-10-30 00:00:00', '2024-10-31 00:00:00', '0', '没用的设备', '预防性维护', '0');
+INSERT INTO `maintance_info` VALUES ('1849829437259608066', 'EQ006', '看看manager能不能收到消息', '2024-10-26 00:00:00', '2024-10-31 00:00:00', '8', '呜呜呜', '常规维修', '0');
+INSERT INTO `maintance_info` VALUES ('1849830326825349121', 'EQ004', '哈哈哈哈哈manager能不能收到啊啊啊', '2024-10-26 00:00:00', '2024-10-31 00:00:00', '6', '呜呜呜', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1849831991313854466', 'EQ007', '球球manager收到信息', '2024-10-29 00:00:00', '2024-10-31 00:00:00', '6', '┭┮﹏┭┮', '季节性保养', '0');
+INSERT INTO `maintance_info` VALUES ('1850023742465024001', 'EQ008', '看看消息通知', '2024-10-31 00:00:00', '2024-11-08 00:00:00', '3', '看看消息通知', '年度检查', '0');
+INSERT INTO `maintance_info` VALUES ('1850027800210874370', 'EQ007', '啊？', '2024-10-23 00:00:00', '2024-10-31 00:00:00', '3', '服啦', '年度检查', '0');
+INSERT INTO `maintance_info` VALUES ('1850147500693626881', 'EQ006', '啊啊啊啊', '2024-10-31 00:00:00', '2024-11-02 00:00:00', '6', '无', '紧急维修', '0');
+INSERT INTO `maintance_info` VALUES ('1853467238492053505', 'EQ001', '定期维护-大修周期', '2024-11-05 00:00:00', '2024-11-12 00:00:00', '0', '保养计划钻床大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853467238580133891', 'EQ002', '定期维护-小修周期', '2024-11-05 00:00:00', '2024-11-12 00:00:00', '0', '保养计划车床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853467238647242757', 'EQ003', '定期维护-小修周期', '2024-11-05 00:00:00', '2024-11-12 00:00:00', '0', '保养计划铣床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853467238710157316', 'EQ006', '定期维护-小修周期', '2024-11-05 00:00:00', '2024-11-12 00:00:00', '0', '保养计划焊接机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853467238835986436', 'EQ010', '定期维护-中修周期', '2024-11-05 00:00:00', '2024-11-12 00:00:00', '0', '保养计划包装机中修周期', '中修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853829688794107906', 'EQ006', '定期维护-中修周期', '2024-11-06 00:00:15', '2024-11-13 00:00:15', '0', '保养计划焊接机中修周期', '中修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1853829688873799683', 'EQ008', '定期维护-大修周期', '2024-11-06 00:00:15', '2024-11-13 00:00:15', '0', '保养计划切割机大修周期', '大修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1854192014072242177', 'EQ004', '定期维护-中修周期', '2024-11-07 00:00:00', '2024-11-14 00:00:00', '0', '保养计划磨床中修周期', '中修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1854192014139351044', 'EQ005', '定期维护-小修周期', '2024-11-07 00:00:00', '2024-11-14 00:00:00', '0', '保养计划冲压机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1854192014206459907', 'EQ006', '定期维护-小修周期', '2024-11-07 00:00:00', '2024-11-14 00:00:00', '0', '保养计划焊接机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873036307289374721', 'EQ001', '定期维护-中修周期', '2024-12-29 00:00:30', '2025-01-05 00:00:30', '0', '保养计划钻床中修周期', '中修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873036307448758276', 'EQ003', '定期维护-中修周期', '2024-12-29 00:00:30', '2025-01-05 00:00:30', '0', '保养计划铣床中修周期', '中修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873036307507478532', 'EQ004', '定期维护-小修周期', '2024-12-29 00:00:30', '2025-01-05 00:00:30', '0', '保养计划磨床小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873036307570393092', 'EQ006', '定期维护-小修周期', '2024-12-29 00:00:30', '2025-01-05 00:00:30', '0', '保养计划焊接机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873036307570393096', 'EQ009', '定期维护-小修周期', '2024-12-29 00:00:30', '2025-01-05 00:00:30', '0', '保养计划压力机小修周期', '小修周期', '0');
+INSERT INTO `maintance_info` VALUES ('1873200143707435009', 'EQ004', 'mmm', '2024-12-30 00:00:00', '2024-12-31 00:00:00', '0', 'vvv', '常规维修', '1');
+INSERT INTO `maintance_info` VALUES ('1873200350197215233', 'EQ002', ' bbb', '2024-12-30 00:00:00', '2024-12-31 00:00:00', '3', 'bbbb', '常规维修', '0');
+
+-- ----------------------------
+-- Table structure for maintance_type
+-- ----------------------------
+DROP TABLE IF EXISTS `maintance_type`;
+CREATE TABLE `maintance_type` (
+  `type_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `maintance_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`type_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of maintance_type
+-- ----------------------------
+INSERT INTO `maintance_type` VALUES ('MT001', '大修周期');
+INSERT INTO `maintance_type` VALUES ('MT002', '小修周期');
+INSERT INTO `maintance_type` VALUES ('MT003', '常规维修');
+INSERT INTO `maintance_type` VALUES ('MT004', '预防性维护');
+INSERT INTO `maintance_type` VALUES ('MT005', '紧急维修');
+INSERT INTO `maintance_type` VALUES ('MT006', '季节性保养');
+INSERT INTO `maintance_type` VALUES ('MT007', '年度检查');
+INSERT INTO `maintance_type` VALUES ('MT008', '中修周期');
+INSERT INTO `maintance_type` VALUES ('MT009', '设备校准');
+INSERT INTO `maintance_type` VALUES ('MT010', '零部件更换');
 
 -- ----------------------------
 -- Table structure for menu_info
 -- ----------------------------
 DROP TABLE IF EXISTS `menu_info`;
-CREATE TABLE `menu_info`  (
+CREATE TABLE `menu_info` (
   `menu_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `parent_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `menu_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `menu_icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `permission` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `menu_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `parent_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `menu_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `menu_icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `permission` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of menu_info
 -- ----------------------------
+INSERT INTO `menu_info` VALUES ('M001', '系统首页', null, 'home', 'HomeFilled', 'home:view_dashboard', '1');
+INSERT INTO `menu_info` VALUES ('M002', '设备信息', null, 'equip/index', 'Cpu', 'device:manage_equipment', '2');
+INSERT INTO `menu_info` VALUES ('M003', '保养计划', '', 'maintenancePlan/index', 'SetUp', 'maintenance:manage_plan', '3');
+INSERT INTO `menu_info` VALUES ('M004', '审批管理', '', 'approval/index', 'Check', 'approval:manage', '5');
+INSERT INTO `menu_info` VALUES ('M006', '工单计划', '', 'order/WorkOrder', 'Document', 'workorder:manage_plan', '6');
+INSERT INTO `menu_info` VALUES ('M008', '用户管理', '', 'user/index', 'Setting', 'system:manage_user', '7');
+INSERT INTO `menu_info` VALUES ('M009', '点查管理', null, 'check', 'ZoomIn', 'check:manage_check', '4');
+INSERT INTO `menu_info` VALUES ('M010', '点巡检计划', 'M009', 'check/index', 'Place', 'check:manage_checkPlan', '4');
 
 -- ----------------------------
 -- Table structure for order_info
 -- ----------------------------
 DROP TABLE IF EXISTS `order_info`;
-CREATE TABLE `order_info`  (
+CREATE TABLE `order_info` (
   `order_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `equip_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `plan_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `deliver_time` datetime(0) NULL DEFAULT NULL,
-  `start_time` datetime(0) NULL DEFAULT NULL,
-  `end_time` datetime(0) NULL DEFAULT NULL,
-  `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `order_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `order_record` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `plan_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `order_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `order_record` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '详见日志',
+  `order_status` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '进行中',
+  `check_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`order_id`) USING BTREE,
-  INDEX `pid_fk_2`(`plan_id`) USING BTREE,
-  INDEX `eid_fk_2`(`equip_id`) USING BTREE,
-  INDEX `wid_fk_1`(`worker_id`) USING BTREE,
+  KEY `pid_fk_2` (`plan_id`) USING BTREE,
+  KEY `eid_fk_2` (`equip_id`) USING BTREE,
+  KEY `wid_fk_1` (`worker_id`) USING BTREE,
+  KEY `cid_fk_2` (`check_id`) USING BTREE,
+  CONSTRAINT `cid_fk_2` FOREIGN KEY (`check_id`) REFERENCES `check_info` (`check_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `eid_fk_2` FOREIGN KEY (`equip_id`) REFERENCES `equip_info` (`equip_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `pid_fk_2` FOREIGN KEY (`plan_id`) REFERENCES `maintance_info` (`plan_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `wid_fk_1` FOREIGN KEY (`worker_id`) REFERENCES `worker_info` (`worker_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
+INSERT INTO `order_info` VALUES ('1843281858862428161', 'EQ005', '1839912235471466497', '2024-10-07 21:26:56', '2024-10-18 00:49:36', 'W001', 'haha', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1843282125955706882', 'EQ003', '1840587262277664769', '2024-10-07 21:28:00', '2024-12-02 13:14:52', 'W001', 'lallala', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1843282126102507521', 'EQ009', '1840754307044646914', '2024-10-07 21:28:00', '2024-10-31 00:37:14', 'W001', 'aaaaa', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1843284296696770561', 'EQ001', '1840350924613828610', '2024-10-07 21:36:37', '2024-12-02 13:14:52', 'W001', '测试', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1843284296772268034', 'EQ001', '1840580697608937474', '2024-10-07 21:36:37', '2024-12-02 13:14:52', 'W001', '测试', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1843284296826793986', 'EQ002', '1840585257048031233', '2024-10-07 21:36:37', '2024-12-02 13:14:52', 'W001', '测试', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1843289172399083521', 'EQ002', '1843287985004204034', '2024-10-07 21:55:59', '2024-12-02 13:14:52', 'W002', '测试派单', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1843656169203257346', 'EQ005', '1843655390027403265', '2024-10-08 22:14:18', '2024-10-31 00:42:36', 'W008', '吴十干', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1845718830427697153', 'EQ006', '1839921085398347778', '2024-10-14 14:50:35', '2024-10-31 00:39:33', 'W003', '11', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1846060442357870594', 'EQ001', '1846059908733349890', '2024-10-15 13:28:02', '2024-10-15 16:52:22', 'W001', '测试3', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1846769589307129858', 'EQ001', '1846768545906900994', '2024-10-17 12:25:56', null, 'W003', 'hhhhh', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1847284048350367745', 'EQ004', '1844045153909604353', '2024-10-18 22:30:12', '2024-10-31 00:29:44', 'W003', '啦啦啦经济', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1849088587432947714', 'EQ010', '1848724380808073217', '2024-10-23 22:00:48', '2024-10-23 22:48:48', 'W003', '随便派', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1849099002967724033', 'EQ008', '1848724286125854722', '2024-10-23 22:42:11', '2024-10-23 22:49:25', 'W001', '分派', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1851662126818525186', 'EQ006', '1849829437259608066', '2024-10-31 00:27:07', '2024-10-31 00:43:39', 'W004', '焊接机维修', '详见日志', '已完成', null);
+INSERT INTO `order_info` VALUES ('1851662301351903234', 'EQ007', '1849831991313854466', '2024-10-31 00:27:49', null, 'W003', '注塑机维修', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1851668420891770881', 'EQ004', '1849830326825349121', '2024-10-31 00:52:08', null, 'W006', '只要功夫深，那功夫就不浅', '详见日志', '进行中', null);
+INSERT INTO `order_info` VALUES ('1873201052227235842', 'EQ006', '1850147500693626881', '2024-12-29 10:55:07', null, 'W003', 'sybs', '详见日志', '进行中', null);
 
 -- ----------------------------
 -- Table structure for role_info
 -- ----------------------------
 DROP TABLE IF EXISTS `role_info`;
-CREATE TABLE `role_info`  (
+CREATE TABLE `role_info` (
   `role_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `role_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `role_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of role_info
 -- ----------------------------
+INSERT INTO `role_info` VALUES ('R001', 'Admin', 'Full system access');
+INSERT INTO `role_info` VALUES ('R002', 'Manager', 'Maintenance management');
+INSERT INTO `role_info` VALUES ('R003', 'User', 'Maintenance execution');
+INSERT INTO `role_info` VALUES ('R004', 'System', null);
 
 -- ----------------------------
 -- Table structure for role_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `role_menu`;
-CREATE TABLE `role_menu`  (
+CREATE TABLE `role_menu` (
   `rm_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `role_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `menu_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `role_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `menu_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`rm_id`) USING BTREE,
-  INDEX `rid_fk_1`(`role_id`) USING BTREE,
-  INDEX `mid_fk_1`(`menu_id`) USING BTREE,
+  KEY `rid_fk_1` (`role_id`) USING BTREE,
+  KEY `mid_fk_1` (`menu_id`) USING BTREE,
   CONSTRAINT `mid_fk_1` FOREIGN KEY (`menu_id`) REFERENCES `menu_info` (`menu_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `rid_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role_info` (`role_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of role_menu
 -- ----------------------------
+INSERT INTO `role_menu` VALUES ('RM001', 'R001', 'M001');
+INSERT INTO `role_menu` VALUES ('RM002', 'R001', 'M002');
+INSERT INTO `role_menu` VALUES ('RM003', 'R001', 'M003');
+INSERT INTO `role_menu` VALUES ('RM004', 'R001', 'M004');
+INSERT INTO `role_menu` VALUES ('RM007', 'R001', 'M006');
+INSERT INTO `role_menu` VALUES ('RM008', 'R001', 'M008');
+INSERT INTO `role_menu` VALUES ('RM010', 'R002', 'M001');
+INSERT INTO `role_menu` VALUES ('RM011', 'R002', 'M002');
+INSERT INTO `role_menu` VALUES ('RM012', 'R002', 'M003');
+INSERT INTO `role_menu` VALUES ('RM013', 'R002', 'M004');
+INSERT INTO `role_menu` VALUES ('RM016', 'R002', 'M006');
+INSERT INTO `role_menu` VALUES ('RM017', 'R003', 'M001');
+INSERT INTO `role_menu` VALUES ('RM018', 'R003', 'M002');
+INSERT INTO `role_menu` VALUES ('RM019', 'R003', 'M003');
+INSERT INTO `role_menu` VALUES ('RM022', 'R003', 'M006');
+INSERT INTO `role_menu` VALUES ('RM023', 'R001', 'M010');
+INSERT INTO `role_menu` VALUES ('RM024', 'R002', 'M010');
+INSERT INTO `role_menu` VALUES ('RM025', 'R003', 'M010');
+INSERT INTO `role_menu` VALUES ('RM026', 'R001', 'M009');
+INSERT INTO `role_menu` VALUES ('RM027', 'R002', 'M009');
+INSERT INTO `role_menu` VALUES ('RM028', 'R003', 'M009');
+INSERT INTO `role_menu` VALUES ('RM029', 'R004', 'M001');
+INSERT INTO `role_menu` VALUES ('RM030', 'R004', 'M002');
+INSERT INTO `role_menu` VALUES ('RM031', 'R004', 'M003');
+INSERT INTO `role_menu` VALUES ('RM032', 'R004', 'M004');
+INSERT INTO `role_menu` VALUES ('RM033', 'R004', 'M006');
+INSERT INTO `role_menu` VALUES ('RM034', 'R004', 'M008');
+INSERT INTO `role_menu` VALUES ('RM035', 'R004', 'M009');
+INSERT INTO `role_menu` VALUES ('RM036', 'R004', 'M010');
+
+-- ----------------------------
+-- Table structure for site
+-- ----------------------------
+DROP TABLE IF EXISTS `site`;
+CREATE TABLE `site` (
+  `site_id` int NOT NULL,
+  `site_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`site_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of site
+-- ----------------------------
+INSERT INTO `site` VALUES ('1', '压片机车间');
+INSERT INTO `site` VALUES ('2', '模具部');
+INSERT INTO `site` VALUES ('3', '机加工部');
+INSERT INTO `site` VALUES ('4', '包装间');
+INSERT INTO `site` VALUES ('5', '辅机间');
+
+-- ----------------------------
+-- Table structure for type
+-- ----------------------------
+DROP TABLE IF EXISTS `type`;
+CREATE TABLE `type` (
+  `type_id` int NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`type_id`) USING BTREE,
+  UNIQUE KEY `type_id_uindex` (`type_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of type
+-- ----------------------------
+INSERT INTO `type` VALUES ('1', '加工中心');
+INSERT INTO `type` VALUES ('2', '实验一体机');
+INSERT INTO `type` VALUES ('3', '铝塑包装线');
+INSERT INTO `type` VALUES ('4', '压片机');
+INSERT INTO `type` VALUES ('5', '混合');
 
 -- ----------------------------
 -- Table structure for user_info
 -- ----------------------------
 DROP TABLE IF EXISTS `user_info`;
-CREATE TABLE `user_info`  (
+CREATE TABLE `user_info` (
   `user_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `userpwd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `userpwd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `is_deleted` int(1) unsigned zerofill DEFAULT '0',
+  `avatar_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
+INSERT INTO `user_info` VALUES ('1847275432939524098', 'test', 'test', '1', null);
+INSERT INTO `user_info` VALUES ('1847276254314319873', 'test', 'test', '1', null);
+INSERT INTO `user_info` VALUES ('1847276923100286978', 'a', '12', '1', null);
+INSERT INTO `user_info` VALUES ('1847279182831898626', 'nmd', 'nmd', '1', null);
+INSERT INTO `user_info` VALUES ('1847279528782286850', 'test', 'test', '1', null);
+INSERT INTO `user_info` VALUES ('1847279592762200066', '啊啊啊啊', 'ddddd', '1', null);
+INSERT INTO `user_info` VALUES ('U001', 'admin', 'password123', '0', '/avatar/2024-10-25_1729844862429_OIP_C.jpg');
+INSERT INTO `user_info` VALUES ('U002', 'manager', 'password123', '0', '/avatar/2024-10-26_1729918218156_th__1_.jpg');
+INSERT INTO `user_info` VALUES ('U003', 'user', 'password123', '0', '/avatar/2024-12-29_1735439784824_4f2f6491ec10d86c5215f5cdc012546c.jpeg');
+INSERT INTO `user_info` VALUES ('U004', 'yessey', '123456789', '0', '/avatar/2024-10-24_1729756214414_w700d1q75cms.jpg');
+INSERT INTO `user_info` VALUES ('U005', 'system', '123456789', '0', '/avatar/2024-10-24_1729756716492_admin.jpg');
 
 -- ----------------------------
 -- Table structure for user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role`  (
+CREATE TABLE `user_role` (
   `ur_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `user_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `role_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `user_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `role_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `is_deleted` int(1) unsigned zerofill DEFAULT '0',
   PRIMARY KEY (`ur_id`) USING BTREE,
-  INDEX `uid_fk_1`(`user_id`) USING BTREE,
-  INDEX `rid_fk_2`(`role_id`) USING BTREE,
+  KEY `uid_fk_1` (`user_id`) USING BTREE,
+  KEY `rid_fk_2` (`role_id`) USING BTREE,
   CONSTRAINT `rid_fk_2` FOREIGN KEY (`role_id`) REFERENCES `role_info` (`role_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `uid_fk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of user_role
 -- ----------------------------
+INSERT INTO `user_role` VALUES ('1847275432939524099', '1847275432939524098', 'R003', '0');
+INSERT INTO `user_role` VALUES ('1847276254339485698', '1847276254314319873', 'R001', '0');
+INSERT INTO `user_role` VALUES ('1847276923146424322', '1847276923100286978', 'R003', '0');
+INSERT INTO `user_role` VALUES ('1847279182861258753', '1847279182831898626', 'R003', '0');
+INSERT INTO `user_role` VALUES ('1847279528849395713', '1847279528782286850', 'R002', '0');
+INSERT INTO `user_role` VALUES ('1847279592841891841', '1847279592762200066', 'R001', '0');
+INSERT INTO `user_role` VALUES ('UR001', 'U001', 'R001', '0');
+INSERT INTO `user_role` VALUES ('UR002', 'U002', 'R002', '0');
+INSERT INTO `user_role` VALUES ('UR003', 'U003', 'R003', '0');
+INSERT INTO `user_role` VALUES ('UR004', 'U004', 'R003', '0');
+INSERT INTO `user_role` VALUES ('UR005', 'U005', 'R004', '0');
 
 -- ----------------------------
 -- Table structure for worker_info
 -- ----------------------------
 DROP TABLE IF EXISTS `worker_info`;
-CREATE TABLE `worker_info`  (
+CREATE TABLE `worker_info` (
   `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `worker_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `dept` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `pay_hour` decimal(10, 2) NULL DEFAULT NULL,
+  `worker_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `dept` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `pay_hour` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`worker_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of worker_info
 -- ----------------------------
+INSERT INTO `worker_info` VALUES ('W001', '张三', '维修部', '1131.15');
+INSERT INTO `worker_info` VALUES ('W002', '李四', '工程部', '236.63');
+INSERT INTO `worker_info` VALUES ('W003', '王五', '维修部', '801.80');
+INSERT INTO `worker_info` VALUES ('W004', '赵六', '质检部', '0.27');
+INSERT INTO `worker_info` VALUES ('W005', '钱七', '工程部', '32.50');
+INSERT INTO `worker_info` VALUES ('W006', '孙八', '维修部', '24.00');
+INSERT INTO `worker_info` VALUES ('W007', '周九', '质检部', '26.75');
+INSERT INTO `worker_info` VALUES ('W008', '吴十', '工程部', '1082.47');
+INSERT INTO `worker_info` VALUES ('W009', '郑十一', '维修部', '23.50');
+INSERT INTO `worker_info` VALUES ('W010', '王十二', '质检部', '27.25');
 
-SET FOREIGN_KEY_CHECKS = 1;
+-- ----------------------------
+-- Table structure for work_log
+-- ----------------------------
+DROP TABLE IF EXISTS `work_log`;
+CREATE TABLE `work_log` (
+  `log_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `order_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `worker_id` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `log_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `log_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `log_attachment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `attachment_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`log_id`) USING BTREE,
+  KEY `order_id` (`order_id`) USING BTREE,
+  KEY `worker_id` (`worker_id`) USING BTREE,
+  CONSTRAINT `work_log_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `order_info` (`order_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `work_log_ibfk_2` FOREIGN KEY (`worker_id`) REFERENCES `worker_info` (`worker_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of work_log
+-- ----------------------------
+INSERT INTO `work_log` VALUES ('1729605259080', '1843284296772268034', 'W001', '遇事不决，可问春风。', '2024-10-22 21:54:19', 'http://localhost:8080/uploads/logFiles/5f583b434826c52bc8ddacc4b46c29f9.jpg', 'album3.jpg');
+INSERT INTO `work_log` VALUES ('1729605723572', '1846060442357870594', 'W001', '徒余留明月忆往昔', '2024-10-22 22:02:03', 'http://localhost:8080/uploads/logFiles/d3695239f5acab904b098fbf88987969.jpeg', '唯美樱花季黑衣少女4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729605907100', '1845718830427697153', 'W003', '樽酒会知音', '2024-10-22 22:05:07', 'http://localhost:8080/uploads/logFiles/55845c38cc9df0bc2eba06af371ae1b2.jpeg', '都市动漫风景4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729611442864', '1843284296696770561', 'W001', '试问人间知我者能有几？', '2024-10-22 23:37:22', 'http://localhost:8080/uploads/logFiles/67c5a9de2ee179960beb947aa1f05a3b.jpg', 'album.jpg');
+INSERT INTO `work_log` VALUES ('1729612509216', '1843282126102507521', 'W001', '三尺瑶琴碎骨兮', '2024-10-22 23:55:09', 'http://localhost:8080/uploads/logFiles/c84657efd3eec315f769e805f88002bb.jpeg', '零二蓝光侧颜4K动漫壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729758720803', '1843282126102507521', 'W001', '在我的天空', '2024-10-24 16:32:00', 'http://localhost:8080/uploads/logFiles/ef18324fee5a0fb08150ca6abb053118.jpeg', '剑客英姿4K动漫电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729758905402', '1843282126102507521', 'W001', '渐行渐远去的我们', '2024-10-24 16:35:05', 'http://localhost:8080/uploads/logFiles/ed0aa2d1dfe58cbb885e7f70adb66c0a.jpeg', '金克斯4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729759705075', '1843284296696770561', 'W001', '让沉默的秒针代替我的疑问', '2024-10-24 16:48:25', 'http://localhost:8080/uploads/logFiles/bad1aba7d9ea7c86bd157ace1b4b7d68.jpeg', '4K动漫风景电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729759822103', '1843284296772268034', 'W001', '你发的娃娃脸，降落在身边', '2024-10-24 16:50:22', 'http://localhost:8080/uploads/logFiles/faba39e643233132549e7f2a43de5636.jpeg', '《咒术回战》两面宿傩4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729760072572', '1843284296696770561', 'W001', '可能余温太久，没给你感动，在我回答你的时候', '2024-10-24 16:54:32', 'http://localhost:8080/uploads/logFiles/5819bef09522684d246ec520e26b4e2b.jpeg', '火焰剑士动漫4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729760130973', '1843284296696770561', 'W001', '我沉默太久，这一句我爱你说出口，啦啦啦啦啦啦啦啦啦', '2024-10-24 16:55:30', 'http://localhost:8080/uploads/logFiles/d5d8c18b554d5cd5eac92e20d0b83a49.jpeg', '薇尔莉特·伊芙加登4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729761914268', '1843281858862428161', 'W001', '再配合些掌声，看上去全都忠心耿耿，谁定的烂台本，啦啦啦啦', '2024-10-24 17:25:14', 'http://localhost:8080/uploads/logFiles/8d1c4f976865e6211d4532847446d78e.jpeg', '《链锯人》玛琪玛魅惑眼神4K高清动漫壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729763145683', '1843281858862428161', 'W001', '当恩怨各一半，我怎么圈揽，啦啦啦啦', '2024-10-24 17:45:45', 'http://localhost:8080/uploads/logFiles/8fd0465dfda8523e6b2ef219863b7831.jpeg', '《龙珠》孙悟空超级赛亚人之神4K壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729763278319', '1843281858862428161', 'W001', '我借你的孤单，今生恐怕难还，啦啦啦啦', '2024-10-24 17:47:58', 'http://localhost:8080/uploads/logFiles/4eac063fba93c94ca72c8893c4cf2894.jpeg', '《新世纪福音战士》绫波丽夜光4K壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729841358553', '1843281858862428161', 'W001', '待这月色涌起，谁人轻叩这门扉...三月梨花雪，几载开了又败...', '2024-10-25 15:29:18', 'http://localhost:8080/uploads/logFiles/36a1037d89492e6aae6415261ddcb75a.jpeg', '《英雄联盟》金克斯街头风4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729841581601', '1843282125955706882', 'W001', '后端代码存在错误，更新逻辑按照传来的文字记录和文件记录更新，对于文件部分则是与uploadLog一样需要进行一步文件保存', '2024-10-25 15:33:01', 'http://localhost:8080/uploads/logFiles/c409e0be894134988ecdd593a8ba5b6a.jpeg', '《原神》雷电将军樱花景色4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729845543295', '1843282125955706882', 'W001', '男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。男儿不展风云志，空负天生八尺躯。', '2024-10-25 16:39:03', 'http://localhost:8080/uploads/logFiles/4785b62279d1ab528da35bebaae38436.jpeg', '《火影忍者》宇智波佐助4K动漫壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729846875753', '1843282125955706882', 'W001', '你的晚安，是下意识的恻隐，我留至夜深，治疗失眠梦呓，那封收写的信，啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦，再一次沾染你，若生命如过场电影，哦让我，再一次，甜梦里惊醒。', '2024-10-25 17:01:15', 'http://localhost:8080/uploads/logFiles/19f08cb9e31deeedb13931846fb81ebe.jpeg', '《火影忍者》雏田职场OL风4K动漫壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729846932527', '1843282125955706882', 'W001', '你的晚安，是下意识的恻隐，我留至夜深，治疗失眠梦呓，那封收写的信，啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦，再一次沾染你，若生命如过场电影，哦让我，再一次，甜梦里惊醒。', '2024-10-25 17:02:12', 'http://localhost:8080/uploads/logFiles/c90735b1f905b8e88e030182658c45dc.jpeg', '暗黑系美少女战士4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729847030711', '1843284296826793986', 'W001', '等等等等等等等等的等等等等等等等等的等等等等等等等等的等等等等等等等等的', '2024-10-25 17:03:50', 'http://localhost:8080/uploads/logFiles/67d18a960fa771cabca80d41e26a5ae2.jpeg', '《崩坏：星穹铁道》飞霄4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729847104405', '1846060442357870594', 'W001', '我们到底在追求些什么？为何一直不停往前冲...', '2024-10-25 17:05:04', 'http://localhost:8080/uploads/logFiles/94f3a314d40bf8e1fcec0fe09752b02b.jpeg', '火龙与勇者动漫4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729847144097', '1845718830427697153', 'W003', 'and get u defeatand get u defeatand get u defeatand get u defeatand get u defeatand get u defeatand get u defeatand get u defeatand get u defeat', '2024-10-25 17:05:44', 'http://localhost:8080/uploads/logFiles/8d1c4f976865e6211d4532847446d78e.jpeg', '《链锯人》玛琪玛魅惑眼神4K高清动漫壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729847691171', '1843284296772268034', 'W001', '习吾拳法者，可败不可退。我这一拳，可以撼山。我这一剑，会很快；我的下一剑，只会更快。', '2024-10-25 17:14:51', 'http://localhost:8080/uploads/logFiles/7d46f3230874c2f5d3a71ddf98ad1f2d.jpeg', '《咒术回战》五条悟4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729847969152', '1843284296772268034', 'W001', '梦醒了吗？你的话像锋利的剑...百年沉睡的公主...梦醒了吗？你的话像锋利的剑...百年沉睡的公主...梦醒了吗？你的话像锋利的剑...百年沉睡的公主...', '2024-10-25 17:19:29', 'http://localhost:8080/uploads/logFiles/52690c84f1e041d27dbb7a5b978af55c.jpeg', '《咒术回战》五条悟VS两面宿傩4K对决壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729848357759', '1843284296826793986', 'W001', '这风铃跟心动很接近，这封信还在环念旅行，路过的爱情都太年轻，你是我想要再回去的风景...啦啦啦啦', '2024-10-25 17:25:57', 'http://localhost:8080/uploads/logFiles/c17d62d357a00dd6d73644590f9b8202.jpeg', '未来科技女战士动漫4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729848578697', '1843284296826793986', 'W001', '去任何地方，我看着你的脸，轻刷着和弦...啦啦啦啦啦啦啦', '2024-10-25 17:29:38', 'http://localhost:8080/uploads/logFiles/90b6c849d9ae970a5b0fa254b8d4b538.jpeg', '雨中巴士站唯美动漫风景4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729849067223', '1843282126102507521', 'W001', '点燃星，亲手点燃黑暗森林的火星，蒙昧初醒', '2024-10-25 17:37:47', 'http://localhost:8080/uploads/logFiles/db304719357d29517d5d5ab6d9018ddb.jpeg', '蓝发女剑士与幻龙动漫4K电脑壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1729945497208', '1843282125955706882', 'W001', '我是苍蝇，是卑劣的优雅。', '2024-10-26 20:24:57', 'http://localhost:8080/uploads/logFiles/0bc31d507e7c923c31473624c2bdb71f.jpeg', '《崩坏：星穹铁道》符玄4K壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1730121277212', '1843282126102507521', 'W001', '天上白玉京；十二楼五城，仙人抚我顶；结发受长生。', '2024-10-28 21:14:37', 'http://localhost:8080/uploads/logFiles/e1c09a4b163bd199e793f40070bac4f9.jpg', '逍遥仙.jpg');
+INSERT INTO `work_log` VALUES ('1730303638072', '1843282125955706882', 'W001', '真是一场酣畅淋漓的git合并冲突啊！真是太爽啦！笑。', '2024-10-30 23:53:58', 'http://localhost:8080/uploads/logFiles/69406436081278bd46de7573167a7c13.jpeg', '《原神》八重神子与黑猫4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1730305771057', '1847284048350367745', 'W003', '做完了', '2024-10-31 00:29:31', 'http://localhost:8080/uploads/logFiles/fc38bea56f2d4b7a28c970f3d94ca32b.jpeg', '《咒术回战》虎杖悠仁4K手机壁纸.jpeg');
+INSERT INTO `work_log` VALUES ('1730306486986', '1843656169203257346', 'W008', '吴十辞职了，换人。', '2024-10-31 00:41:26', 'http://localhost:8080/uploads/logFiles/c184846295930b1f41995276e47b5f05.docx', '大一上实验二走迷宫.docx');
+INSERT INTO `work_log` VALUES ('1730306601191', '1851662126818525186', 'W004', '休休休唏嘘修个蛋啊', '2024-10-31 00:43:21', 'http://localhost:8080/uploads/logFiles/09783c90594ab4713b5a719f8a99ed75.py', 'formal_maze.py');
+INSERT INTO `work_log` VALUES ('1730307253991', '1851668420891770881', 'W006', 'testWordparse2', '2024-10-31 00:54:13', 'http://localhost:8080/uploads/logFiles/0ecc088f489db88e8887e3b42ad516ec.jpeg', '4f2f6491ec10d86c5215f5cdc012546c.jpeg');
+INSERT INTO `work_log` VALUES ('1730307358063', '1851668420891770881', 'W006', '尽管前路迷茫，我用学习照亮；i love study,study makes me happy.', '2024-10-31 00:55:58', 'http://localhost:8080/uploads/logFiles/12ef3aa8e5d34398aee9476661fddc41.mp4', 'New Page 2 和另外 3 个页面 - 个人 - Microsoft​ Edge 2024-04-09 18-19-24.mp4');
+INSERT INTO `work_log` VALUES ('1735404931873', '1851662301351903234', 'W003', 'undefined123', '2024-12-29 00:55:31', 'http://localhost:8080/uploads/logFiles/0ecc088f489db88e8887e3b42ad516ec.jpeg', '4f2f6491ec10d86c5215f5cdc012546c.jpeg');
+INSERT INTO `work_log` VALUES ('1735437916409', '1851662301351903234', 'W003', '123', '2024-12-29 10:05:16', 'http://localhost:8080/uploads/logFiles/96356daf65286102856036a0a71c6c9d.webp', 'u=2982164933,520580257&fm=253&fmt=auto&app=138&f=JPEG.webp');
+INSERT INTO `work_log` VALUES ('1735481000190', '1851662301351903234', 'W003', '在此处提交文字记录...', '2024-12-29 22:03:20', 'http://localhost:8080/uploads/logFiles/e11d70e933b355ca42d785913c2d36a4.txt', 'test01.txt');
+
+-- ----------------------------
+-- View structure for order_summary
+-- ----------------------------
+DROP VIEW IF EXISTS `order_summary`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `order_summary` AS select `o`.`order_id` AS `order_id`,`o`.`equip_id` AS `equip_id`,`o`.`plan_id` AS `plan_id`,`o`.`start_time` AS `start_time`,`o`.`end_time` AS `end_time`,`o`.`worker_id` AS `worker_id`,`o`.`order_desc` AS `order_desc`,`o`.`order_record` AS `order_record`,`o`.`order_status` AS `order_status`,`o`.`check_id` AS `check_id`,`m`.`plan_name` AS `plan_name`,`m`.`end_time` AS `planTime`,`w`.`worker_name` AS `worker_name` from ((`order_info` `o` join `maintance_info` `m` on((`o`.`plan_id` = `m`.`plan_id`))) join `worker_info` `w` on((`o`.`worker_id` = `w`.`worker_id`))) ;
+
+-- ----------------------------
+-- View structure for selected_equip_summary
+-- ----------------------------
+DROP VIEW IF EXISTS `selected_equip_summary`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `selected_equip_summary` AS select `eq`.`equip_name` AS `equip_name`,`eq`.`equip_id` AS `equip_id`,`eq`.`equip_pic` AS `equip_pic`,`eq`.`last_maintance` AS `last_maintance`,`mt`.`maintance_desc` AS `maintance_desc`,`od`.`order_desc` AS `order_desc`,`od`.`order_record` AS `order_record`,`mt`.`plan_id` AS `plan_id` from ((`equip_info` `eq` join `maintance_info` `mt` on((`eq`.`equip_id` = `mt`.`equip_id`))) join `order_info` `od` on((`mt`.`plan_id` = `od`.`plan_id`))) ;
+
+-- ----------------------------
+-- View structure for 审批详情视图
+-- ----------------------------
+DROP VIEW IF EXISTS `审批详情视图`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `审批详情视图` AS select `user_info`.`username` AS `username`,`approval_info`.`manip_time` AS `manip_time`,`approval_info`.`approval_remark` AS `approval_remark`,`approval_info`.`step_order` AS `step_order`,`equip_info`.`equip_name` AS `equip_name`,`maintance_info`.`maintance_desc` AS `maintance_desc`,`maintance_info`.`start_time` AS `start_time`,`maintance_info`.`end_time` AS `end_time`,`maintance_info`.`status` AS `status`,`approval_info`.`approval_status` AS `approval_status` from (((`approval_info` join `maintance_info` on((`approval_info`.`plan_id` = `maintance_info`.`plan_id`))) left join `user_info` on((`approval_info`.`applicant_id` = `user_info`.`user_id`))) join `equip_info` on((`maintance_info`.`equip_id` = `equip_info`.`equip_id`))) where (`maintance_info`.`plan_id` = '1839912235471466497') order by `approval_info`.`step_order` ;
+
+-- ----------------------------
+-- Procedure structure for dynamic_maintenance_plan
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `dynamic_maintenance_plan`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `dynamic_maintenance_plan`()
+BEGIN
+    -- 标识是否结束循环
+    DECLARE DONE INT DEFAULT 0;
+
+    -- 维护周期变量
+    DECLARE maintenance_cycle TINYINT;
+    DECLARE maintenance_type_name VARCHAR(30);
+    
+    -- 设备信息变量
+    DECLARE equip_id VARCHAR(30);
+    DECLARE fix_big TINYINT;
+    DECLARE fix_medium TINYINT;
+    DECLARE fix_small TINYINT;
+    DECLARE purchase_date DATETIME;
+    DECLARE equip_name VARCHAR(30);
+
+    -- 定义保养计划ID和审批ID的变量
+    DECLARE plan_id VARCHAR(30);
+    DECLARE applicant_approval_id VARCHAR(30);
+    DECLARE first_approval_id VARCHAR(30);
+    DECLARE second_approval_id VARCHAR(30);
+
+    
+		
+		 -- 定义游标
+    DECLARE cur CURSOR FOR 
+    SELECT equip_id, fix_big, fix_medium, fix_small, purchase_date, equip_name FROM equip_info;
+
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET DONE = 1;
+		
+    -- 打开游标
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO equip_id, fix_big, fix_medium, fix_small, purchase_date, equip_name;
+
+        IF DONE THEN 
+            LEAVE read_loop; 
+        END IF;
+
+        -- 初始化维护周期
+        SET maintenance_cycle = 0;
+				
+        IF DATEDIFF(CURRENT_DATE(), purchase_date) % fix_big = 0 THEN -- 大修
+            SET maintenance_cycle = fix_big;
+            SET maintenance_type_name = '大修周期';
+						
+        ELSEIF DATEDIFF(CURRENT_DATE(), purchase_date) % fix_medium = 0 THEN -- 中修
+            SET maintenance_cycle = fix_medium;
+            SET maintenance_type_name = '中修周期';
+						
+        ELSEIF DATEDIFF(CURRENT_DATE(), purchase_date) % fix_small = 0 THEN -- 小修
+            SET maintenance_cycle = fix_small;
+            SET maintenance_type_name = '小修周期';
+						
+        END IF;
+
+        IF maintenance_cycle != 0 THEN
+            -- 生成新插入的保养计划ID
+            SET plan_id = UUID();
+
+            -- 插入保养计划
+            INSERT INTO maintance_info (plan_id, equip_id, maintance_desc, maintance_type, plan_name, start_time, end_time, status)
+            VALUES (plan_id, equip_id, CONCAT('定期维护-', maintenance_type_name), maintenance_type_name, CONCAT('保养计划-', equip_name, '-', maintenance_cycle), CURRENT_DATE(), DATE_ADD(CURRENT_DATE(), INTERVAL 7 DAY), 0);
+
+            -- 生成审批ID
+            SET applicant_approval_id = UUID();
+            SET first_approval_id = UUID();
+            SET second_approval_id = UUID();
+
+            -- 插入申请人审批记录 默认为U003，状态设置为已申请（2）
+            INSERT INTO approval_info (approval_id, plan_id, applicant_id, approval_status, step_order, manip_time)
+            VALUES (applicant_approval_id, plan_id, 'U003', 2, 0, CURRENT_TIMESTAMP());
+
+            -- 插入一级审批记录（待审批状态）
+            INSERT INTO approval_info (approval_id, plan_id, approval_status, step_order, father_id)
+            VALUES (first_approval_id, plan_id, 0, 1, applicant_approval_id);
+
+            -- 插入二级审批记录（待审批状态）
+            INSERT INTO approval_info (approval_id, plan_id, approval_status, step_order, father_id)
+            VALUES (second_approval_id, plan_id, 0, 2, first_approval_id);
+        END IF;
+    END LOOP;
+
+    -- 关闭游标
+    CLOSE cur;
+END
+;;
+DELIMITER ;

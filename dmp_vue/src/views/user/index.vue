@@ -3,19 +3,19 @@
     <div class="search-bar">
       <el-input v-model="username" placeholder="请输入用户名" clearable/>
       <el-input v-model="roleName" placeholder="请输入用户角色" clearable/>
-      <el-button type="primary" @click="getList">
+      <el-button type="primary" @click="getList" color="rgb(159.5, 206.5, 255)">
         <el-icon>
           <Search/>
         </el-icon>
         搜索
       </el-button>
-      <el-button type="success" @click="resetSearch">
+      <el-button type="success" @click="resetSearch" color="rgb(242.5, 208.5, 157.5)">
         <el-icon>
           <RefreshRight/>
         </el-icon>
         重置
       </el-button>
-      <el-button type="success" @click="openDialog">
+      <el-button type="success" @click="openDialog" color="rgb(179, 224.5, 156.5)">
         <el-icon>
           <Plus/>
         </el-icon>
@@ -33,7 +33,7 @@
           <el-popconfirm title="确定删除吗?" @confirm="confirmDelete(scope.row)" confirm-button-text="确定" cancel-button-text="取消">
 
             <template #reference>
-              <el-button type="danger" size="small">
+              <el-button type="danger" size="small" color="rgb(248, 152.1, 152.1)" style="width: 50px;">
                 <el-icon>
                   <Delete />
                 </el-icon>
@@ -43,7 +43,7 @@
           </el-popconfirm>
 
           <!-- 编辑按钮 -->
-          <el-button type="success" size="small" @click="editUser(scope.row)">
+          <el-button type="success" size="small" @click="editUser(scope.row)" color="rgb(159.5, 206.5, 255)" style="width: 50px;">
             <el-icon>
               <Edit />
             </el-icon>

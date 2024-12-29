@@ -134,8 +134,8 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
                         notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已经通过一级审核，请耐心等待。", "User");
                 //通知第二级审核
                 messageService.
-                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "需要您的审核，请及时处理。", "Admin");
-
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() +
+                                "需要您的审核，请及时处理。<a href='#/dashboard/approval/index'>点击处理</a>", "Admin");
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -168,7 +168,7 @@ public class ApprovalInfoServiceImpl extends ServiceImpl<ApprovalInfoMapper, App
             //通知用户派单
             try {
                 messageService.
-                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已经通过审核，请及时派单。", "User");
+                        notifySuperior("保养计划：" + maintanceInfoDetail.getPlanName() + "已经通过审核，请及时派单。<a href='#/dashboard/approval/index'>点击处理</a>", "User");
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
