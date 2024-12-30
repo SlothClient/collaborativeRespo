@@ -6,8 +6,8 @@
     <select id="getBigNums" resultType="com.example.springboot.entity.VisualInfo">
         SELECT
         COUNT(*) AS totalOrder,  <!-- 工单总数 -->
-        SUM(CASE WHEN o.end_time &gt; NOW() AND o.start_time &lt;= NOW() THEN 1 ELSE 0 END) AS toFinishOrder,  <!-- 待完成工单数 -->
-        SUM(CASE WHEN o.end_time &lt;= NOW() THEN 1 ELSE 0 END) AS finishOrder,  <!-- 已完成工单数 -->
+        SUM(CASE WHEN o.end_time IS NULL THEN 1 ELSE 0 END) AS toFinishOrder,  <!-- 待完成工单数 -->
+        SUM(CASE WHEN o.end_time IS NOT NULL THEN 1 ELSE 0 END) AS finishOrder,  <!-- 已完成工单数 -->
         (SELECT COUNT(*) FROM maintance_info p WHERE p.status = 2) AS toSendOrder  <!-- 待派单计划数 -->
         FROM
         order_info o;

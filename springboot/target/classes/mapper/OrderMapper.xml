@@ -11,7 +11,6 @@
         <result column="worker_id" property="workerId" jdbcType="VARCHAR"/>
         <result column="order_desc" property="orderDesc" jdbcType="LONGVARCHAR"/>
         <result column="order_record" property="orderRecord" jdbcType="LONGVARCHAR"/>
-        <result column="check_id" property="checkId" jdbcType="VARCHAR"/>
         <result column="order_status" property="orderStatus" jdbcType="VARCHAR"/>
     </resultMap>
     <!-- 分页查询，通过视图简化多表查询 -->
