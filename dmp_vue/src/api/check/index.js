@@ -4,7 +4,9 @@ export const getCheckInfo= (checkInfoReq) => {
     return request.post("/check/getCheckInfo", checkInfoReq);
 }
 
-
+export const getEquipmentInfo = () => {
+    return request.post("/equipment/getEquipmentInfo")
+}
 
 export const addCheckInfo = (checkInfo) => {
     return request.post("/check/addCheckInfo", checkInfo)

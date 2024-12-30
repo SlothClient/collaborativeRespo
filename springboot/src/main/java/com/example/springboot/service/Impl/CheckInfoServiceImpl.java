@@ -67,6 +67,7 @@ public class CheckInfoServiceImpl extends ServiceImpl<CheckInfoMapper, CheckInfo
         //当前审批计划详情
         CheckInfoDetail checkInfoDetail = CheckInfoDetail
                 .builder()
+                .checkId(checkInfo.getCheckId())
                 .checkDesc(checkInfo.getCheckDesc())
                 .checkSite(checkInfo.getCheckSite())
                 .checkContent(checkInfo.getCheckContent())

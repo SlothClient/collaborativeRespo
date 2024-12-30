@@ -46,7 +46,7 @@
     </el-row>
     <!-- 数据展示-->
     <el-table :data="data" stripe style="width: 100%;" @selection-change="handleItemChange" ref="tableRef">
-      <el-table-column type="selection" width="28" ></el-table-column>
+      <el-table-column type="selection" width="28" :selectable="selectable"></el-table-column>
 
       <el-table-column label="点巡检计划信息">
         <template #default="scope">
@@ -92,7 +92,7 @@
       <el-table-column label="操作" width="100">
         <template #default="scope">
           <div class="action-buttons">
-            <el-link type="primary" @click="openEditDialog(scope.row)">
+            <el-link type="primary" @click="openEditDialog(scope.row.checkId)">
               <el-icon>
                 <Edit/>
               </el-icon>
@@ -152,8 +152,7 @@
     <check-info-edit-dialog
         :checkInfoEditVisible ="isCheckInfoEditVisible"
         @close-dialog="closeEditDialog()"
-        :currentRow="currentRowEdit"
-        :equipmentInfoList="equipmentInfo"
+        :checkInfoDetail="currentRowDetail"
         @edit-check-info="editCheckInfo"
     ></check-info-edit-dialog>
     <!--    派单-->
@@ -168,7 +167,7 @@
   </div>
 </template>
 <script setup>
-import{getCheckInfo,addCheckInfo,undoCheckInfo,getCheckInfoDetail,updateCheck,addWorkOrder} from "@/api/check/index.js"
+import{getCheckInfo,getEquipmentInfo,addCheckInfo,undoCheckInfo,getCheckInfoDetail,updateCheck,getWorkerList,addWorkOrder} from "@/api/check/index.js"
 import {onMounted, ref} from "vue";
 import CheckInfoEditDialog from "@/components/check/checkInfoEditDialog.vue";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
@@ -177,6 +176,7 @@ import CheckInfoAddDialog from "@/components/check/checkInfoAddDialog.vue";
 import CheckInfoDetailDialog from "@/components/check/checkInfoDetailDialog.vue";
 import DispatchOrder from "@/components/check/dispatchOrder.vue";
 import AdvancedSearchDialog from "@/components/check/advancedSearchDialog.vue";
+import {createCheckitem} from "@/api/checkitem/index.js";
 const tableRef = ref(null)
 // //禁用多选框
 // const selectable = (row, index) => {
@@ -339,6 +339,7 @@ const handleDelete = (plan) => {
 const data = ref([
   // 示例数据
 ]);
+
 //搜索请求
 const checkInfoReq = ref({
   currentPage: 1,
@@ -350,6 +351,7 @@ const checkInfoReq = ref({
   equipId: '',
   creator: ''
 });
+
 //分页
 const currentPage = ref(1);
 const pageSize = ref(3);
@@ -422,11 +424,27 @@ const isCheckInfoEditVisible = ref(false);
 const closeEditDialog = () => {
   isCheckInfoEditVisible.value = false;
 };
-const openEditDialog = (row) => {
-  currentRowEdit.value = row
-  console.log(row)
+const openEditDialog = async (checkId) => {
+  console.log(checkId)
+  const res = await getCheckInfoDetail(checkId)
+  console.log(res)
+  if (!res.data.flag) {
+    ElNotification({
+      message: res.data.data,
+      type: "error"
+    })
+    return
+  }
+  currentRowDetail.value = res.data.data
+  console.log(currentRowDetail)
   isCheckInfoEditVisible.value = true;
+  console.log(isCheckInfoEditVisible)
 };
+// const openEditDialog = (row) => {
+//   currentRowEdit.value = row
+//   console.log(row)
+//   isCheckInfoEditVisible.value = true;
+// };
 
 const editCheckInfo = async (val) => {
   console.log(val)
@@ -468,6 +486,7 @@ const closeAddDialog = () => {
  */
 const addCheck = async (Plan) => {
   const res = await addCheckInfo(Plan);
+  console.log(res)
   if (!res.data.flag) {
     ElNotification({
       message: res.data.msg,
@@ -482,6 +501,48 @@ const addCheck = async (Plan) => {
   }
 
 }
+// const handleAddCheckInfo = async ({ addPlan, cleanedData }) => {
+//   try {
+//     // 添加计划信息
+//     const planRes = await addCheckInfo(addPlan);
+//     if (!planRes.data.flag) {
+//       ElNotification({
+//         message: planRes.data.msg,
+//         type: "error"
+//       });
+//       return; // 如果添加计划失败，则终止后续操作
+//     }
+//
+//     // 使用返回的计划ID更新cleanedData中的checkId（如果需要）
+//     cleanedData.forEach(item => {
+//       item.checkId = planRes.data.id; // 假设返回的计划信息中包含ID
+//     });
+//
+//     // 添加检查项信息
+//     const checkitemRes = await createCheckitem(cleanedData);
+//     if (!checkitemRes.data.flag) {
+//       ElNotification({
+//         message: checkitemRes.data.msg,
+//         type: "error"
+//       });
+//       return; // 如果添加检查项失败，则终止后续操作
+//     }
+//
+//     ElNotification({
+//       message: '添加成功',
+//       type: "success"
+//     });
+//
+//     // 如果需要，可以在这里调用其他API，例如获取最新的检查信息列表
+//     await getCheck(checkInfoReq.value)
+//   } catch (error) {
+//     console.error('Error adding check info:', error);
+//     ElNotification({
+//       message: '添加检查信息失败',
+//       type: "error"
+//     });
+//   }
+// };
 /**
  * 获取保养计划列表
  * @param checkInfoReq

@@ -1,20 +1,20 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px">
-    <div style="display: flex; gap: 16px">
+    <div class="search-bar">
       <el-input
-          style="width: 260px; margin-right: 10px;"
+          class="search-item"
           v-model="equipName"
           placeholder="请输入设备名称"
           clearable
       ></el-input>
       <el-input
-          style="width: 260px; margin-right: 10px;"
+          class="search-item"
           v-model="departmentName"
           placeholder="请输入设备部门"
           clearable
       ></el-input>
       <el-input
-          style="width: 260px; margin-right: 10px;"
+          class="search-item"
           v-model="typeName"
           placeholder="请输入设备类型"
           clearable
@@ -22,7 +22,7 @@
       <el-button type="primary" color="rgb(159.5, 206.5, 255)" @click="getList(requestParams)">
         <el-icon style="margin-right: 3px;"><Search /></el-icon>搜索
       </el-button>
-      <el-button type="success" color="rgb(159.5, 206.5, 255)"  @click="clear">
+      <el-button type="success" color="rgb(242.5, 208.5, 157.5)"  @click="clear">
         <el-icon style="margin-right: 3px;"><RefreshRight /></el-icon>重置
       </el-button>
       <el-button type="success" color="rgb(179, 224.5, 156.5)"  @click="handleAdd">
@@ -49,7 +49,7 @@
     </div>
     <!--  新增对话框-->
     <el-dialog v-model="dialogFormVisible" title="用户信息" width="50%">
-      <el-form :model="form" ref="ruleFormRef" :rules="rules">
+      <el-form :model="form" ref="ruleFormRef" :rules="rules" >
         <el-row class="row-bg" justify="space-evenly" style="margin-top: 15px;">
           <el-col :span="7"><div class="grid-content ep-bg-purple" >
             <el-form-item label="设备名称" prop="equipName" >
@@ -76,34 +76,8 @@
             </el-form-item>
           </div>
           </el-col>
-          <!--          <el-col :span="7"><div class="grid-content ep-bg-purple" >-->
-          <!--            <el-form-item prop="supplierId" label="供应商ID">-->
-          <!--              <el-input v-model="state.form.supplierId" autocomplete="off" placeholder="请输入供应商ID" style="width: 150px;display: flex;margin-right: 10px;"/>-->
-          <!--            </el-form-item>-->
-          <!--          </div>-->
-          <!--          </el-col>-->
-
         </el-row>
-        <!--        <el-row class="row-bg" justify="space-evenly">-->
-        <!--          <el-col :span="7"><div class="grid-content ep-bg-purple" >-->
-        <!--            <el-form-item prop="departmentId" label="部门ID">-->
-        <!--              <el-input v-model="state.form.departmentId" autocomplete="off" placeholder="请输入部门ID" style="width: 150px;display: flex;margin-right: 10px;"/>-->
-        <!--            </el-form-item>-->
-        <!--          </div>-->
-        <!--          </el-col>-->
-        <!--          <el-col :span="7"><div class="grid-content ep-bg-purple-light" >-->
-        <!--            <el-form-item lprop="typeId" label="类型ID">-->
-        <!--              <el-input v-model="state.form.typeId" autocomplete="off" placeholder="请输入类型ID"style="width: 150px;display: flex;margin-right: 10px;" />-->
-        <!--            </el-form-item>-->
-        <!--          </div>-->
-        <!--          </el-col>-->
-        <!--          <el-col :span="7"><div class="grid-content ep-bg-purple" >-->
-        <!--            <el-form-item prop="position" label="位置">-->
-        <!--              <el-input type="textarea" v-model="state.form.position" autocomplete="off" placeholder="请输入位置" style="width: 150px;display: flex;margin-right: 10px;"/>-->
-        <!--            </el-form-item>-->
-        <!--          </div>-->
-        <!--          </el-col>-->
-        <!--        </el-row>-->
+
         <el-row class="row-bg" justify="space-evenly" style="margin-top: 15px;">
           <el-col :span="7"><div class="grid-content ep-bg-purple-light" >
             <el-form-item prop="countBig" label="大修次数">
@@ -156,7 +130,7 @@
               <el-date-picker
                   v-model="form.purchaseDate"
                   type="date"
-                  placeholder="Pick a date"
+                  placeholder="请输入购置日期"
                   style="width: 150px;display: flex;margin-right: 10px;"
               />
             </el-form-item>
@@ -167,7 +141,7 @@
               <el-date-picker
                   v-model="form.lastMaintance"
                   type="date"
-                  placeholder="Pick a date"
+                  placeholder="请输入最后保养日期"
                   style="width: 150px;display: flex;margin-right: 10px;"
               />
             </el-form-item>
@@ -176,8 +150,8 @@
         </el-row>
         <el-row class="row-bg" justify="space-evenly" style="margin-top: 15px;">
           <el-col :span="7"><div class="grid-content ep-bg-purple-light" >
-            <el-form-item prop="statusName" label="设备部门"style="display: flex">
-              <el-select v-model="form.departmentName" placeholder="请选择状态" size="default" style="width: 132px">
+            <el-form-item prop="departmentName" label="设备部门"style="display: flex">
+              <el-select v-model="form.departmentName" placeholder="请选择部门" size="default" style="width: 132px">
                 <el-option
                     v-for="item in departmentList"
                     :key="item.departmentId"
@@ -189,7 +163,7 @@
           </div>
           </el-col>
           <el-col :span="7"><div class="grid-content ep-bg-purple-light" >
-            <el-form-item prop="statusName" label="设备状态"style="display: flex">
+            <el-form-item prop="typeName" label="设备状态"style="display: flex">
               <el-select v-model="form.typeName" placeholder="请选择类型" size="default" style="width: 132px">
                 <el-option
                     v-for="item in typeList"
@@ -202,8 +176,8 @@
           </div>
           </el-col>
           <el-col :span="7"><div class="grid-content ep-bg-purple-light" >
-            <el-form-item prop="statusName" label="设备位置"style="display: flex">
-              <el-select v-model="form.siteName" placeholder="请选择状态" size="default" style="width: 132px">
+            <el-form-item prop="siteName" label="设备位置"style="display: flex">
+              <el-select v-model="form.siteName" placeholder="请选择位置" size="default" style="width: 132px">
                 <el-option
                     v-for="item in siteList"
                     :key="item.siteId"
@@ -220,12 +194,12 @@
             <div class="grid-content ep-bg-purple">
               <el-form-item label="设备照片" prop="equipPic" >
                 <el-upload
-                    action="https://your-upload-url.com/upload"
+                    action="http://localhost:5173/api/file/upload"
                     :on-success="handleUploadSuccess"
                     :show-file-list="false"
                     class="el-upload"
                 >
-                  <img v-if="form.equipPic" :src="form.equipPic" alt="Uploaded photo" />
+                  <img v-if="form.equipPic" :src="form.equipPic"  style=" width: 178px;height: 178px;display: block;" />
                   <el-icon v-else class="avatar-uploader-icon"><Plus /><span style="font-size: 7pt;">上传</span></el-icon>
                 </el-upload>
               </el-form-item>
@@ -235,7 +209,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button @click="resetDialogForm">取消</el-button>
           <el-button type="primary" @click="save">保存</el-button>
         </div>
       </template>
@@ -249,6 +223,33 @@ import {getEquipInfoList,addEquipInfo,updateEquipInfo,deleteEquipInfo} from "@/a
 import equipTable from "@/components/equip/equipTable.vue";
 import {ElMessage, ElNotification} from "element-plus";
 import {useEquipmentInfoStore} from "@/store/module/equipmentInfo.js";
+
+import axios from "axios";
+
+//表单校验
+const rules = reactive({
+  equipName:[
+    {required: true, message: '请输入设备名称', trigger: 'blur'}
+  ],
+  statusName:[
+    {required: true, message: '请选择设备状态', trigger: 'blur'}
+  ],
+  departmentName:[
+    {required: true, message: '请选择部门', trigger: 'blur'}
+  ],
+  typeName:[
+    {required: true, message: '请选择类型', trigger: 'blur'}
+  ],
+  siteName:[
+    {required: true, message: '请选择位置', trigger: 'blur'}
+  ],
+  purchaseDate:[
+    {required: true, message: '请输入购置日期', trigger: 'blur'}
+  ],
+  lastMaintance:[
+    {required: true, message: '请输入最后保养日期', trigger: 'blur'}
+  ]
+})
 
 const currentPage = ref(1);
 const pageSize = ref(4);
@@ -317,8 +318,26 @@ const handleEdit = (row) => {
     form[key] = parsedRow[key];
   });
 };
+//保存图片内存中的临时地址
+const imageUrl = ref('')
+
+//图片上传成功前
+const beforeUpload = (file) => {
+  const isImage = file.type.startsWith('image/');
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isImage) {
+    ElMessage.error('上传图片只能是 JPG/PNG 格式!');
+  }
+  if (!isLt2M) {
+    ElMessage.error('上传图片大小不能超过 2MB!');
+  }
+  return isImage && isLt2M;
+};
+//图片上传成功后
 const handleUploadSuccess = (response) => {
-  form.photo = response.url; // 假设上传成功后返回的响应中包含图片的 URL
+  console.log(response)
+  form.equipPic = response.data
 };
 const {proxy} =getCurrentInstance()
 const getEdit =async (form)=>{
@@ -335,6 +354,14 @@ const getadd = async (form)=>{
   console.log(res)
   await getList(requestParams.value);
 }
+const ruleFormRef = ref(null)
+// 重置对话框表单
+const resetDialogForm = () => {
+  ruleFormRef.value.resetFields(); // 重置表单字段和验证状态
+  dialogFormVisible.value = false; // 关闭对话框
+  // window.location.reload(); // 刷新页面
+};
+
 const save = ()=>{
   proxy.$refs.ruleFormRef.validate((valid)=>{
     if(valid){
@@ -342,7 +369,13 @@ const save = ()=>{
         //如果id存在，那就是编辑
         getEdit(form)
       }else{
-        getadd(form)
+        if(form == null){
+          ElMessage.error("不能全为空")
+        }else{
+          getadd(form)
+          ElMessage.success("新增成功")
+        }
+
       }
     }
   })
@@ -419,5 +452,14 @@ onMounted(async () => {
   width: 178px;
   height: 178px;
   text-align: center;
+}
+.search-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.search-item{
+  width: 260px;
+  margin-right: 10px;
 }
 </style>
