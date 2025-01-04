@@ -63,9 +63,9 @@
               <div>工单备注：<span>{{ scope.row.orderDesc }}</span></div>
               <br/>
               <div>派单时间：<span>{{ scope.row.startTime }}</span></div>
-              <div>派单人：<span>{{ '暂无' }}</span></div>
-              <div>更新时间：<span>{{ '暂无' }}</span></div>
-              <div>更新人：<span>{{ '暂无' }}</span></div>
+              <div>派单人：<span>{{ '管理员' }}</span></div>
+              <div>更新时间：<span>{{ scope.row.endTime }}</span></div>
+              <div>更新人：<span>{{ '管理员' }}</span></div>
               <!-- <div>工作记录：<span>{{ scope.row.工作记录 }}</span></div> -->
             </div>
           </template>
