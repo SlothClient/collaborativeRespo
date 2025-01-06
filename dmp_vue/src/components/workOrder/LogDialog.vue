@@ -9,7 +9,7 @@
             <el-descriptions-item label="工单描述">{{ receivedData.orderDesc }}</el-descriptions-item>
             <el-descriptions-item label="设备名称">{{ equipData.equipName }}</el-descriptions-item>
             <el-descriptions-item label="设备状态">
-                <el-tag size="small">执行中</el-tag>
+                <el-tag size="small" :type="receivedData.orderRecord==='已完成'?'success':'primary'">{{ receivedData.orderRecord }}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="文字记录">
                 <textarea id="record" placeholder="在此处提交文字记录..." v-model="word_log"></textarea>
@@ -149,9 +149,15 @@ const submitLog = async () => {
 
 // 提交确认
 const handleSubmit = (done: () => void) => {
+    // 检查是否至少填写了一种日志内容
+    if (!word_log.value?.trim() && !file.value) {
+        ElMessage.warning('请至少填写文字记录或上传文件');
+        return;
+    }
+
     // 显示确认信息的弹窗
-    const wordLog = word_log.value; // 获取文字记录
-    const fileName = addFileBtn.value?.files[0]?.name || '无文件记录'; // 获取文件名，若无文件则显示 '无文件记录'
+    const wordLog = word_log.value || '无文字记录'; // 如果没有文字记录则显示"无文字记录"
+    const fileName = file.value?.name || '无文件记录'; // 如果没有文件则显示"无文件记录"
 
     // 生成确认信息
     const message = `<h4 style="margin:0">请确认信息</h4><p>文字记录：<span style="color:skyblue">${wordLog}</span></p><p>文件记录：<span style="color:skyblue">${fileName}</span></p>`;
@@ -160,12 +166,11 @@ const handleSubmit = (done: () => void) => {
     ElMessageBox.confirm(message,
         '提交日志',
         {
-            dangerouslyUseHTMLString: true // 允许使用 HTML 字符串
+            dangerouslyUseHTMLString: true
         })
         .then(async () => {
             await submitLog();
             // 提交后重新拉取工作日志
-            // 发数据，触发事件
             emitter.emit("updateWorkLogs");
         })
 }
