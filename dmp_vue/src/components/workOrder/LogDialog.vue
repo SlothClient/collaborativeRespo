@@ -129,8 +129,11 @@ const submitLog = async () => {
     const formData = new FormData();
     formData.append('orderId', receivedData.value.orderId);
     formData.append('workerId', receivedData.value.workerId);
-    formData.append('wordLog', word_log.value);
-    formData.append('fileLog', addFileBtn.value?.files[0]);
+    if (file.value) {
+        formData.append('fileLog', addFileBtn.value?.files[0]);
+    }
+    formData.append('wordLog', word_log.value || '未提交');
+
 
 
     try {
