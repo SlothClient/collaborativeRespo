@@ -221,6 +221,12 @@ const handleFileChange = (event, log) => {
 // 控制编辑和提交的按钮逻辑
 const handleEditSubmit = (log) => {
     if (log.funcBtnVal === '提交') {
+      if (props.selectedOrder.orderStatus === '已完成') {
+            ElMessage.warning("工单已完成，无法编辑！");
+            // 自动置为阅读模式
+            cancelEdit(log);
+            return;
+        }
         submitEdit(log);
     } else {
         editLog(log);
