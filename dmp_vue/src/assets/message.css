@@ -1,0 +1,12 @@
+.custom-notification {
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+    border: 1px solid #EBEEF5;
+}
+
+.custom-notification .el-notification__title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #4999e8;
+}
