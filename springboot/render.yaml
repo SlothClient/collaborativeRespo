@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cmms-backend
+    env: java
+    build:
+      command: "mvn clean package"  # 或 gradle build
+      path: .
+    envVars:
+      - key: JAVA_VERSION
+        value: "21"  # 指定 Java 版本
+    plan: free
