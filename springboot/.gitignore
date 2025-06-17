@@ -1,2 +1,5 @@
-# target/ 部署时build需要
+# 忽略target目录下的所有内容，除了jar包（云部署要用）
+target/*
+!target/*.jar
+
 *.class

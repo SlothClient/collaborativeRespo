@@ -15,7 +15,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        // 本地
+        // target: 'http://localhost:8080',
+        // 云端
+        target: 'https://cmms-backend-vm1c.onrender.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
