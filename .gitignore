@@ -5,7 +5,7 @@
 *.ipr
 
 # Compiled files
-target/
+# target/ 部署时build需要
 out/
 build/
 

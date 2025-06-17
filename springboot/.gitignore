@@ -1,2 +1,2 @@
-/target/
+# target/ 部署时build需要
 *.class
